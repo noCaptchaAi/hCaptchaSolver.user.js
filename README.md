@@ -50,8 +50,9 @@ Other usage Scripts:
 * NodeJs [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/node.js)
 * JavaScript [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/javascript.js)
 
-Send JSON Post Request:
-Base64 images ~ body.JSON [here](https://raw.githubusercontent.com/shimuldn/hCaptchaSolverApi/main/usage_examples/base64-body-format.json)
+Wanna build your own script with our api?
+
+please visit here https://github.com/shimuldn/hCaptchaSolverApi#build-your-own-scripts
 
 
 Script written by @DiegoSawyer
