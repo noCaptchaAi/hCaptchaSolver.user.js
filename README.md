@@ -53,3 +53,5 @@ Other usage Scripts:
 Send JSON Post Request:
 Base64 images ~ body.JSON [here](https://raw.githubusercontent.com/shimuldn/hCaptchaSolverApi/main/usage_examples/base64-body-format.json)
 
+
+Script written by @DiegoSawyer
