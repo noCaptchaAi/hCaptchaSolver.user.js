@@ -37,7 +37,7 @@
 
 ## Browser Supported
 
-![image](https://user-images.githubusercontent.com/4178343/188481130-00f022e6-8280-4bfd-b1ea-9bdddfbb2681.png)
+All major with moneky clients
 
 ## Visit Main [Project](https://github.com/shimuldn/hCaptchaSolverApi)
 Other usage Scripts:
