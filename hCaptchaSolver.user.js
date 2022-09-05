@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         noCaptcha AI
-// @namespace    https://nocaptchaai.com/
+// @name         noCaptcha AI hCaptcha Solver
+// @namespace    https://nocaptchaai.com
 // @version      0.1
-// @description  try to take over the world!
+// @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       You
 // @match        https://*.hcaptcha.com/*
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
@@ -12,6 +12,11 @@
 (async function noCaptcha() {
     'use strict';
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
+          
+          // get api key here, free trial plan alavailable https://nocaptchaai.com
+          // cheap plan starts form 30k solve for 10$
+          // Unlimited plans starts from 99$
+          // Selenium, puppeteer, python, playwright scripts https://github.com/shimuldn/hCaptchaSolverApi/tree/main/usage_examples
           config = { uid: '', apikey: '' },
           baseUrl = 'https://solve.shimul.me/api/solve',
           searchParams = new URLSearchParams(location.hash);
