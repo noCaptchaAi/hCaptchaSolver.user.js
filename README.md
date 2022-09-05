@@ -20,6 +20,10 @@
  *** You need `apikey` and `uid` to get it working, get free Api here https://nocaptchaai.com/register
  
  
+## Want to build your own script with our api?
+
+Please visit here https://github.com/shimuldn/hCaptchaSolverApi#build-your-own-scripts
+
 ## Managers supported
 
 <p>
@@ -50,9 +54,6 @@ Other usage Scripts:
 * NodeJs [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/node.js)
 * JavaScript [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/javascript.js)
 
-Wanna build your own script with our api?
-
-please visit here https://github.com/shimuldn/hCaptchaSolverApi#build-your-own-scripts
 
 
 Script by @Diego
