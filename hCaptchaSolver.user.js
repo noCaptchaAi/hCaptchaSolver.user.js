@@ -13,8 +13,8 @@
     'use strict';
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
           
-          // get api key here, free trial plan alavailable https://nocaptchaai.com
-          // cheap plan starts form 30k solve for 10$
+          // Get Free api key here https://nocaptchaai.com
+          // Cheap promo 30k solves for 10$
           // Unlimited plans starts from 99$
           // Selenium, puppeteer, python, playwright scripts https://github.com/shimuldn/hCaptchaSolverApi/tree/main/usage_examples
           config = { uid: '', apikey: '' },
