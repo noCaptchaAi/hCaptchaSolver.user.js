@@ -1,0 +1,73 @@
+// ==UserScript==
+// @name         noCaptcha AI
+// @namespace    https://nocaptchaai.com/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        https://*.hcaptcha.com/*
+// @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
+// @run-at       document-end
+// ==/UserScript==
+
+(async function noCaptcha() {
+    'use strict';
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
+          config = { uid: '', apikey: '' },
+          baseUrl = 'https://solve.shimul.me/api/solve',
+          searchParams = new URLSearchParams(location.hash);
+
+    await sleep(1000);
+
+    document.querySelector('#checkbox')?.click();
+
+    await sleep(2000);
+
+    const imgs = document.querySelectorAll('.task-image .image');
+    const images = {...[...imgs].map(ele => ele.style.background.match(/url\("(.*)"/)[1] || 0)};
+    if (Object.keys(images).length === 0) return;
+
+    const target = document.querySelector('.prompt-text').textContent.replace(/Please click each image containing (an|a) /, '')
+    config['Content-Type'] = 'application/json';
+    let response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: config,
+        body: JSON.stringify({
+            images,
+            target,
+            'data_type': 'url',
+            'site_key': searchParams.get('sitekey'),
+            'site': searchParams.get('host')
+        })
+    })
+    response = await response.json();
+
+    if (response.status == 'new') {
+        await sleep(2000);
+        const status = await (await fetch(response.url)).json();
+        console.log(status)
+        if (status.status == 'solved') {
+            for (const index of status.solution) {
+                imgs[index].click();
+                await sleep(200);
+            }
+        }
+    } else {
+       return alert(response.status);
+    }
+
+    let btn = document.querySelector('.button-submit').textContent;
+    await sleep(200);
+    document.querySelector('.button-submit').click();
+
+    if (btn == 'Verify') {
+        await sleep(2000)
+        btn = document.querySelector('.button-submit').textContent;
+        if (btn == 'Next' || btn == 'Skip') {
+            noCaptcha()
+        }
+    } else if (btn == 'Next' || btn == 'Skip') {
+        noCaptcha()
+    } else {
+        await sleep(1000)
+    }
+})();
