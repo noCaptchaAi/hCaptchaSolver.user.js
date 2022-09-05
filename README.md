@@ -55,4 +55,4 @@ Wanna build your own script with our api?
 please visit here https://github.com/shimuldn/hCaptchaSolverApi#build-your-own-scripts
 
 
-Script written by @DiegoSawyer
+Script by @Diego
