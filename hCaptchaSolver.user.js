@@ -3,7 +3,7 @@
 // @namespace    https://nocaptchaai.com
 // @version      0.1
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
-// @author       You
+// @author       Diego and noCaptcha AI
 // @match        https://*.hcaptcha.com/*
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
 // @run-at       document-end
