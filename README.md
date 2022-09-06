@@ -13,8 +13,8 @@
 # hCaptchaSolver Userscript.js
 => userscript to solve hcaptcha challenges automatically with https://noCaptchaAi.com Api \
 => [register for Free trial credits and API key & ⭐ us 🔥](https://nocaptchaai.com/register)**  \
-=> Promo discount 30000 solves / 10$** on our [discord](https://discord.gg/E7FfzhZqzA) \
-=> Unlimited plans starts from 99$ **
+=> Promo discount 30000 solves / 10$ on our [discord](https://discord.gg/E7FfzhZqzA) \
+=> Unlimited plans starts from 99$
 
 # Install [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
  *** You need `apikey` and `uid` to get it working, get free Api here https://nocaptchaai.com/register
