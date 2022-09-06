@@ -41,7 +41,7 @@ Please visit here https://github.com/shimuldn/hCaptchaSolverApi#build-your-own-s
 
 ## Browser Supported
 
-All major with moneky clients
+All major with monkey clients
 
 ## Visit Main [Project](https://github.com/shimuldn/hCaptchaSolverApi)
 Other usage Scripts:
