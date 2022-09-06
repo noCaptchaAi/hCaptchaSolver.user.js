@@ -20,7 +20,7 @@
           // Unlimited plans starts from 99$
           // Selenium, puppeteer, python, playwright scripts https://github.com/shimuldn/hCaptchaSolverApi/tree/main/usage_examples
           config = { uid: '', apikey: '' },
-          baseUrl = 'https://solve.shimul.me/api/solve',
+          baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash);
 
     if (!config.uid || !config.apikey) return;
