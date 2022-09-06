@@ -5,6 +5,8 @@
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
+// @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
+// @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
 // @run-at       document-end
 // ==/UserScript==
@@ -21,6 +23,8 @@
           baseUrl = 'https://solve.shimul.me/api/solve',
           searchParams = new URLSearchParams(location.hash);
 
+    if (!config.uid || !config.apikey) return;
+
     await sleep(1000);
 
     document.querySelector('#checkbox')?.click();
@@ -31,14 +35,13 @@
     const images = {...[...imgs].map(ele => ele.style.background.match(/url\("(.*)"/)[1] || 0)};
     if (Object.keys(images).length === 0) return;
 
-    const target = document.querySelector('.prompt-text').textContent.replace(/Please click each image containing (an|a) /, '')
     config['Content-Type'] = 'application/json';
     let response = await fetch(baseUrl, {
         method: 'POST',
         headers: config,
         body: JSON.stringify({
             images,
-            target,
+            'target': document.querySelector('.prompt-text').textContent,
             'data_type': 'url',
             'site_key': searchParams.get('sitekey'),
             'site': searchParams.get('host')
