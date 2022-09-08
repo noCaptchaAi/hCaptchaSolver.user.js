@@ -45,15 +45,13 @@ All major with monkey clients
 
 ## Visit Main [Project](https://github.com/shimuldn/hCaptchaSolverApi)
 Other usage Scripts:
-* Selenium [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/example-selenium.py)
-* puppeteer [here]( https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/puppeteer.js)
-* puppeteer2  [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/puppeteer2.js)
-* python  [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/example2.py)
-* python_requests [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/python_requests.py)
-* playwright  [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/playwright.js)
-* NodeJs [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/node.js)
-* JavaScript [here](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/javascript.js)
-
-
+- [Selenium.py](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/example-selenium.py)
+- [Puppeteer.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/puppeteer.js)
+- [Puppeteer.ts](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/puppeteer.ts)
+- [Python.py](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/example2.py)
+- [Python_requests.py](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/python_requests.py)
+- [Playwright.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/playwright.js)
+- [Node.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/node.js)
+- [JavaScript.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/javascript.js)
 
 Script by @Diego
