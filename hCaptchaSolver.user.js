@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         noCaptcha AI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      0.1
+// @version      0.2
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
@@ -24,7 +24,7 @@
           searchParams = new URLSearchParams(location.hash);
 
     if (!config.uid || !config.apikey) return;
-
+    if (navigator.language != 'en') return;
     await sleep(1000);
 
     document.querySelector('#checkbox')?.click();
