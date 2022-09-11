@@ -5,7 +5,7 @@
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
-// @match        https://nocaptchaai.com/config.html
+// @match        https://diegosawyer.github.io/hCaptchaSolver.user.js/
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
