@@ -33,11 +33,10 @@
     }
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
-          config = { uid: GM_getValue('uid'), apikey: GM_getValue('apikey') },
           baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash);
 
-    if (!config.uid || !config.apikey) return;
+    if (!GM_getValue('uid') || !GM_getValue('apikey')) return;
     if (!navigator.language.startsWith('en')) return;
 
     await sleep(1000);
@@ -50,10 +49,13 @@
     const images = {...[...imgs].map(ele => ele.style.background.match(/url\("(.*)"/)[1] || 0)};
     if (Object.keys(images).length === 0) return;
 
-    config['Content-Type'] = 'application/json';
     let response = await fetch(baseUrl, {
         method: 'POST',
-        headers: config,
+        headers: {
+            'Content-Type': 'application/json',
+            'uid': GM_getValue('uid'),
+            'apikey': GM_getValue('apikey')
+        },
         body: JSON.stringify({
             images,
             'target': document.querySelector('.prompt-text').textContent,
