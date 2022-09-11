@@ -21,14 +21,13 @@
 (async function noCaptcha() {
     'use strict';
     if (location.href === 'https://nocaptchaai.com/config.html') {
-        const uid = document.querySelector('input[name=uid]');
-        const apikey = document.querySelector('input[name=apikey]');
-        uid.value = GM_getValue('uid');
-        apikey.value = GM_getValue('apikey');
-        document.querySelector('button').onclick = function() {
-            GM_setValue('uid', uid.value);
-            GM_setValue('apikey', apikey.value);
-        }
+        const broadcastChannel = new BroadcastChannel('nocaptcha');
+        broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), isinstalled: true })
+        broadcastChannel.addEventListener('message', function({data}) {
+            console.log('Got message', data);
+            GM_setValue('uid', data.uid);
+            GM_setValue('apikey', data.apikey);
+        });
         return;
     }
 
