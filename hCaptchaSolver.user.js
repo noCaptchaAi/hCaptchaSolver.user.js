@@ -24,7 +24,7 @@
           searchParams = new URLSearchParams(location.hash);
 
     if (!config.uid || !config.apikey) return;
-
+    if (navigator.language != 'en') return;
     await sleep(1000);
 
     document.querySelector('#checkbox')?.click();
