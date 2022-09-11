@@ -20,7 +20,7 @@
 
 (async function noCaptcha() {
     'use strict';
-    if (location.href === 'https://nocaptchaai.com/config.html') {
+    if (location.href === 'https://diegosawyer.github.io/hCaptchaSolver.user.js/') {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
         broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), isinstalled: true })
         broadcastChannel.addEventListener('message', function({data}) {
