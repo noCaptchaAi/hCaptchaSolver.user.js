@@ -20,9 +20,9 @@
 
 (async function noCaptcha() {
     'use strict';
-    if (location.href === 'https://diegosawyer.github.io/hCaptchaSolver.user.js/') {
+    if (location.origin === 'https://diegosawyer.github.io') {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
-        broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), isinstalled: true })
+        broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
         broadcastChannel.addEventListener('message', function({data}) {
             console.log('Got message', data);
             GM_setValue('uid', data.uid);
@@ -31,12 +31,12 @@
         return;
     }
 
+    if (!GM_getValue('uid') || !GM_getValue('apikey')) return;
+    if (!navigator.language.startsWith('en')) return;
+
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
           baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash);
-
-    if (!GM_getValue('uid') || !GM_getValue('apikey')) return;
-    if (!navigator.language.startsWith('en')) return;
 
     await sleep(1000);
 
@@ -68,7 +68,7 @@
     if (response.status == 'new') {
         await sleep(2000);
         const status = await (await fetch(response.url)).json();
-        console.log(response, status)
+        console.log(response, status);
         if (status.status == 'solved') {
             for (const index of status.solution) {
                 imgs[index].click();
@@ -84,14 +84,14 @@
     document.querySelector('.button-submit').click();
 
     if (btn == 'Verify') {
-        await sleep(2000)
+        await sleep(2000);
         btn = document.querySelector('.button-submit').textContent;
         if (btn == 'Next' || btn == 'Skip') {
-            noCaptcha()
+            noCaptcha();
         }
     } else if (btn == 'Next' || btn == 'Skip') {
-        noCaptcha()
+        noCaptcha();
     } else {
-        await sleep(1000)
+        await sleep(1000);
     }
 })();
