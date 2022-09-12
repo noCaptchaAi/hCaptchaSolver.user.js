@@ -29,7 +29,7 @@
         if (origin != 'https://diegosawyer.github.io' || origin != 'https://nocaptchaai.github.io') return;
         form.uid.value = data.uid;
         form.apikey.value = data.apikey;
-        form.isinstalled.checked = data.isinstalled;
+        form.isinstalled.checked = true;
     });
 
     form.addEventListener('submit', function(e) {
