@@ -80,7 +80,9 @@
     }
 
     let btn = document.querySelector('.button-submit').textContent;
+    
     await sleep(200);
+    
     document.querySelector('.button-submit').click();
 
     if (btn == 'Verify') {
