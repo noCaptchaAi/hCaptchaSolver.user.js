@@ -42,7 +42,7 @@
         if (!e.target.isinstalled.checked) {
             return alert('Only works when userscript is installed\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js')
         }
-        broadcastChannel.postMessage({ uid: e.target.uid.value, apikey: e.target.apikey.value })
+        broadcastChannel.postMessage({ uid: e.target.uid.value, apikey: e.target.apikey.value, internet: e.target.internet.checked })
     })
     </script>
   </body>
