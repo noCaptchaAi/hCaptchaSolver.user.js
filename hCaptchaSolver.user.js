@@ -6,7 +6,6 @@
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
 // @match        https://nocaptchaai.com/script/config.html
-// @match        https://nocaptchaai.com/script/config.html/
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
@@ -29,6 +28,7 @@
             alert(`uid ${data.uid.substr(data.uid.length - 5)} || apikey last ending with ${data.apikey.substr(data.apikey.length - 5)} set successfully!\nRefresh your website with hcaptcha to solve!`)
             GM_setValue('uid', data.uid);
             GM_setValue('apikey', data.apikey);
+            alert(`uid ${data.uid.slice(-5)} || apikey last ending with ${data.apikey.slice(-5)} set successfully!\nRefresh your website with hcaptcha to solve!`);
         });
         return;
     }
