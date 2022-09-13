@@ -26,7 +26,7 @@
 
     broadcastChannel.addEventListener('message', function({data, origin}) {
         console.log('Got message', data, origin);
-        if (origin != 'https://diegosawyer.github.io' || origin != 'https://nocaptchaai.github.io') return;
+        if (origin != 'https://nocaptchaai.com') return;
         form.uid.value = data.uid;
         form.apikey.value = data.apikey;
         form.isinstalled.checked = true;
