@@ -1,17 +1,16 @@
 // ==UserScript==
 // @name         noCaptcha AI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      0.4
+// @version      0.7
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
-// @match        https://nocaptchaai.com/script/config.html
+// @match        https://diegosawyer.github.io/hCaptchaSolver.user.js/
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @run-at       document-end
 // ==/UserScript==
 // Get Free api key here https://nocaptchaai.com
 // Cheap promo 30k solves for 10$
@@ -20,20 +19,32 @@
 
 (async function noCaptcha() {
     'use strict';
-    if (location.origin === 'https://nocaptchaai.com') {
+    if (location.origin === 'https://diegosawyer.github.io') {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
-        broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
+        broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), internet: GM_getValue('internet') });
         broadcastChannel.addEventListener('message', function({data}) {
             console.log('Got message', data);
             GM_setValue('uid', data.uid);
             GM_setValue('apikey', data.apikey);
+            GM_setValue('internet', data.internet)
             alert(`uid ${data.uid.slice(-5)} || apikey last ending with ${data.apikey.slice(-5)} set successfully!\nRefresh your website with hcaptcha to solve!`);
         });
         return;
     }
 
+    if (GM_getValue('internet')) {
+        const slowLoad = setTimeout(function() {
+            alert( "slow internet connection the userscript may not work" );
+        }, 1000);
+
+        window.addEventListener('load', function() {
+            window.clearTimeout(slowLoad);
+        }, false);
+    }
+
     if (!GM_getValue('uid') || !GM_getValue('apikey')) return;
     if (!navigator.language.startsWith('en')) return;
+
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
           baseUrl = 'https://free.nocaptchaai.com/api/solve',
