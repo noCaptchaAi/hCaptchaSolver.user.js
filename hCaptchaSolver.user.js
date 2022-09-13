@@ -25,7 +25,6 @@
         broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
         broadcastChannel.addEventListener('message', function({data}) {
             console.log('Got message', data);
-            alert(`uid ${data.uid.substr(data.uid.length - 5)} || apikey last ending with ${data.apikey.substr(data.apikey.length - 5)} set successfully!\nRefresh your website with hcaptcha to solve!`)
             GM_setValue('uid', data.uid);
             GM_setValue('apikey', data.apikey);
             alert(`uid ${data.uid.slice(-5)} || apikey last ending with ${data.apikey.slice(-5)} set successfully!\nRefresh your website with hcaptcha to solve!`);
