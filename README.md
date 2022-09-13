@@ -18,7 +18,7 @@ An userscript to solve hcaptcha challenges automatically with https://noCaptchaA
 
 # Install [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
  *** You need `apikey` and `uid` to get it working, get free Api here https://nocaptchaai.com/register
- 
+setup api/uid with this page https://nocaptchaai.github.io/hCaptchaSolver.user.js/
  
 ## Want to build your own script with our api?
 
