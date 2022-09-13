@@ -16,9 +16,10 @@ An userscript to solve hcaptcha challenges automatically with https://noCaptchaA
 * Promo discount 30000 solves / 10$ on our [discord](https://discord.gg/E7FfzhZqzA) 
 * Unlimited plans starts from 99$
 
-# Install [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
- *** You need `apikey` and `uid` to get it working, get free Api here https://nocaptchaai.com/register
- 
+## Install [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js) & do Steps below
+
+* Get free Api here [noCaptchaAi Signup](https://noCaptchaAi.com/register)
+* You need `apikey` and `uid` to get it working, Setup [with this page here](https://nocaptchaai.github.io/hCaptchaSolver.user.js/)
  
 ## Want to build your own script with our api?
 
