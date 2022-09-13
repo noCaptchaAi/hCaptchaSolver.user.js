@@ -5,7 +5,7 @@
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
-// @match        https://diegosawyer.github.io/hCaptchaSolver.user.js/
+// @match        https://nocaptchaai.com/script/config.html
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
@@ -19,7 +19,7 @@
 
 (async function noCaptcha() {
     'use strict';
-    if (location.origin === 'https://diegosawyer.github.io') {
+    if (location.origin === 'https://nocaptchaai.com') {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
         broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), internet: GM_getValue('internet') });
         broadcastChannel.addEventListener('message', function({data}) {
