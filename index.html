@@ -40,6 +40,7 @@
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         const { isinstalled, uid, apikey, internet } = e.target;
+        console.log(isinstalled.checked)
         if (!isinstalled.checked) {
             return alert('Only works when userscript is installed\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js')
         }
