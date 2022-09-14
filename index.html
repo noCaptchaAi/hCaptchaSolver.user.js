@@ -24,6 +24,7 @@
       <input type='checkbox' name='isinstalled' hidden>
       <button type='submit' class='form'>Save</button>
     </form>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     const broadcastChannel = new BroadcastChannel('nocaptcha'),
           form = document.forms[0];
@@ -42,7 +43,14 @@
         const { isinstalled, uid, apikey, internet } = e.target;
         console.log(isinstalled.checked)
         if (!isinstalled.checked) {
-            return alert('Only works when userscript is installed\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js')
+             Swal.fire({
+               icon: 'error',
+               title: 'Oops...',
+               text: 'Something went wrong!',
+               footer: '<a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js">Why do I have this issue?</a>'
+             })
+          return;
+            //return alert('Only works when userscript is installed\n')
         }
         broadcastChannel.postMessage({ uid: uid.value, apikey: apikey.value, internet: internet.checked })
     })
