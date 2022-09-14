@@ -31,8 +31,7 @@
           form = document.forms[0];
     
     if (searchParams.get('msg')) {
-            Swal.fire(JSON.stringify(searchParams.get('msg')))
-             return;
+        Swal.fire(JSON.stringify(searchParams.get('msg')))
     }
       
     broadcastChannel.addEventListener('message', function({data, origin}) {
