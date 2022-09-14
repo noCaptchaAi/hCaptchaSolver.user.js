@@ -31,10 +31,10 @@
           form = document.forms[0];
     
     if (searchParams.get('msg')) {
-            Swal.fire(JSON.stringify(searchParams.get('msg'))))
+            Swal.fire(JSON.stringify(searchParams.get('msg')))
              return;
-        }
     }
+      
     broadcastChannel.addEventListener('message', function({data, origin}) {
         console.log('Got message', data, origin);
         //if (origin != 'https://nocaptchaai.com') return;
