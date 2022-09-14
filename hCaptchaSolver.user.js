@@ -39,22 +39,20 @@
         }, 1000);
 
         window.addEventListener('load', function() {
-            window.clearTimeout(slowLoad);
+            clearTimeout(slowLoad);
         }, false);
     }
 
     if (!GM_getValue('uid') || !GM_getValue('apikey')) {
-      if (GM_getValue('notified') == undefined) {
-        alert('UID and APIKEY not set. Open https://nocaptchaai.com/script/config.html to add uid and apikey.');
-        open('https://nocaptchaai.com/script/config.html');
+      if (!GM_getValue('notified')) {
+        open('https://nocaptchaai.com/script/config.html?msg=Please enter your details on the page before starting to use the userscript');
         GM_setValue('notified', true);
       }
-      
       return;
     }
-
+    
     if (!navigator.language.startsWith('en')) return;
-
+    if (!navigator.onLine) return;
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
           baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash);
