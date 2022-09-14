@@ -43,13 +43,13 @@
         const { isinstalled, uid, apikey, internet } = e.target;
         console.log(isinstalled.checked)
         if (!isinstalled.checked) {
-             Swal.fire({
-               icon: 'error',
-               title: 'Oops...',
-               text: 'It looks like you haven\'t installed the userscript\nclick the link below to install the userscript',
-               footer: '<a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js">hCaptchaSolver.user.js</a>'
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'It looks like you haven\'t installed the userscript',
+                footer: '<a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js" title="hCaptchaSolver.user.js">click here to install the userscript</a>'
              })
-          return;
+             return;
             //return alert('Only works when userscript is installed\n')
         }
         broadcastChannel.postMessage({ uid: uid.value, apikey: apikey.value, internet: internet.checked })
