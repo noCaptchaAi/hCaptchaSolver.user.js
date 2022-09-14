@@ -11,6 +11,7 @@
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_openInTab
 // ==/UserScript==
 // Get Free api key here https://nocaptchaai.com
 // Cheap promo 30k solves for 10$
@@ -45,7 +46,7 @@
 
     if (!GM_getValue('uid') || !GM_getValue('apikey')) {
       if (!GM_getValue('notified')) {
-        open('https://nocaptchaai.com/script/config.html?msg=Please enter your details on the page before starting to use the userscript');
+        GM_openInTab('https://nocaptchaai.com/script/config.html?msg=Please enter your details on the page before starting to use the userscript', 'active');
         GM_setValue('notified', true);
       }
       return;
