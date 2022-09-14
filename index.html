@@ -39,10 +39,11 @@
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        if (!e.target.isinstalled.checked) {
+        const { isinstalled, uid, apikey, internet } = e.target;
+        if (!isinstalled.checked) {
             return alert('Only works when userscript is installed\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js')
         }
-        broadcastChannel.postMessage({ uid: e.target.uid.value, apikey: e.target.apikey.value, internet: e.target.internet.checked })
+        broadcastChannel.postMessage({ uid: uid.value, apikey: apikey.value, internet: internet.checked })
     })
     </script>
   </body>
