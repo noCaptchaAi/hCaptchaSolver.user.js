@@ -35,15 +35,16 @@
         Swal.fire(JSON.stringify(searchParams.get('msg')))
     }
       
-    function account() {
-      
+    function account(uid, apikey) {
             fetch('https://free.nocaptchaai.com/api/account/balance', {
             headers: {
               'Content-Type': 'application/json',
-               'uid': form.uid.value,
-            'apikey': form.apikey.value
+               'uid': form.uid.value, //will be deleted in the future
+            'apikey': form.apikey.value //will be deleted in the future
         },
-    }).then(r => r.json()).then(d => alert(JSON.stringify(d)));
+    }).then(r => r.json()).then(d => {
+           document.body.append(Object.assign(document.createElement('div'), {innerHTML = JSON.stringify(d)}))
+            }));
 }
       
     broadcastChannel.addEventListener('message', function({data, origin}) {
@@ -53,6 +54,7 @@
         form.apikey.value = data.apikey;
         form.internet.checked = data.internet
         form.isinstalled.checked = true;
+        account(data.uid, data.apikey)
     });
     
     form.addEventListener('submit', function(e) {
