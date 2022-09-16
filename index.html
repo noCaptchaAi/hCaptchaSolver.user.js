@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>hCaptcha Ai | config</title>
-    <link rel="stylesheet" href="https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css">
+    <link rel='stylesheet' href='https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css'>
   </head>
   <body>
-    <form style="margin: auto; width: 50%; padding: 10px;">
+    <form style='margin: auto; width: 50%; padding: 10px;'>
       <div>
         <label class='form'>uid</label>
         <input type='text' name='uid' class='form'>
@@ -21,31 +21,20 @@
         <label class='form'>slow internet connection</label>
         <input type='checkbox' name='internet'>
       </div>
-      <div id="account">
-      </div>
+      <button type='button' name='account' class='form info'>account details</button>
       <input type='checkbox' name='isinstalled' hidden>
 
       <button type='submit' class='form'>Save</button>
     </form>
     <script>
     const broadcastChannel = new BroadcastChannel('nocaptcha'),
-        searchParams = new URLSearchParams(location.search),
-        form = document.forms[0];
+          searchParams = new URLSearchParams(location.search),
+          form = document.forms[0];
 
     if (searchParams.get('msg')) {
         alert(searchParams.get('msg'))
     }
-
-    function account(uid, apikey) {
-        fetch('https://free.nocaptchaai.com/api/account/balance', {
-            headers: { 'Content-Type': 'application/json', uid, apikey }
-        })
-        .then(response => response.json())
-        .then(function(data) {
-            document.getElementById('account').innerText = JSON.stringify(data)
-        });
-    }
-
+    
     broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
         if (origin != 'https://nocaptchaai.com') return;
@@ -60,7 +49,22 @@
         }
 
     });
-
+   
+    form.account.addEventListener('click', function() {
+      console.log(this);
+      fetch('https://free.nocaptchaai.com/api/account/balance', {
+            headers: { 
+              'Content-Type': 'application/json', 
+              'uid': form.uid.value, 
+              'apikey': form.apikey.value
+            }
+        })
+        .then(response => response.json())
+        .then(function(data) {
+            alert(JSON.stringify(data))
+        });
+    })
+   
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         const { isinstalled, uid, apikey, internet } = e.target;
