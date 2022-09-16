@@ -48,7 +48,7 @@
 
     broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
-        // if (origin != 'https://nocaptchaai.com') return;
+        if (origin != 'https://nocaptchaai.com') return;
         if (data.action == 'receive') {
             form.uid.value = data.uid;
             form.apikey.value = data.apikey;
