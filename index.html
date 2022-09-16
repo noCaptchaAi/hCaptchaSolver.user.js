@@ -44,7 +44,7 @@
         },
     }).then(r => r.json()).then(d => {
            document.body.append(Object.assign(document.createElement('div'), {innerHTML: JSON.stringify(d)}))
-            }));
+      });
 }
       
     broadcastChannel.addEventListener('message', function({data, origin}) {
