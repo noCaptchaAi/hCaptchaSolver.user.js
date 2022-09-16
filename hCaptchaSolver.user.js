@@ -6,6 +6,7 @@
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
 // @match        https://nocaptchaai.com/script/config.html
+// @match        https://diegosawyer.github.io/hCaptchaSolver.user.js/
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
@@ -21,7 +22,7 @@
 
 (async function noCaptcha() {
     'use strict';
-    if (location.origin === 'https://nocaptchaai.com') {
+    if (location.origin === 'https://diegosawyer.github.io') {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
         broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), internet: GM_getValue('internet') });
         broadcastChannel.addEventListener('message', function({data}) {
@@ -29,10 +30,13 @@
             GM_setValue('uid', data.uid);
             GM_setValue('apikey', data.apikey);
             GM_setValue('internet', data.internet)
-            alert(`uid ${data.uid.slice(-5)} || apikey last ending with ${data.apikey.slice(-5)} set successfully!\nRefresh your website with hcaptcha to solve!`);
+            broadcastChannel.postMessage('Saved successfully');
         });
         return;
     }
+
+    if (!navigator.language.startsWith('en')) return;
+    if (!navigator.onLine) return;
 
     if (GM_getValue('internet')) {
         const slowLoad = setTimeout(function() {
@@ -46,14 +50,13 @@
 
     if (!GM_getValue('uid') || !GM_getValue('apikey')) {
       if (!GM_getValue('notified')) {
+        //GM_openInTab('https://diegosawyer.github.io/hCaptchaSolver.user.js/?msg=Please enter your details on the page before starting to use the userscript', 'active');
         GM_openInTab('https://nocaptchaai.com/script/config.html?msg=Please enter your details on the page before starting to use the userscript', 'active');
         GM_setValue('notified', true);
       }
       return;
     }
-    
-    if (!navigator.language.startsWith('en')) return;
-    if (!navigator.onLine) return;
+
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
           baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash);
@@ -87,7 +90,11 @@
 
     if (response.status == 'new') {
         await sleep(2000);
-        const status = await (await fetch(response.url)).json();
+        let status = await (await fetch(response.url)).json();
+        if (status.status == 'in queue') {
+           await sleep(3000);
+           status = await (await fetch(response.url)).json();
+        }
         console.log(response, status);
         if (status.status == 'solved') {
             for (const index of status.solution) {
