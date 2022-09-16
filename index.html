@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
   <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>hCaptcha Ai | config</title>
-    <link rel="stylesheet" href="https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css">
+    <link rel='stylesheet' href='https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css'>
   </head>
   <body>
-    <form style="margin: auto; width: 50%; padding: 10px;">
+    <form style='margin: auto; width: 50%; padding: 10px;'>
       <div>
         <label class='form'>uid</label>
         <input type='text' name='uid' class='form'>
@@ -17,27 +17,72 @@
         <label class='form'>apikey</label>
         <input type='text' name='apikey' class='form'>
       </div>
+      <div>
+        <label class='form'>slow internet connection</label>
+        <input type='checkbox' name='internet'>
+      </div>
+      <button type='button' name='account' class='form info'>account details</button>
       <input type='checkbox' name='isinstalled' hidden>
+
       <button type='submit' class='form'>Save</button>
     </form>
     <script>
     const broadcastChannel = new BroadcastChannel('nocaptcha'),
+          searchParams = new URLSearchParams(location.search),
           form = document.forms[0];
 
-    broadcastChannel.addEventListener('message', function({data, origin}) {
+    if (searchParams.get('msg')) {
+        alert(searchParams.get('msg'))
+    }
+    
+    broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
         if (origin != 'https://nocaptchaai.com') return;
-        form.uid.value = data.uid;
-        form.apikey.value = data.apikey;
-        form.isinstalled.checked = true;
-    });
+        if (data.action == 'receive') {
+            form.uid.value = data.uid;
+            form.apikey.value = data.apikey;
+            form.internet.checked = data.internet
+            form.isinstalled.checked = true;
+            account(data.uid, data.apikey)
+        } else if (data.action == 'save') {
+            alert(data.msg);
+        }
 
+    });
+   
+    form.account.addEventListener('click', function() {
+      if (!form.isinstalled.checked) {
+         return alert('It looks like you haven\'t installed the userscript\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js/')
+      }
+
+      fetch('https://free.nocaptchaai.com/api/account/balance', {
+            headers: { 
+              'Content-Type': 'application/json', 
+              'uid': form.uid.value, 
+              'apikey': form.apikey.value
+            }
+        })
+        .then(response => response.json())
+        .then(function(data) {
+            alert(JSON.stringify(data))
+        });
+    })
+   
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        if (!e.target.isinstalled.checked) {
-            return alert('Only works when userscript is installed\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js')
+        const { isinstalled, uid, apikey, internet } = e.target;
+        if (!isinstalled.checked) {
+            return alert('It looks like you haven\'t installed the userscript\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js/')
         }
-        broadcastChannel.postMessage({ uid: e.target.uid.value, apikey: e.target.apikey.value })
+        if (!uid.value || !apikey.value) {
+          return alert('Enter valid values');
+        } 
+        broadcastChannel.postMessage({
+            action: 'receive',
+            uid: uid.value,
+            apikey: apikey.value,
+            internet: internet.checked
+        })
     })
     </script>
   </body>
