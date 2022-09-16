@@ -24,6 +24,7 @@
       <input type='checkbox' name='isinstalled' hidden>
       <button type='submit' class='form'>Save</button>
     </form>
+    <button>account details</button>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     const broadcastChannel = new BroadcastChannel('nocaptcha'),
@@ -33,6 +34,16 @@
     if (searchParams.get('msg')) {
         Swal.fire(JSON.stringify(searchParams.get('msg')))
     }
+      
+    function account() {
+            fetch('https://free.nocaptchaai.com/api/account/balance', {
+            headers: {
+              'Content-Type': 'application/json',
+               'uid': form.uid.value,
+            'apikey': form.apikey.value
+        },
+    }).then(r => r.json()).then(alert);
+}
       
     broadcastChannel.addEventListener('message', function({data, origin}) {
         console.log('Got message', data, origin);
