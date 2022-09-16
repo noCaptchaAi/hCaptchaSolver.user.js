@@ -5,7 +5,7 @@
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
-// @match        https://nocaptchaai.com/script/config.html
+// @match        https://config.nocaptchaai.com
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
@@ -21,13 +21,15 @@
 
 (async function noCaptcha() {
     'use strict';
+    
+    const domain = 'https://config.nocaptchaai.com';
     function notification(name, msg) {
         if (!GM_getValue('notified_' + name)) {
-            GM_openInTab('https://nocaptchaai.com/script/config.html?msg='+ msg, 'active');
+            GM_openInTab(domain + '?msg='+ msg, 'active');
             GM_setValue('notified_' + name, true);
         }
     }
-    if (location.origin === 'https://nocaptchaai.com') {
+    if (location.origin === domain) {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
         broadcastChannel.postMessage({ action: 'receive', uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), internet: GM_getValue('internet') });
         broadcastChannel.addEventListener('message', function({data}) {
@@ -36,7 +38,7 @@
             GM_setValue('uid', data.uid);
             GM_setValue('apikey', data.apikey);
             GM_setValue('internet', data.internet)
-            broadcastChannel.postMessage({ action: 'save', msg: 'Saved successfully'});a
+            broadcastChannel.postMessage({ action: 'save', msg: 'Saved successfully'});
         });
         return;
     }
