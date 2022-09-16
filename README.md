@@ -6,6 +6,13 @@
 ## hCaptchaSolver UserScript
 Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com API
 
+### Install: [Click Me](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
+### Setup
+
+- You need `apikey` and `uid`
+- [Open Config Webpage](https://config.nocaptchaai.com/)
+- Fill the form with `apikey` and `uid` and save
+- You can check balance on there too.
 
 ## Requirements:
 
@@ -21,12 +28,7 @@ Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com 
  * Chrome Based ~ Tampermonkey, Violentmonkey
 
 
-### Setup
-- [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js) & Setup below
-- You need `apikey` and `uid`
-- [Open Config Webpage](https://config.nocaptchaai.com/)
-- Fill the form with `apikey` and `uid` and save
-- You can check balance on there too.
+
  
 
 
