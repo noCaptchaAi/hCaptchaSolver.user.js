@@ -6,9 +6,46 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>hCaptcha Ai | config</title>
     <link rel='stylesheet' href='https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css'>
+    <link rel='stylesheet' href='style.css'>
   </head>
   <body>
-    <form style='margin: auto; width: 50%; padding: 10px;'>
+    <header>
+      <h1>
+        <img
+          src="https://docs.nocaptchaai.com/img/nocaptchaai.com.png"
+          alt="noCaptchaAi logo"
+          width="30px"
+        />
+        <a href="https://noCaptchaAi.com" target="_blank">noCaptchaAi.com</a>
+      </h1>
+      <br />
+      <h3>Setup page for hCaptchaSolver.js Apikeys</h3>
+      <br />
+      <h3>
+        Need api key?
+        <a href="https://nocaptchaai.com/" target="_blank"> Register here</a>
+      </h3>
+      <br />
+      <p>
+        Sometimes Free apikey's needs manual activation, ping on telegram or discord <br>
+        Paid accounts are instantly activated have no waiting necessary.
+      </p>
+      <br />
+      <h3>
+        <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs ~</a>
+        <a href="https://discord.gg/E7FfzhZqzA" target="_blank">
+          Buy on Discord ~</a
+        >
+        <a
+          href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/"
+          target="_blank"
+          >Github</a
+        >
+        <a href="https://t.me/noCaptchaAi" target="_blank">~Telegram</a>
+      </h3>
+      <br />
+    </header>
+    <form>
       <div>
         <label class='form'>uid</label>
         <input type='text' name='uid' class='form'>
@@ -37,7 +74,7 @@
     
     broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
-        if (origin != 'https://nocaptchaai.com') return;
+        if (origin != 'https://config.nocaptchaai.com') return;
         if (data.action == 'receive') {
             form.uid.value = data.uid;
             form.apikey.value = data.apikey;

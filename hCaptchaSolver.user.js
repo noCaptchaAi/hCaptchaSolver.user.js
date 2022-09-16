@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         noCaptcha AI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      0.8
+// @version      0.8.1
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
-// @match        https://config.nocaptchaai.com
+// @match        https://nocaptchaai.com/*
+// @match        https://config.nocaptchaai.com/*
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
-// @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
+// @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_openInTab
