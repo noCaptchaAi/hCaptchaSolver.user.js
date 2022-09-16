@@ -11,19 +11,19 @@ Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com 
 - API key
 - Monkey Clients
 
-## Get Apikey:
+### Get Apikey:
 
 - Free Trial: [Register](https://nocaptchaai.com/register) 
 
 - Paid Plans:  [Buy on DISCORD](https://discord.gg/E7FfzhZqzA)
  * More plan details and api docs https://docs.nocaptchaai.com/Intro
 
-## Monkey Clients
+### Monkey Clients
  * Firefox ~ Tampermonkey, Greasemonkey, Firemonkey , USI, Firemonkey
  * Chrome Based ~ Tampermonkey, Violentmonkey
 
 
-## Setup
+### Setup
 - [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js) & Setup below
 - You need `apikey` and `uid`
 - [Open Config Webpage](https://config.nocaptchaai.com/)
