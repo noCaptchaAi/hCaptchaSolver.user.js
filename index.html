@@ -43,7 +43,7 @@
             'apikey': form.apikey.value //will be deleted in the future
         },
     }).then(r => r.json()).then(d => {
-           document.body.append(Object.assign(document.createElement('div'), {innerHTML = JSON.stringify(d)}))
+           document.body.append(Object.assign(document.createElement('div'), {innerHTML: JSON.stringify(d)}))
             }));
 }
       
