@@ -91,6 +91,25 @@
     })
     response = await response.json();
 
+    if (response.status == 'new') {
+        await sleep(2000);
+        let status = await (await fetch(response.url)).json();
+        if (status.status == 'in queue') {
+            await sleep(3000);
+            status = await (await fetch(response.url)).json();
+        }
+        if (status.status == 'solved') {
+            for (const index of status.solution) {
+                imgs[index].click();
+                await sleep(200);
+            }
+        }
+        console.log(response, status);
+
+    } else {
+        return alert(response.status);
+    }
+
     let btn = document.querySelector('.button-submit').textContent;
 
     await sleep(200);
