@@ -24,13 +24,13 @@
     'use strict';
     if (location.origin === 'https://diegosawyer.github.io') {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
-        broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), internet: GM_getValue('internet') });
+        broadcastChannel.postMessage({ action: 'receive', uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), internet: GM_getValue('internet') });
         broadcastChannel.addEventListener('message', function({data}) {
             console.log('Got message', data);
             GM_setValue('uid', data.uid);
             GM_setValue('apikey', data.apikey);
             GM_setValue('internet', data.internet)
-            broadcastChannel.postMessage('Saved successfully');
+            broadcastChannel.postMessage({ action: 'save', msg: 'Saved successfully'});
         });
         return;
     }
