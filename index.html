@@ -21,40 +21,46 @@
         <label class='form'>slow internet connection</label>
         <input type='checkbox' name='internet'>
       </div>
+      <div id="account">
+      </div>
       <input type='checkbox' name='isinstalled' hidden>
+
       <button type='submit' class='form'>Save</button>
     </form>
-    <button onclick="account()">account details</button>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     const broadcastChannel = new BroadcastChannel('nocaptcha'),
           searchParams = new URLSearchParams(location.search),
           form = document.forms[0];
     
     if (searchParams.get('msg')) {
-        Swal.fire(JSON.stringify(searchParams.get('msg')))
+        alert(searchParams.get('msg'))
     }
       
     function account(uid, apikey) {
-            fetch('https://free.nocaptchaai.com/api/account/balance', {
-            headers: {
+      fetch('https://free.nocaptchaai.com/api/account/balance', {
+          headers: {
               'Content-Type': 'application/json',
                'uid': form.uid.value, //will be deleted in the future
             'apikey': form.apikey.value //will be deleted in the future
         },
     }).then(r => r.json()).then(d => {
-           document.body.append(Object.assign(document.createElement('div'), {innerHTML: JSON.stringify(d)}))
+           document.getElementById('account').innerText = JSON.stringify(d)
       });
 }
       
     broadcastChannel.addEventListener('message', function({data, origin}) {
         console.log('Got message', data, origin);
         //if (origin != 'https://nocaptchaai.com') return;
-        form.uid.value = data.uid;
-        form.apikey.value = data.apikey;
-        form.internet.checked = data.internet
-        form.isinstalled.checked = true;
-        account(data.uid, data.apikey)
+        if (data.action == 'receive') {
+          form.uid.value = data.uid;
+          form.apikey.value = data.apikey;
+          form.internet.checked = data.internet
+          form.isinstalled.checked = true;
+          account(data.uid, data.apikey)
+        } else if (data.action == 'save') {
+          alert(data.msg);
+        }
+        
     });
     
     form.addEventListener('submit', function(e) {
@@ -62,14 +68,7 @@
         const { isinstalled, uid, apikey, internet } = e.target;
         console.log(isinstalled.checked)
         if (!isinstalled.checked) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'It looks like you haven\'t installed the userscript',
-                footer: '<a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js" title="hCaptchaSolver.user.js">click here to install the userscript</a>'
-             })
-             return;
-            //return alert('Only works when userscript is installed\n')
+            return alert('It looks like you haven\'t installed the userscript\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js/')
         }
         broadcastChannel.postMessage({ uid: uid.value, apikey: apikey.value, internet: internet.checked })
     })
