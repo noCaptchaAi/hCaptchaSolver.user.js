@@ -7,9 +7,7 @@
 Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com API
 
 
-#### Requirements:
-- API key
-- Monkey Clients
+## Requirements:
 
 ### Get Apikey:
 
@@ -31,6 +29,8 @@ Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com 
 - You can check balance on there too.
  
 
+
+------------------- **** ------------------
 
 ### Main Project
 Api Documentation: https://docs.nocaptchaai.com
