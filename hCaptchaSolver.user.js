@@ -6,7 +6,6 @@
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
 // @match        https://nocaptchaai.com/script/config.html
-// @match        https://diegosawyer.github.io/hCaptchaSolver.user.js/
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://raw.githubusercontent.com/noCaptchaAi/nocaptchaai.github.io/main/src/assets/favicons/logo.png
@@ -22,41 +21,45 @@
 
 (async function noCaptcha() {
     'use strict';
-    if (location.origin === 'https://diegosawyer.github.io') {
+    function notification(name, msg) {
+        if (!GM_getValue('notified_' + name)) {
+            GM_openInTab('https://nocaptchaai.com/script/config.html?msg='+ msg, 'active');
+            GM_setValue('notified_' + name, true);
+        }
+    }
+    if (location.origin === 'https://nocaptchaai.com') {
         const broadcastChannel = new BroadcastChannel('nocaptcha');
         broadcastChannel.postMessage({ action: 'receive', uid: GM_getValue('uid'), apikey: GM_getValue('apikey'), internet: GM_getValue('internet') });
         broadcastChannel.addEventListener('message', function({data}) {
             console.log('Got message', data);
+            if (data.action != 'receive') return;
             GM_setValue('uid', data.uid);
             GM_setValue('apikey', data.apikey);
             GM_setValue('internet', data.internet)
-            broadcastChannel.postMessage({ action: 'save', msg: 'Saved successfully'});
+            broadcastChannel.postMessage({ action: 'save', msg: 'Saved successfully'});a
         });
         return;
     }
 
-    if (!navigator.language.startsWith('en')) return;
     if (!navigator.onLine) return;
+    if (!navigator.language.startsWith('en')) {
+       return notification('en', 'Works only in English language browsers');
+    }
+    if (!GM_getValue('uid') || !GM_getValue('apikey')) {
+        return notification('welcome', 'Please enter your details on the page before starting to use the userscript');
+    }
 
     if (GM_getValue('internet')) {
         const slowLoad = setTimeout(function() {
             alert( "slow internet connection the userscript may not work" );
-        }, 1000);
+        }, 1500);
 
         window.addEventListener('load', function() {
             clearTimeout(slowLoad);
         }, false);
     }
 
-    if (!GM_getValue('uid') || !GM_getValue('apikey')) {
-      if (!GM_getValue('notified')) {
-        //GM_openInTab('https://diegosawyer.github.io/hCaptchaSolver.user.js/?msg=Please enter your details on the page before starting to use the userscript', 'active');
-        GM_openInTab('https://nocaptchaai.com/script/config.html?msg=Please enter your details on the page before starting to use the userscript', 'active');
-        GM_setValue('notified', true);
-      }
-      return;
-    }
-
+    
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
           baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash);
@@ -88,28 +91,10 @@
     })
     response = await response.json();
 
-    if (response.status == 'new') {
-        await sleep(2000);
-        let status = await (await fetch(response.url)).json();
-        if (status.status == 'in queue') {
-           await sleep(3000);
-           status = await (await fetch(response.url)).json();
-        }
-        console.log(response, status);
-        if (status.status == 'solved') {
-            for (const index of status.solution) {
-                imgs[index].click();
-                await sleep(200);
-            }
-        }
-    } else {
-        return alert(response.status);
-    }
-
     let btn = document.querySelector('.button-submit').textContent;
-    
+
     await sleep(200);
-    
+
     document.querySelector('.button-submit').click();
 
     if (btn == 'Verify') {
