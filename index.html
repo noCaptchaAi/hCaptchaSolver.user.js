@@ -37,7 +37,7 @@
     
     broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
-        if (origin != 'https://config.nocaptchaai.com') return;
+        if (origin != 'https://nocaptchaai.com') return;
         if (data.action == 'receive') {
             form.uid.value = data.uid;
             form.apikey.value = data.apikey;
@@ -51,7 +51,10 @@
     });
    
     form.account.addEventListener('click', function() {
-      console.log(this);
+      if (!form.isinstalled.checked) {
+         return alert('It looks like you haven\'t installed the userscript\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js/')
+      }
+
       fetch('https://free.nocaptchaai.com/api/account/balance', {
             headers: { 
               'Content-Type': 'application/json', 
