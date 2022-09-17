@@ -93,7 +93,7 @@
     })
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const { uid, apikey, internet } = e.target;
+        const { uid, apikey } = e.target;
         if (!uid.value || !apikey.value) {
           return alert('Enter valid values');
         } 
