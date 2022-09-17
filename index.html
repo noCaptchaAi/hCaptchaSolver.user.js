@@ -74,7 +74,6 @@
         if (origin != 'https://config.nocaptchaai.com') return;
         form.uid.value = data.uid;
         form.apikey.value = data.apikey;
-        form.internet.checked = data.internet
         form.style.display = 'block';
         document.getElementById('no').style.display = 'none';
     });
@@ -102,7 +101,6 @@
             action: 'receive',
             uid: uid.value,
             apikey: apikey.value,
-            internet: internet.checked
         })
         alert('Saved successfully');
     })
