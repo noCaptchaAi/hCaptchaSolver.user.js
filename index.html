@@ -55,6 +55,7 @@
         <input type='text' name='apikey' class='form'>
       </div>
       <button type='button' name='account' class='form info'>account details</button>
+      <button type='button' name='compatibility' class='form warning'>Check Compatibility</button>
       <button type='submit' class='form'>Save</button>
     </form>
     <div id="no">
@@ -77,7 +78,13 @@
         form.style.display = 'block';
         document.getElementById('no').style.display = 'none';
     });
-   
+    form.compatibility.addEventListener('click', function() {
+        const err = [];
+        if (!navigator.onLine) err.push('* Check your internet connection');
+        if (!navigator.language.startsWith('en')) err.push('* Your browser language should be English');
+        if (!form.uid.value || !form.apikey.value) err.push('* Your uid or apikey information is not found');
+        alert(err.join('\n') || 'No problems found');
+    }) 
     form.account.addEventListener('click', function() {
       fetch('https://free.nocaptchaai.com/api/account/balance', {
             headers: { 
