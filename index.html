@@ -54,10 +54,6 @@
         <label class='form'>apikey</label>
         <input type='text' name='apikey' class='form'>
       </div>
-      <div>
-        <label class='form'>slow internet connection</label>
-        <input type='checkbox' name='internet'>
-      </div>
       <button type='button' name='account' class='form info'>account details</button>
       <button type='submit' class='form'>Save</button>
     </form>
@@ -76,16 +72,11 @@
     broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
         if (origin != 'https://config.nocaptchaai.com') return;
-        if (data.action == 'receive') {
-            form.uid.value = data.uid;
-            form.apikey.value = data.apikey;
-            form.internet.checked = data.internet
-            form.style.display = 'block';
-            document.getElementById('no').style.display = 'none';
-        } else if (data.action == 'save') {
-            alert(data.msg);
-        }
-
+        form.uid.value = data.uid;
+        form.apikey.value = data.apikey;
+        form.internet.checked = data.internet
+        form.style.display = 'block';
+        document.getElementById('no').style.display = 'none';
     });
    
     form.account.addEventListener('click', function() {
@@ -113,6 +104,7 @@
             apikey: apikey.value,
             internet: internet.checked
         })
+        alert('Saved successfully');
     })
     </script>
   </body>
