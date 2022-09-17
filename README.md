@@ -20,7 +20,7 @@ Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com 
 
 - Free Trial: [Register](https://nocaptchaai.com/register) 
 
-- Paid Plans:  [Buy on DISCORD](https://discord.gg/E7FfzhZqzA)
+- Paid Plans:  Buy on [Discord](https://discord.gg/E7FfzhZqzA) or [Telegram](https://t.me/noCaptchaAi)
  * All plan details & Api Docs https://docs.nocaptchaai.com/Intro
 
 ### Monkey Clients
@@ -28,8 +28,6 @@ Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com 
  * Chrome Based ~ Tampermonkey, Violentmonkey
 
 
-
- 
 
 
 ------------------- **** ------------------
