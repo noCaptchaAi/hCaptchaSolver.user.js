@@ -105,10 +105,7 @@
         if (!uid || !apikey || uid.length < 10 || apikey.length < 10) {
           return alert('Enter valid values');
         } 
-        broadcastChannel.postMessage({
-            uid: uid.value,
-            apikey: apikey.value,
-        })
+        broadcastChannel.postMessage({ uid, apikey })
         alert('Saved successfully');
     })
     </script>
