@@ -100,7 +100,7 @@
         .then(function({ failed, limit, status, type, used }) {
             alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used +'\nfailed: ' + failed + '\nremaining: ' + (limit-used));
         })
-   
+    }
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         const { uid, apikey, internet } = e.target;
