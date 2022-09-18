@@ -32,16 +32,13 @@
       </p>
       <br />
       <h3>
-        <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs ~</a>
-        <a href="https://discord.gg/E7FfzhZqzA" target="_blank">
-          Buy on Discord ~</a
-        >
-        <a
-          href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/"
-          target="_blank"
-          >Github</a
-        >
-        <a href="https://t.me/noCaptchaAi" target="_blank">~Telegram</a>
+        <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs</a>
+        ~
+        <a href="https://discord.gg/E7FfzhZqzA" target="_blank">Buy on Discord</a>
+        ~
+        <a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/" target="_blank">Github</a>
+        ~
+        <a href="https://t.me/noCaptchaAi" target="_blank">Telegram</a>
       </h3>
       <br />
     </header>
@@ -54,17 +51,12 @@
         <label class='form'>apikey</label>
         <input type='text' name='apikey' class='form'>
       </div>
-      <div>
-        <label class='form'>slow internet connection</label>
-        <input type='checkbox' name='internet'>
-      </div>
       <button type='button' name='account' class='form info'>account details</button>
-      <!-- <input type='checkbox' name='isinstalled' hidden> -->
-
+      <button type='button' name='compatibility' class='form warning'>Check Compatibility</button>
       <button type='submit' class='form'>Save</button>
     </form>
     <div id="no">
-      It looks like you haven\'t installed the userscript\nhttps://github.com/noCaptchaAi/hCaptchaSolver.user.js/
+      It looks like you haven't installed the userscript <a href='https://github.com/noCaptchaAi/hCaptchaSolver.user.js/'>hCaptchaSolver.user.js</a>
     </div>
     <script>
     const broadcastChannel = new BroadcastChannel('nocaptcha'),
@@ -78,19 +70,18 @@
     broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
         if (origin != 'https://config.nocaptchaai.com') return;
-        if (data.action == 'receive') {
-            form.uid.value = data.uid;
-            form.apikey.value = data.apikey;
-            form.internet.checked = data.internet
-            form.style.display = 'block';
-            document.getElementById('no').style.display = 'none';
-            account(data.uid, data.apikey)
-        } else if (data.action == 'save') {
-            alert(data.msg);
-        }
-
+        form.uid.value = data.uid;
+        form.apikey.value = data.apikey;
+        form.style.display = 'block';
+        document.getElementById('no').style.display = 'none';
     });
-   
+    form.compatibility.addEventListener('click', function() {
+        const err = [];
+        if (!navigator.onLine) err.push('* Check your internet connection');
+        if (!navigator.language.startsWith('en')) err.push('* Your browser language should be English');
+        if (!form.uid.value || !form.apikey.value) err.push('* Your uid or apikey information is not found');
+        alert(err.join('\n') || 'No problems found');
+    }) 
     form.account.addEventListener('click', function() {
       fetch('https://free.nocaptchaai.com/api/account/balance', {
             headers: { 
@@ -100,23 +91,16 @@
             }
         })
         .then(response => response.json())
-        .then(function(data) {
-            alert(JSON.stringify(data))
-        });
+        .then(function({ failed, limit, status, type, used }) {
+            alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used +'\nfailed: ' + failed + '\nremaining: ' + (limit-used));
+        })
     })
-   
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const { uid, apikey, internet } = e.target;
-        if (!uid.value || !apikey.value) {
-          return alert('Enter valid values');
-        } 
-        broadcastChannel.postMessage({
-            action: 'receive',
-            uid: uid.value,
-            apikey: apikey.value,
-            internet: internet.checked
-        })
+        const uid = e.target.uid.value;
+        const apikey = e.target.apikey.value;
+        broadcastChannel.postMessage({ uid, apikey })
+        alert('Saved successfully');
     })
     </script>
   </body>
