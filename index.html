@@ -99,9 +99,6 @@
         e.preventDefault();
         const uid = e.target.uid.value;
         const apikey = e.target.apikey.value;
-        if (!uid || !apikey || uid.length < 10 || apikey.length < 10 || !apikey.includes('-')) {
-          return alert('Enter valid values');
-        } 
         broadcastChannel.postMessage({ uid, apikey })
         alert('Saved successfully');
     })
