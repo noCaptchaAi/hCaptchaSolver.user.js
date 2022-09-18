@@ -92,7 +92,11 @@
         })
         .then(response => response.json())
         .then(function({ failed, limit, status, type, used }) {
-            alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used +'\nfailed: ' + failed + '\nremaining: ' + (limit-used));
+            if (status == 'Not able to get balance details') {
+              alert('Try using the userscript a few times') 
+            } else {
+              alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used +'\nfailed: ' + failed + '\nremaining: ' + (limit-used));
+            }
         })
     })
     form.addEventListener('submit', function(e) {
