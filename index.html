@@ -70,8 +70,8 @@
     broadcastChannel.addEventListener('message', function({ data, origin }) {
         console.log('Got message', data, origin);
         if (origin != 'https://config.nocaptchaai.com') return;
-        form.uid.value = data.uid;
-        form.apikey.value = data.apikey;
+        form.uid.value = data.uid || '';
+        form.apikey.value = data.apikey || '';
         form.style.display = 'block';
         document.getElementById('no').style.display = 'none';
     });
@@ -101,9 +101,8 @@
     })
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const uid = e.target.uid.value;
-        const apikey = e.target.apikey.value;
-        broadcastChannel.postMessage({ uid, apikey })
+        const { uid, apikey } = e.target;
+        broadcastChannel.postMessage({ uid: uid.value, apikey: apikey.value })
         alert('Saved successfully');
     })
     </script>
