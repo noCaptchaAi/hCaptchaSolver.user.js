@@ -101,9 +101,8 @@
     })
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const uid = e.target.uid.value;
-        const apikey = e.target.apikey.value;
-        broadcastChannel.postMessage({ uid, apikey })
+        const { uid, apikey } = e.target;
+        broadcastChannel.postMessage({ uid: uid.value, apikey: apikey.value })
         alert('Saved successfully');
     })
     </script>
