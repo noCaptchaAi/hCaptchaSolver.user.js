@@ -1,44 +1,43 @@
 // ==UserScript==
 // @name         noCaptcha AI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      0.8.3
+// @version      0.8.4
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
-// @match        https://config.nocaptchaai.com/*
+// @match        https://config.nocaptchaai.com
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_openInTab
+// @grant        GM_registerMenuCommand
 // ==/UserScript==
+if (location.origin === 'https://config.nocaptchaai.com') {
+    const broadcastChannel = new BroadcastChannel('nocaptcha');
+    broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
+    broadcastChannel.addEventListener('message', function({data}) {
+        console.log('Got message', data);
+        GM_setValue('uid', data.uid);
+        GM_setValue('apikey', data.apikey);
+    });
+    return;
+}
+
+GM_registerMenuCommand('Open Config Webpage', function() {
+    GM_openInTab('https://config.nocaptchaai.com')
+}, 'O');
+
 (async function noCaptcha() {
     'use strict';
-    const domain = 'https://config.nocaptchaai.com';
-    function notification(name, msg) {
-        if (!GM_getValue('notified_' + name)) {
-            GM_openInTab(domain + '?msg='+ msg, 'active');
-            GM_setValue('notified_' + name, true);
-        }
-    }
-    if (location.origin === domain) {
-        const broadcastChannel = new BroadcastChannel('nocaptcha');
-        broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
-        broadcastChannel.addEventListener('message', function({data}) {
-            console.log('Got message', data);
-            GM_setValue('uid', data.uid);
-            GM_setValue('apikey', data.apikey);
-        });
-        return;
-    }
-
-    if (!navigator.onLine) return;
-    if (!navigator.language.startsWith('en')) {
-       return notification('en', 'Works only in English language browsers');
-    }
+    if (!navigator.onLine || !navigator.language.startsWith('en')) return;
     if (!GM_getValue('uid') || !GM_getValue('apikey')) {
-        return notification('welcome', 'Please enter your details on the page before starting to use the userscript');
+        if (!GM_getValue('notified')) {
+            GM_openInTab('https://config.nocaptchaai.com?msg=Please enter your details on the page before starting to use the userscript', 'active');
+            GM_setValue('notified', true);
+        }
+        return;
     }
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
