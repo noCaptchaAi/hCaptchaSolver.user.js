@@ -1,110 +1,112 @@
 <!DOCTYPE html>
 <html lang='en'>
-  <head>
+
+<head>
     <meta charset='UTF-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>hCaptcha Ai | config</title>
     <link rel='stylesheet' href='https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css'>
     <link rel='stylesheet' href='style.css'>
-  </head>
-  <body>
+</head>
+
+<body>
     <header>
-      <h1>
-        <img
-          src="https://docs.nocaptchaai.com/img/nocaptchaai.com.png"
-          alt="noCaptchaAi logo"
-          width="30px"
-        />
-        <a href="https://noCaptchaAi.com" target="_blank">noCaptchaAi.com</a>
-      </h1>
-      <br />
-      <h3>Setup page for hCaptchaSolver.js Apikeys</h3>
-      <br />
-      <h3>
-        Need api key?
-        <a href="https://nocaptchaai.com/" target="_blank"> Register here</a>
-      </h3>
-      <br />
-      <p>
-        Sometimes Free apikey's needs manual activation, ping on telegram or discord <br>
-        Paid accounts are instantly activated have no waiting necessary.
-      </p>
-      <br />
-      <h3>
-        <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs</a>
-        ~
-        <a href="https://discord.gg/E7FfzhZqzA" target="_blank">Buy on Discord</a>
-        ~
-        <a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/" target="_blank">Github</a>
-        ~
-        <a href="https://t.me/noCaptchaAi" target="_blank">Telegram</a>
-      </h3>
-      <br />
+        <h1>
+            <img src="https://docs.nocaptchaai.com/img/nocaptchaai.com.png" alt="noCaptchaAi logo" width="30px" />
+            <a href="https://noCaptchaAi.com" target="_blank">noCaptchaAi.com</a>
+        </h1>
+        <br />
+        <h3>Setup page for hCaptchaSolver.js Apikeys</h3>
+        <br />
+        <h3>
+            Need api key?
+            <a href="https://nocaptchaai.com/" target="_blank"> Register here</a>
+        </h3>
+        <br />
+        <p>
+            Sometimes Free apikey's needs manual activation, ping on telegram or discord <br>
+            Paid accounts are instantly activated have no waiting necessary.
+        </p>
+        <br />
+        <h3>
+            <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs</a>
+            ~
+            <a href="https://discord.gg/E7FfzhZqzA" target="_blank">Buy on Discord</a>
+            ~
+            <a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/" target="_blank">Github</a>
+            ~
+            <a href="https://t.me/noCaptchaAi" target="_blank">Telegram</a>
+        </h3>
+        <br />
     </header>
     <form style="display: none">
-      <div>
-        <label class='form'>uid</label>
-        <input type='text' name='uid' class='form'>
-      </div>
-      <div>
-        <label class='form'>apikey</label>
-        <input type='text' name='apikey' class='form'>
-      </div>
-      <button type='button' name='account' class='form info'>account details</button>
-      <button type='button' name='compatibility' class='form warning'>Check Compatibility</button>
-      <button type='submit' class='form'>Save</button>
+        <div>
+            <label class='form'>uid</label>
+            <input type='text' name='uid' class='form'>
+        </div>
+        <div>
+            <label class='form'>apikey</label>
+            <input type='text' name='apikey' class='form'>
+        </div>
+        <button type='button' name='account' class='form info'>account details</button>
+        <button type='button' name='compatibility' class='form warning'>Check Compatibility</button>
+        <button type='submit' class='form'>Save</button>
     </form>
     <div id="no">
-      It looks like you haven't installed the userscript <a href='https://github.com/noCaptchaAi/hCaptchaSolver.user.js/'>hCaptchaSolver.user.js</a>
+        It looks like you haven't installed the userscript <a href='https://github.com/noCaptchaAi/hCaptchaSolver.user.js/'>hCaptchaSolver.user.js</a>
     </div>
     <script>
-    const broadcastChannel = new BroadcastChannel('nocaptcha'),
-          searchParams = new URLSearchParams(location.search),
-          form = document.forms[0];
+        const broadcastChannel = new BroadcastChannel('nocaptcha'),
+            searchParams = new URLSearchParams(location.search),
+            form = document.forms[0];
 
-    if (searchParams.get('msg')) {
-        alert(searchParams.get('msg'))
-    }
-    
-    broadcastChannel.addEventListener('message', function({ data, origin }) {
-        console.log('Got message', data, origin);
-        if (origin != 'https://config.nocaptchaai.com') return;
-        form.uid.value = data.uid || '';
-        form.apikey.value = data.apikey || '';
-        form.style.display = 'block';
-        document.getElementById('no').style.display = 'none';
-    });
-    form.compatibility.addEventListener('click', function() {
-        const err = [];
-        if (!navigator.onLine) err.push('* Check your internet connection');
-        if (!navigator.language.startsWith('en')) err.push('* Your browser language should be English');
-        if (!form.uid.value || !form.apikey.value) err.push('* Your uid or apikey information is not found');
-        alert(err.join('\n') || 'No problems found');
-    }) 
-    form.account.addEventListener('click', function() {
-      fetch('https://free.nocaptchaai.com/api/account/balance', {
-            headers: { 
-              'Content-Type': 'application/json', 
-              'uid': form.uid.value, 
-              'apikey': form.apikey.value
-            }
+        if (searchParams.get('msg')) {
+            alert(searchParams.get('msg'))
+        }
+
+        broadcastChannel.addEventListener('message', function({ data, origin }) {
+            console.log('Got message', data, origin);
+            if (origin != 'https://config.nocaptchaai.com') return;
+            form.uid.value = data.uid || '';
+            form.apikey.value = data.apikey || '';
+            form.style.display = 'block';
+            document.getElementById('no').style.display = 'none';
+        });
+        form.compatibility.addEventListener('click', function() {
+            const err = [];
+            if (!navigator.onLine) err.push('* Check your internet connection');
+            if (!navigator.language.startsWith('en')) err.push('* Your browser language should be English');
+            if (!form.uid.value || !form.apikey.value) err.push('* Your uid or apikey information is not found');
+            alert(err.join('\n') || 'No problems found');
         })
-        .then(response => response.json())
-        .then(function({ failed, limit, status, type, used }) {
-            if (status.startsWith('Not')) {
-              alert('Try using the userscript a few times') 
-            } else {
-              alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used +'\nfailed: ' + failed + '\nremaining: ' + (limit-used));
-            }
+        form.account.addEventListener('click', function() {
+            fetch('https://free.nocaptchaai.com/api/account/balance', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'uid': form.uid.value,
+                        'apikey': form.apikey.value
+                    }
+                })
+                .then(response => response.json())
+                .then(function({ failed, limit, status, type, used }) {
+                    if (status.startsWith('Not')) {
+                        alert('Try using the userscript a few times')
+                    } else {
+                        alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used + '\nfailed: ' + failed + '\nremaining: ' + (limit - used));
+                    }
+                })
         })
-    })
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const { uid, apikey } = e.target;
-        broadcastChannel.postMessage({ uid: uid.value, apikey: apikey.value })
-        alert('Saved successfully');
-    })
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const { uid, apikey } = e.target;
+            broadcastChannel.postMessage({
+                uid: uid.value,
+                apikey: apikey.value
+            })
+            alert('Saved successfully');
+        })
     </script>
-  </body>
+</body>
+
 </html>
