@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         noCaptcha AI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      0.8.4
+// @version      0.8.5
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
@@ -31,7 +31,7 @@ GM_registerMenuCommand('Open Config Webpage', function() {
 
 (async function noCaptcha() {
     'use strict';
-    if (!navigator.onLine || !navigator.language.startsWith('en')) return;
+    if (!navigator.onLine) return;
     if (!GM_getValue('uid') || !GM_getValue('apikey')) {
         if (!GM_getValue('notified')) {
             GM_openInTab('https://config.nocaptchaai.com?msg=Please enter your details on the page before starting to use the userscript', 'active');
@@ -39,6 +39,7 @@ GM_registerMenuCommand('Open Config Webpage', function() {
         }
         return;
     }
+    navigator.__defineGetter__('language', () => 'en');
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)),
           baseUrl = 'https://free.nocaptchaai.com/api/solve',
