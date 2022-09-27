@@ -1,18 +1,28 @@
+# hCaptchaSolver UserScript
+Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com API
 <p>
 <a href="https://t.me/noCaptchaAi" target="_blank"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"></a>
 <a href="https://discord.gg/E7FfzhZqzA" target="_blank"><img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"></a>
 </p>
 
-## hCaptchaSolver UserScript
-Currently solves hCaptcha challenges automatically with https://noCaptchaAi.com API
+# Install: [Click Me](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
 
-### Install: [Click Me](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
+<video width="320" height="240" controls>
+  <source src="https://user-images.githubusercontent.com/4178343/191682942-fbfa814d-49b6-458d-83d6-1d4ec1ff3053.mp4" type="video/mp4">
+</video>
+
+https://user-images.githubusercontent.com/4178343/191682942-fbfa814d-49b6-458d-83d6-1d4ec1ff3053.mp4
+
+
+
 ### Setup
 
 - You need `apikey` and `uid`
 - [Open Config Webpage](https://config.nocaptchaai.com/)
 - Fill the form with `apikey` and `uid` and save
 - You can check balance on there too.
+
+
 
 ## Requirements:
 
