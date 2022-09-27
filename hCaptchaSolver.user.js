@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         noCaptcha AI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      0.8.5
+// @version      0.8.6
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
@@ -87,7 +87,12 @@ GM_registerMenuCommand('Open Config Webpage', function() {
         }
         console.log(response, status);
 
-    } else {
+    } else if (response.status == 'solved') {
+            for (const index of response.solution) {
+                imgs[index].click();
+                await sleep(200);
+            }
+      } else {
         return alert(response.status);
     }
 
