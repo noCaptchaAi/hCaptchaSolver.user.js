@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         noCaptcha AI hCaptcha Solver
+// @name         noCaptcha AI hCaptcha Solver + base64 Images
 // @namespace    https://nocaptchaai.com
-// @version      0.8.6
+// @version      0.9
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
@@ -13,6 +13,7 @@
 // @grant        GM_getValue
 // @grant        GM_openInTab
 // @grant        GM_registerMenuCommand
+// @run-at       document-start
 // ==/UserScript==
 if (location.origin === 'https://config.nocaptchaai.com') {
     const broadcastChannel = new BroadcastChannel('nocaptcha');
@@ -47,13 +48,45 @@ GM_registerMenuCommand('Open Config Webpage', function() {
 
     await sleep(1000);
 
+    
+    
+    
+    
     document.querySelector('#checkbox')?.click();
 
     await sleep(2000);
 
-    const imgs = document.querySelectorAll('.task-image .image');
-    const images = {...[...imgs].map(ele => ele.style.background.match(/url\("(.*)"/)[1] || 0)};
-    if (Object.keys(images).length === 0) return;
+    const getBase64FromUrl = async (url) => {
+        const data = await fetch(url);
+        const blob = await data.blob();
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = () => {
+            const base64data = reader.result;
+            let base64_img =  base64data.replace(/^data:image\/(png|jpeg);base64,/, "");
+            resolve(base64_img);
+          }
+        });
+      }
+      
+      let images = {}
+      const imgs = document.querySelectorAll('.task-image .image');
+      let t1 = + new Date().getTime() / 1000
+      for (let i = 0; i < imgs.length; i++) {
+        let url = imgs[i].style.background.match(/url\("(.*)"/)[1]
+        images[i]=await getBase64FromUrl(url)
+       
+    
+      }
+    //   if (Object.keys(images).length === 0) return;
+    let t2 = + new Date().getTime() / 1000
+    console.log("converted to base64 in", t2 - t1, "sec");
+    // console.log(getBase64FromUrl);
+
+    // const imgs = document.querySelectorAll('.task-image .image');
+    // const images = {...[...imgs].map(ele => ele.style.background.match(/url\("(.*)"/)[1] || 0)};
+    // if (Object.keys(images).length === 0) return;
 
     let response = await fetch(baseUrl, {
         method: 'POST',
@@ -65,9 +98,10 @@ GM_registerMenuCommand('Open Config Webpage', function() {
         body: JSON.stringify({
             images,
             'target': document.querySelector('.prompt-text').textContent,
-            'data_type': 'url',
-            'site_key': searchParams.get('sitekey'),
-            'site': searchParams.get('host')
+            'method': 'hcaptcha_base64',
+            'sitekey': searchParams.get('sitekey'),
+            'site': searchParams.get('host'),
+            'softid': 'UserScript',
         })
     })
     response = await response.json();
@@ -87,12 +121,7 @@ GM_registerMenuCommand('Open Config Webpage', function() {
         }
         console.log(response, status);
 
-    } else if (response.status == 'solved') {
-            for (const index of response.solution) {
-                imgs[index].click();
-                await sleep(200);
-            }
-      } else {
+    } else {
         return alert(response.status);
     }
 
