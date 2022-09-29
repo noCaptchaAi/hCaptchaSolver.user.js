@@ -88,7 +88,7 @@ async function noCaptcha() {
     }
     if (Object.keys(images).length === 0) return;
     const end = performance.now() / 1000
-    console.log('converted to base64 in', (end-start).toFixed(2), 'sec');
+    console.log('converted to base64 in' + (end-start).toFixed(2) + 'sec');
 
     let response = await fetch(baseUrl, {
         method: 'POST',
