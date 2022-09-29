@@ -84,7 +84,7 @@
                 .then(response => response.json())
                 .then(function({ failed, limit, status, type, used }) {
                     if (status.startsWith('Not')) {
-                        alert('Try using the userscript a few times')
+                        alert('Solve a captcha first then check balance again.')
                     } else {
                         alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used + '\nfailed: ' + failed + '\nremaining: ' + (limit - used));
                     }
