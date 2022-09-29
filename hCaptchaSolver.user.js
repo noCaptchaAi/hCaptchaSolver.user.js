@@ -15,7 +15,9 @@
 // @grant        GM_registerMenuCommand
 // ==/UserScript==
 const broadcastChannel = new BroadcastChannel('nocaptcha');
-broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
+if (location.origin === 'https://config.nocaptchaai.com') {
+    broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
+}
 broadcastChannel.addEventListener('message', function({ data, origin }) {
     if (origin != 'https://config.nocaptchaai.com') return;
     console.log('Got message', data);
