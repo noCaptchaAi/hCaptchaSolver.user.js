@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name         noCaptcha AI hCaptcha Solver + base64 Images
+// @name         noCaptcha AI hCaptcha Solver base64
 // @namespace    https://nocaptchaai.com
-// @version      0.9
+// @version      1.0.0
 // @description  noCaptcha AI recognizes and solves hcaptcha challenges with our HTTP Api. ll tell your mom about it, lot faster than 2captcha and others.
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
 // @match        https://config.nocaptchaai.com/*
+// @match        http://localhost:5555/*
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
@@ -48,7 +49,9 @@ GM_registerMenuCommand('Open Config Webpage', function() {
 
     await sleep(1000);
 
-    
+    function random(min,max) {
+        return Math.floor((Math.random())*(max-min)+min);
+    }
     
     
     
@@ -72,7 +75,7 @@ GM_registerMenuCommand('Open Config Webpage', function() {
       
       let images = {}
       const imgs = document.querySelectorAll('.task-image .image');
-      let t1 = + new Date().getTime() / 1000
+      let t1 = + new Date();
       for (let i = 0; i < imgs.length; i++) {
         let url = imgs[i].style.background.match(/url\("(.*)"/)[1]
         images[i]=await getBase64FromUrl(url)
@@ -80,8 +83,11 @@ GM_registerMenuCommand('Open Config Webpage', function() {
     
       }
     //   if (Object.keys(images).length === 0) return;
-    let t2 = + new Date().getTime() / 1000
-    console.log("converted to base64 in", t2 - t1, "sec");
+    let t2 =+ new Date();
+    if (Object.keys(images).length === 9){
+        console.log("converted to base64 in", Number((t2-t1)/1000).toFixed(2), "sec");
+    }
+    
     // console.log(getBase64FromUrl);
 
     // const imgs = document.querySelectorAll('.task-image .image');
@@ -110,7 +116,7 @@ GM_registerMenuCommand('Open Config Webpage', function() {
         await sleep(2000);
         let status = await (await fetch(response.url)).json();
         if (status.status == 'in queue') {
-            await sleep(3000);
+            await sleep(2000);
             status = await (await fetch(response.url)).json();
         }
         if (status.status == 'solved') {
@@ -121,23 +127,39 @@ GM_registerMenuCommand('Open Config Webpage', function() {
         }
         console.log(response, status);
 
-    } else {
+    } else if (response.status === 'solved') {
+        for (const index of response.solution) {
+              imgs[index].click();
+
+            
+            // console.log(random(400,250));
+            await sleep(random(400,250));
+          }
+      }else if (response.status === 'skip') {
+        // document.querySelector('.button-submit').click();
+        // noCaptcha();
+        
+      } else {
         return alert(response.status);
     }
 
     let btn = document.querySelector('.button-submit').textContent;
 
-    await sleep(200);
-
-    document.querySelector('.button-submit').click();
+    console.log('waiting 2-3s');
+    await sleep(random(3000,2000));
+    
+    // document.querySelector('.button-submit').click();
 
     if (btn == 'Verify') {
-        await sleep(2000);
-        btn = document.querySelector('.button-submit').textContent;
-        if (btn == 'Next' || btn == 'Skip') {
-            noCaptcha();
-        }
+        document.querySelector('.button-submit').click();
+        noCaptcha();
+        // await sleep(2000);
+        // btn = document.querySelector('.button-submit').textContent;
+        // if (btn == 'Next' || btn == 'Skip') {
+        //     noCaptcha();
+        // }
     } else if (btn == 'Next' || btn == 'Skip') {
+        document.querySelector('.button-submit').click();
         noCaptcha();
     } else {
         await sleep(1000);
