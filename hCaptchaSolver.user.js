@@ -122,7 +122,7 @@ async function noCaptcha(secondTime = false) {
         await sleep(2000);
         let status = await (await fetch(response.url)).json();
         if (status.status == 'in queue') {
-            await sleep(3000);
+            await sleep(2000);
             status = await (await fetch(response.url)).json();
         }
         if (status.status == 'solved') {
