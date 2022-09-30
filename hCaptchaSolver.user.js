@@ -95,7 +95,7 @@ async function getBase64FromUrl(url) {
         return log('Couldn\'t find the pictures');
     }
     const end = performance.now() / 1000;
-    log('converted to base64 in ' + (end-start).toFixed(2) + 'sec');
+    console.log('converted to base64 in ' + (end-start).toFixed(2) + 'sec');
 
     let response = await fetch(baseUrl, {
         method: 'POST',
@@ -128,7 +128,7 @@ async function getBase64FromUrl(url) {
                 await sleep(200);
             }
         }
-        log(response + ' ' + status);
+        console.log(response + ' ' + status);
     } else if (response.status === 'solved') {
         for (const index of response.solution) {
             imgs[index].click();
