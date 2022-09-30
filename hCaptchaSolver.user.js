@@ -64,7 +64,7 @@ async function getBase64FromUrl(url) {
             resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ""))
         })
         reader.addEventListener('error', function() {
-            log('Failed to convert url to base64' + e)
+            log('Failed to convert url to base64')
         })
     });
 }
