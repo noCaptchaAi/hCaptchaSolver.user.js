@@ -13,6 +13,7 @@
 // @grant        GM_getValue
 // @grant        GM_openInTab
 // @grant        GM_registerMenuCommand
+// @inject-into  content
 // ==/UserScript==
 const broadcastChannel = new BroadcastChannel('nocaptcha');
 if (location.origin === 'https://config.nocaptchaai.com') {
@@ -40,13 +41,7 @@ if (!GM_getValue('uid') || !GM_getValue('apikey')) {
 }
 navigator.__defineGetter__('language', () => 'en');
 
-if (GM_info.scriptHandler == 'Violentmonkey') {
-  window.addEventListener('load', noCaptcha)
-} else {
-  noCaptcha();
-}
-
-function random(min,max) {
+function random(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -136,4 +131,4 @@ async function noCaptcha() {
     await sleep(random(3000, 2000));
     document.querySelector('.button-submit').click();
     noCaptcha()
-}
+})()
