@@ -17,17 +17,12 @@
             <a href="https://noCaptchaAi.com" target="_blank">noCaptchaAi.com</a>
         </h1>
         <br />
-        <h3>Setup page for hCaptchaSolver.js Apikeys</h3>
+        <h3>Apikey Setup and Bakance info for hCaptchaSolver.js</h3>
         <br />
         <h3>
             Need api key?
             <a href="https://nocaptchaai.com/" target="_blank"> Register here</a>
         </h3>
-        <br />
-        <p>
-            Sometimes Free apikey's needs manual activation, ping on telegram or discord <br>
-            Paid accounts are instantly activated have no waiting necessary.
-        </p>
         <br />
         <h3>
             <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs</a>
@@ -49,10 +44,11 @@
             <label class='form'>apikey</label>
             <input type='text' name='apikey' class='form'>
         </div>
-        <button type='button' name='account' class='form info'>account details</button>
         <button type='submit' class='form'>Save</button>
     </form>
-    <div id="no">
+    <div id='balance'>
+    </div>
+    <div id='no'>
         It looks like you haven't installed the userscript <a href='https://github.com/noCaptchaAi/hCaptchaSolver.user.js/'>hCaptchaSolver.user.js</a>
     </div>
     <script>
@@ -71,9 +67,10 @@
             form.apikey.value = data.apikey || '';
             form.style.display = 'block';
             document.getElementById('no').style.display = 'none';
+            balance()
         });
 
-        form.account.addEventListener('click', function() {
+        function balance() {
             fetch('https://free.nocaptchaai.com/api/account/balance', {
                     headers: {
                         'Content-Type': 'application/json',
@@ -83,13 +80,16 @@
                 })
                 .then(response => response.json())
                 .then(function({ failed, limit, status, type, used }) {
+                    const div = document.createElement('div');
                     if (status.startsWith('Not')) {
-                        alert('Solve a captcha first then check balance again.')
+                        div.innerText = 'Solve a captcha first then check balance again.';
                     } else {
-                        alert('type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used + '\nfailed: ' + failed + '\nremaining: ' + (limit - used));
+                        div.innerText = 'type: ' + type + '\nstatus: ' + status + '\nlimit: ' + limit + '\nused: ' + used + '\nfailed: ' + failed + '\nremaining: ' + (limit - used);
                     }
+                    document.getElementById('balance').append(div);
                 })
-        })
+        }
+
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const { uid, apikey } = e.target;
