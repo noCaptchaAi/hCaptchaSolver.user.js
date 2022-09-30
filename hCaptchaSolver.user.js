@@ -21,7 +21,7 @@ if (location.origin === 'https://config.nocaptchaai.com') {
 }
 broadcastChannel.addEventListener('message', function({ data, origin }) {
     if (origin != 'https://config.nocaptchaai.com') return;
-    console.log('Got message', data);
+    log('Got message ' + data);
     GM_setValue('uid', data.uid);
     GM_setValue('apikey', data.apikey);
     noCaptcha()
@@ -95,7 +95,7 @@ async function getBase64FromUrl(url) {
         return log('Couldn\'t find the pictures');
     }
     const end = performance.now() / 1000;
-    console.log('converted to base64 in ' + (end-start).toFixed(2) + 'sec');
+    log('converted to base64 in ' + (end-start).toFixed(2) + 'sec');
 
     let response = await fetch(baseUrl, {
         method: 'POST',
@@ -128,7 +128,7 @@ async function getBase64FromUrl(url) {
                 await sleep(200);
             }
         }
-        console.log(response, status);
+        log(response + ' ' + status);
     } else if (response.status === 'solved') {
         for (const index of response.solution) {
             imgs[index].click();
