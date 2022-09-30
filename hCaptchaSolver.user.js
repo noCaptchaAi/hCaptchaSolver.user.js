@@ -41,6 +41,7 @@ if (!GM_getValue('uid') || !GM_getValue('apikey')) {
     return;
 }
 navigator.__defineGetter__('language', () => 'en');
+noCaptcha()
 
 function random(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -52,7 +53,7 @@ function sleep(ms) {
 
 function log(msg) {
     console.log('%c[noCaptcha] %c' + msg, 'background: #222; color: #bada55', '');
-} 
+}
 
 async function getBase64FromUrl(url) {
     const blob = await (await fetch(url)).blob();
@@ -68,7 +69,7 @@ async function getBase64FromUrl(url) {
     });
 }
 
-(async function noCaptcha() {
+async function noCaptcha() {
 
     const baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash),
@@ -141,4 +142,4 @@ async function getBase64FromUrl(url) {
     await sleep(random(3000, 2000));
     document.querySelector('.button-submit').click();
     noCaptcha()
-})()
+}
