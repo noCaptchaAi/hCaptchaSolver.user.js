@@ -15,17 +15,16 @@
 // @grant        GM_registerMenuCommand
 // @inject-into  content
 // ==/UserScript==
-const broadcastChannel = new BroadcastChannel('nocaptcha');
 if (location.origin === 'https://config.nocaptchaai.com') {
+    const broadcastChannel = new BroadcastChannel('nocaptcha');
     broadcastChannel.postMessage({ uid: GM_getValue('uid'), apikey: GM_getValue('apikey') });
+    broadcastChannel.addEventListener('message', function({data}) {
+        console.log('Got message', data);
+        GM_setValue('uid', data.uid);
+        GM_setValue('apikey', data.apikey);
+    });
+    return;
 }
-broadcastChannel.addEventListener('message', function({ data, origin }) {
-    if (origin != 'https://config.nocaptchaai.com') return;
-    console.log('Got message', data);
-    GM_setValue('uid', data.uid);
-    GM_setValue('apikey', data.apikey);
-    noCaptcha()
-});
 
 GM_registerMenuCommand('Open Config Webpage', function() {
     GM_openInTab('https://config.nocaptchaai.com')
@@ -41,7 +40,6 @@ if (!GM_getValue('uid') || !GM_getValue('apikey')) {
     return;
 }
 navigator.__defineGetter__('language', () => 'en');
-noCaptcha()
 
 function random(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -69,12 +67,12 @@ async function getBase64FromUrl(url) {
     });
 }
 
-async function noCaptcha(secondTime = false) {
+(async function noCaptcha(secondTime = false) {
     const baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash),
-          images = {},
-          s = performance.now() / 1000;
+          images = {};
 
+    console.time('solved in');
     if (!secondTime) {
         await sleep(1000);
         document.querySelector('#checkbox')?.click();
@@ -143,7 +141,6 @@ async function noCaptcha(secondTime = false) {
 
     await sleep(random(3000, 2000));
     document.querySelector('.button-submit').click();
-    const e = performance.now() / 1000;
-    log('solved in ' + (e-s).toFixed(2) + 'sec');
+    console.timeEnd('solved in');
     noCaptcha(true)
-}
+})();
