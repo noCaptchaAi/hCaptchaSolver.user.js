@@ -71,7 +71,7 @@ async function getBase64FromUrl(url) {
     const baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash),
           images = {};
-
+    
     console.time('solved in');
     if (!secondTime) {
         await sleep(1000);
@@ -79,13 +79,17 @@ async function getBase64FromUrl(url) {
         await sleep(2000);
     }
 
-    const imgs = document.querySelectorAll('.task-image .image');
+    const imgs = document.querySelectorAll('.task-image .image'),
+          target = document.querySelector('.prompt-text')?.textContent;
     // const images = {...[...imgs].map(ele => ele.style.background.match(/url\("(.*)"/)[1] || 0)};
     // const images = await [...imgs].reduce(async function(acc, element, index) {
     //     const url = element.style.background.match(/url\("(.*)"/)[1]
     //     if (!url) return;
     //     return { [index]: await getBase64FromUrl(url), ...acc };
     // }, {})
+    if (!target) {
+        return log('Couldn\'t find the target');
+    }
     const start = performance.now() / 1000;
     for (let i = 0; i < imgs.length; i++) {
         const url = imgs[i].style.background.match(/url\("(.*)"/)[1]
@@ -142,5 +146,6 @@ async function getBase64FromUrl(url) {
     await sleep(random(3000, 2000));
     document.querySelector('.button-submit').click();
     console.timeEnd('solved in');
+    await sleep(1000);
     noCaptcha(true)
 })();
