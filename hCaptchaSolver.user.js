@@ -37,6 +37,7 @@ if (!GM_getValue('uid') || !GM_getValue('apikey')) {
         GM_openInTab('https://config.nocaptchaai.com?msg=Please enter your details on the page before starting to use the userscript', 'active');
         GM_setValue('notified', true);
     }
+    log('uid or apikey not found')
     return;
 }
 navigator.__defineGetter__('language', () => 'en');
@@ -49,6 +50,10 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+function log(msg) {
+    console.log('%c[noCaptcha] %c' + msg, 'background: #222; color: #bada55', '');
+} 
+
 async function getBase64FromUrl(url) {
     const blob = await (await fetch(url)).blob();
     return new Promise(function (resolve) {
@@ -56,6 +61,9 @@ async function getBase64FromUrl(url) {
         reader.readAsDataURL(blob);
         reader.addEventListener('loadend', function() {
             resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ""))
+        })
+        reader.addEventListener('error', function() {
+            log('Failed to convert url to base64' + e)
         })
     });
 }
@@ -83,8 +91,10 @@ async function getBase64FromUrl(url) {
         if (!url) break;
         images[i] = await getBase64FromUrl(url)
     }
-    if (Object.keys(images).length === 0) return;
-    const end = performance.now() / 1000
+    if (Object.keys(images).length === 0) {
+        return log('Couldn\'t find the pictures');
+    }
+    const end = performance.now() / 1000;
     console.log('converted to base64 in ' + (end-start).toFixed(2) + 'sec');
 
     let response = await fetch(baseUrl, {
