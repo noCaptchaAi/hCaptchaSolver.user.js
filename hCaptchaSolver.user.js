@@ -69,15 +69,17 @@ async function getBase64FromUrl(url) {
     });
 }
 
-async function noCaptcha() {
-
+async function noCaptcha(secondTime = false) {
     const baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash),
-          images = {};
+          images = {},
+          s = performance.now() / 1000;
 
-    await sleep(1000);
-    document.querySelector('#checkbox')?.click();
-    await sleep(2000);
+    if (!secondTime) {
+        await sleep(1000);
+        document.querySelector('#checkbox')?.click();
+        await sleep(2000);
+    }
 
     const imgs = document.querySelectorAll('.task-image .image');
     // const images = {...[...imgs].map(ele => ele.style.background.match(/url\("(.*)"/)[1] || 0)};
@@ -141,5 +143,7 @@ async function noCaptcha() {
 
     await sleep(random(3000, 2000));
     document.querySelector('.button-submit').click();
-    noCaptcha()
+    const e = performance.now() / 1000;
+    log('solved in ' + (e-s).toFixed(2) + 'sec');
+    noCaptcha(true)
 }
