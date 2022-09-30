@@ -60,7 +60,7 @@ async function getBase64FromUrl(url) {
     });
 }
 
-async function noCaptcha() {
+(async function noCaptcha() {
 
     const baseUrl = 'https://free.nocaptchaai.com/api/solve',
           searchParams = new URLSearchParams(location.hash),
