@@ -62,7 +62,7 @@ async function getBase64FromUrl(url) {
             resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ""))
         })
         reader.addEventListener('error', function() {
-            log('Failed to convert url to base64')
+            log('❌ Failed to convert url to base64')
         })
     });
 }
@@ -88,7 +88,7 @@ async function getBase64FromUrl(url) {
     //     return { [index]: await getBase64FromUrl(url), ...acc };
     // }, {})
     if (!target) {
-        return log('Couldn\'t find the target');
+        return log('❌ Couldn\'t find the target');
     }
     const start = performance.now() / 1000;
     for (let i = 0; i < imgs.length; i++) {
@@ -97,7 +97,7 @@ async function getBase64FromUrl(url) {
         images[i] = await getBase64FromUrl(url)
     }
     if (Object.keys(images).length === 0) {
-        return log('Couldn\'t find the pictures');
+        return log('❌ Couldn\'t find the pictures');
     }
     const end = performance.now() / 1000;
     log('☑️ converted to base64 ~ ' + (end-start).toFixed(2) + 's');
