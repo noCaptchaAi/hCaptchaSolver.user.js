@@ -17,9 +17,8 @@ Gracefully Solve and Bypass hCaptcha reCaptcha 2(soon) grid-image challenges wit
 ### Install Beta ⚠️: [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolverBeta.user.js)
 
 
+https://user-images.githubusercontent.com/4178343/193617753-078eb586-6a7a-407f-8b98-e80894c0eae2.mp4
 
-
-https://user-images.githubusercontent.com/4178343/191682942-fbfa814d-49b6-458d-83d6-1d4ec1ff3053.mp4
 
 
 ## Setup
