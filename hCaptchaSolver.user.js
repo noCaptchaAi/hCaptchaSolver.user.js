@@ -100,7 +100,7 @@ async function getBase64FromUrl(url) {
         return log('Couldn\'t find the pictures');
     }
     const end = performance.now() / 1000;
-    log('converted to base64 in ' + (end-start).toFixed(2) + 'sec');
+    log('☑️ converted to base64 ~ ' + (end-start).toFixed(2) + 's');
 
     let response = await fetch(baseUrl, {
         method: 'POST',
@@ -124,10 +124,12 @@ async function getBase64FromUrl(url) {
         await sleep(2000);
         let status = await (await fetch(response.url)).json();
         if (status.status == 'in queue') {
+            log('🕓 in queue');
             await sleep(2000);
             status = await (await fetch(response.url)).json();
         }
         if (status.status == 'solved') {
+            log("☑️ solved");
             for (const index of status.solution) {
                 imgs[index].click();
                 await sleep(200);
@@ -135,6 +137,7 @@ async function getBase64FromUrl(url) {
         }
         console.log(response, status);
     } else if (response.status === 'solved') {
+        log('☑️ solved');
         for (const index of response.solution) {
             imgs[index].click();
             await sleep(random(400, 250));
@@ -142,10 +145,12 @@ async function getBase64FromUrl(url) {
     } else {
         return alert(response.status);
     }
-
+    
+    log("🕓 waiting 2-3s");
     await sleep(random(3000, 2000));
     document.querySelector('.button-submit').click();
     console.timeEnd('solved in');
+    log("☑️ verifiying");
     await sleep(1000);
     noCaptcha(true)
 })();
