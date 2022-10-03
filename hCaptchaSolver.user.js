@@ -59,7 +59,7 @@ async function getBase64FromUrl(url) {
         const reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.addEventListener('loadend', function() {
-            resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ""))
+            resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ''))
         })
         reader.addEventListener('error', function() {
             log('❌ Failed to convert url to base64')
@@ -124,12 +124,12 @@ async function getBase64FromUrl(url) {
         await sleep(2000);
         let status = await (await fetch(response.url)).json();
         if (status.status == 'in queue') {
-            log('🕓 in queue');
+            log('🕘 waiting for response');
             await sleep(2000);
             status = await (await fetch(response.url)).json();
         }
         if (status.status == 'solved') {
-            log("☑️ solved");
+            log('☑️ solved');
             for (const index of status.solution) {
                 imgs[index].click();
                 await sleep(200);
@@ -146,11 +146,11 @@ async function getBase64FromUrl(url) {
         return alert(response.status);
     }
     
-    log("🕓 waiting 2-3s");
+    log('🕓 waiting 2-3s');
     await sleep(random(3000, 2000));
     document.querySelector('.button-submit').click();
     console.timeEnd('solved in');
-    log("☑️ verifiying");
+    log('☑️ verifiying');
     await sleep(1000);
     noCaptcha(true)
 })();
