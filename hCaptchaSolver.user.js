@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         noCaptchaAI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      1.1.1
+// @version      1.1.2
 // @description  Gracefully Solve and Bypass hCaptcha grid-image challenges with noCaptchaAi.com API.⚡ ~ 50x faster than 2Captcha etc. All language support(progress).
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
@@ -60,7 +60,11 @@ function sleep(ms) {
 }
 
 function log(msg) {
-  console.log("%cnoCaptchaAi.com ~ %c" + msg, "background: #222; color: #bada55", "");
+  console.log(
+    "%cnoCaptchaAi.com ~ %c" + msg,
+    "background: #222; color: #bada55",
+    ""
+  );
 }
 
 async function getBase64FromUrl(url) {
@@ -120,49 +124,53 @@ async function getBase64FromUrl(url) {
   // console.log(frameLang.innerHTML.toLowerCase());
   // console.log(navigator.language);
 
-  let response = await fetch(baseUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      uid: GM_getValue("uid"),
-      apikey: GM_getValue("apikey"),
-    },
-    body: JSON.stringify({
-      images,
-      target: document.querySelector(".prompt-text").textContent,
-      method: "hcaptcha_base64",
-      sitekey: searchParams.get("sitekey"),
-      site: searchParams.get("host"),
-      ln: document.documentElement.lang,
-      softid: "UserScript",
-    }),
-  });
-  response = await response.json();
+  try {
+    let response = await fetch(baseUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        uid: GM_getValue("uid"),
+        apikey: GM_getValue("apikey"),
+      },
+      body: JSON.stringify({
+        images,
+        target: document.querySelector(".prompt-text").textContent,
+        method: "hcaptcha_base64",
+        sitekey: searchParams.get("sitekey"),
+        site: searchParams.get("host"),
+        ln: document.documentElement.lang,
+        softid: "UserScript",
+      }),
+    });
+    response = await response.json();
 
-  if (response.status == "new") {
-    await sleep(2000);
-    let status = await (await fetch(response.url)).json();
-    if (status.status == "in queue") {
-      log("🕘 waiting for response");
+    if (response.status == "new") {
       await sleep(2000);
-      status = await (await fetch(response.url)).json();
-    }
-    if (status.status == "solved") {
-      log("☑️ solved");
-      for (const index of status.solution) {
-        imgs[index].click();
-        await sleep(200);
+      let status = await (await fetch(response.url)).json();
+      if (status.status == "in queue") {
+        log("🕘 waiting for response");
+        await sleep(2000);
+        status = await (await fetch(response.url)).json();
       }
+      if (status.status == "solved") {
+        log("☑️ solved");
+        for (const index of status.solution) {
+          imgs[index].click();
+          await sleep(200);
+        }
+      }
+      console.log(response, status);
+    } else if (response.status === "solved") {
+      log("☑️ solved");
+      for (const index of response.solution) {
+        imgs[index].click();
+        await sleep(random(280, 350));
+      }
+    } else {
+      return alert(response.status);
     }
-    console.log(response, status);
-  } else if (response.status === "solved") {
-    log("☑️ solved");
-    for (const index of response.solution) {
-      imgs[index].click();
-      await sleep(random(280, 350));
-    }
-  } else {
-    return alert(response.status);
+  } catch (error) {
+    log("❌ error sending request");
   }
 
   log("🕓 waiting 2-3s");
