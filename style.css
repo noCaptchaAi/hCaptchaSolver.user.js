@@ -1,0 +1,36 @@
+html,
+form,
+body,
+header {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  overflow: hidden;
+  background-color: rgb(24, 21, 43);
+  color: beige;
+  width: 70vw;
+  margin: 10px auto;
+}
+[hidden] {
+  display: none !important;
+}
+
+input {
+  color: black !important;
+}
+
+a {
+  color: rgb(122, 184, 0);
+}
+
+a:hover {
+  color: rgba(126, 128, 214, 0.801);
+}
+
+form {
+  border: 1px solid rgba(179, 27, 27, 0.308);
+  padding: 10%;
+  border-radius: 20px;
+}
+dialog{
+  color: aliceblue;
+}
