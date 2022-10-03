@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         noCaptchaAI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      1.1.0
+// @version      1.1.1
 // @description  Gracefully Solve and Bypass hCaptcha grid-image challenges with noCaptchaAi.com API.⚡ ~ 50x faster than 2Captcha etc. All language support(progress).
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
