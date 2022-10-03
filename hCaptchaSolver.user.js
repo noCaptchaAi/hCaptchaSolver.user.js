@@ -159,14 +159,14 @@ async function getBase64FromUrl(url) {
     log("☑️ solved");
     for (const index of response.solution) {
       imgs[index].click();
-      await sleep(random(400, 250));
+      await sleep(random(280, 350));
     }
   } else {
     return alert(response.status);
   }
 
   log("🕓 waiting 2-3s");
-  await sleep(random(3000, 2000));
+  await sleep(random(2000, 3000));
   document.querySelector(".button-submit").click();
   console.timeEnd("noCaptchaAi.com ~ ⌛ solved in");
   log("☑️ verifiying");
