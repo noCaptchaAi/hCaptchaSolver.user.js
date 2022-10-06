@@ -1,5 +1,4 @@
 html,
-form,
 body,
 header {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -7,7 +6,7 @@ header {
   overflow: hidden;
   background-color: rgb(24, 21, 43);
   color: beige;
-  width: 70vw;
+  width: 98vw;
   margin: 10px auto;
 }
 [hidden] {
@@ -27,10 +26,31 @@ a:hover {
 }
 
 form {
-  border: 1px solid rgba(179, 27, 27, 0.308);
-  padding: 10%;
-  border-radius: 20px;
+  border: 1px solid rgba(179, 27, 27, 0.137);
+  padding: 2%;
+  border-radius: 15px;
 }
-dialog{
-  color: aliceblue;
+
+#wrap {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+#wrap > div {
+  padding: 20px;
+  width: 48%;
+  padding-right: 20px;
+  max-width: 400px;
+  min-height: 350px;
+}
+input {
+  left: 0;
+  font-size: large;
+  text-align: center;
+  color: black;
+}
+
+hr {
+  background-color: rgba(0, 255, 255, 0.397);
 }
