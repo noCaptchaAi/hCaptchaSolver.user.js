@@ -1,9 +1,9 @@
 <p>
 <h1><img src="https://avatars.githubusercontent.com/u/110127579?s=200&v=4" width="30px" /> hCaptcha Solver UserScript </h1>
 
-⚡ fast and easy hCaptcha Solver challenges with noCaptchaAi.com API
+⚡ fast and easy hCaptcha challenge bypass Solver with noCaptchaAi.com API
 
-[Project](https://github.com/shimuldn/hCaptchaSolverApi) ~ [API DOCS](https://docs.nocaptchaai.com) ~ [Website](https://nocaptchaai.com)
+### [Project](https://github.com/shimuldn/hCaptchaSolverApi) ~ [API DOCS](https://docs.nocaptchaai.com) ~ [Website](https://nocaptchaai.com)
 </p>
 
 <p>
@@ -12,6 +12,7 @@
 </p>
 
 # 🎯 Requirements
+
 ### a) Install: [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
 ### b) Get Apikey: ~
  - Free Apikey: Free 1000 per month [Signup](https://nocaptchaai.com/register)
@@ -38,5 +39,3 @@ https://user-images.githubusercontent.com/4178343/193617753-078eb586-6a7a-407f-8
 - [Playwright.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/playwright.js)
 - [Node.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/node.js)
 - [JavaScript.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/javascript.js)
-
-🙈Script by @Diego
