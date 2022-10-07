@@ -11,26 +11,25 @@
 <a href="https://discord.gg/E7FfzhZqzA" target="_blank"><img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"></a>
 </p>
 
-# Install: [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
-
-## 🎯 Requirements
-### a) Apikey: ~
- - Free Apikey: Free 1000 per month [Signup](https://nocaptchaai.com/register) | 
- - Paid Apikey: 15K only 5$ [buy here](https://nocaptchaai.com/plans) or  DM admins on Telegram or Discord
-### b) [Open Config Webpage](https://config.nocaptchaai.com/) and fill the with uid, apikey form email
-### c) Click Save and start solving. Confused? watch clip below.
+# 🎯 Requirements
+### a) Install: [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
+### b) Get Apikey: ~
+ - Free Apikey: Free 1000 per month [Signup](https://nocaptchaai.com/register)
+ - Paid Apikey: [Buy here](https://nocaptchaai.com/plans) or  DM admins on Telegram or Discord
+### b) Open Config [Webpage](https://config.nocaptchaai.com/)
+### d) Click Save and start solving
 
 https://user-images.githubusercontent.com/4178343/193617753-078eb586-6a7a-407f-8b98-e80894c0eae2.mp4
 
 
 
-## Monkey Clients
+# 🙈 Monkey Clients
 
  * Firefox ~ Tampermonkey (✔️), Violentmonkey (✔️)
  * Chrome Based ~ Tampermonkey (✔️), Violentmonkey  (✔️)
 
 
-## Other usage Scripts:
+# Other Solver Scripts:
 - [Selenium.py](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/example-selenium.py)
 - [Puppeteer.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/puppeteer.js)
 - [Puppeteer.ts](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/puppeteer.ts)
@@ -40,4 +39,4 @@ https://user-images.githubusercontent.com/4178343/193617753-078eb586-6a7a-407f-8
 - [Node.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/node.js)
 - [JavaScript.js](https://github.com/shimuldn/hCaptchaSolverApi/blob/main/usage_examples/javascript.js)
 
-Script by @Diego
+🙈Script by @Diego
