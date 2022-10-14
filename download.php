@@ -15,5 +15,5 @@ $code = strtr($string, array("UID" => get('uid') or die, "APIKEY" => get('apikey
 
 $tempfile = $dir_to_save . md5(rand()) . ".user.js";
 
-file_put_contents($tempfile, $string);
+file_put_contents($tempfile, $code);
 echo "<script>window.location = \"$tempfile\";</script>";
