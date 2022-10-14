@@ -108,8 +108,8 @@
         form.addEventListener("submit", function(e) {
             e.preventDefault();
             const {uid, apikey} = e.target;
-            localStorage.setItem('uid', uid);
-            localStorage.setItem('apikey', apikey);
+            localStorage.setItem('uid', uid.value);
+            localStorage.setItem('apikey', apikey.value);
             const a = document.createElement('a');
             a.href = './download.php?uid=' + uid + '&apikey=' + apikey;
             a.hidden = true;
