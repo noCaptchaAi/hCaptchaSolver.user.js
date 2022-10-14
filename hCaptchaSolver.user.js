@@ -6,9 +6,6 @@
 // @author       noCaptcha AI and Diego
 // @match        https://newassets.hcaptcha.com/*
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @grant        GM_openInTab
 // @grant        GM_registerMenuCommand
 // @inject-into  content
 // ==/UserScript==
