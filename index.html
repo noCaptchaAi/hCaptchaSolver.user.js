@@ -51,7 +51,7 @@
                 <button type="submit" class="form">Save & Fetch Balance</button>
             </form>
         </div>
-        <div id="balance">
+        <div id="balance" style="display: none;">
             <h4>Account Info</h4>
             <hr />
             <div id="balance"></div>
@@ -64,9 +64,23 @@
         //<a link="/dowanload.php?type=py"><img src="https://en.wikipedia.org/wiki/Python_(programming_language)#/media/File:Python-logo-notext.svg">python_requests.py</a>
         // 2. Add an update button when there is a new version
         const form = document.forms[0];
-        form.uid.value = localStorage.getItem("uid") || "";
-        form.apikey.value = localStorage.getItem("apikey") || "";
-
+        const uid = localStorage.getItem("uid");
+        const apikey = localStorage.getItem("apikey");
+        form.uid.value = uid || "";
+        form.apikey.value = apikey || "";
+        
+        if (uid && apikey) {
+            
+            balance();
+            document.getElementById('balance').style = "display: block";
+            const btn = document.createElement('button');
+            btn.onclick = function () {
+                
+                window.location = "./download.php?uid=" + uid + "&apikey=" + apikey;
+            }
+            document.getElementById("wrap").append(btn);            
+        }
+        
         function balance() {
             fetch("https://free.nocaptchaai.com/api/account/balance", {
                     headers: {
@@ -110,12 +124,6 @@
             const {uid, apikey} = e.target;
             localStorage.setItem('uid', uid.value);
             localStorage.setItem('apikey', apikey.value);
-            const a = document.createElement('a');
-            a.href = './download.php?uid=' + uid + '&apikey=' + apikey;
-            a.hidden = true;
-            document.body.append(a);
-            a.click();
-            a.remove();
             balance();
             alert("Saved successfully");
         });
