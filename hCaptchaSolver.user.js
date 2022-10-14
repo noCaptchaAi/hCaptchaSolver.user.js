@@ -5,9 +5,6 @@
 // @description  Gracefully Solve and Bypass hCaptcha grid-image challenges with noCaptchaAi.com API.⚡ ~ 50x faster than 2Captcha etc. All language support(progress).
 // @author       noCaptcha AI and Diego
 // @match        https://newassets.hcaptcha.com/*
-// @match        https://config.nocaptchaai.com/*
-// @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
-// @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -15,7 +12,6 @@
 // @grant        GM_registerMenuCommand
 // @inject-into  content
 // ==/UserScript==
-
 if (!navigator.onLine) return;
 //navigator.__defineGetter__('language', () => 'en');
 
@@ -29,13 +25,13 @@ function log(msg) {
 
 async function getBase64FromUrl(url) {
     const blob = await (await fetch(url)).blob();
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve) {
         const reader = new FileReader();
         reader.readAsDataURL(blob);
-        reader.addEventListener("loadend", function () {
+        reader.addEventListener("loadend", function() {
             resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ""));
         });
-        reader.addEventListener("error", function () {
+        reader.addEventListener("error", function() {
             log("❌ Failed to convert url to base64");
         });
     });
