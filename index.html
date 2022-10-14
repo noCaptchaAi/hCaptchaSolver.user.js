@@ -74,8 +74,8 @@
             balance();
             document.getElementById('balance').style = "display: block";
             const btn = document.createElement('button');
+            btn.innerText = 'download userscript'
             btn.onclick = function () {
-                
                 window.location = "./download.php?uid=" + uid + "&apikey=" + apikey;
             }
             document.getElementById("wrap").append(btn);            
@@ -85,8 +85,8 @@
             fetch("https://free.nocaptchaai.com/api/account/balance", {
                     headers: {
                         "Content-Type": "application/json",
-                        uid: form.uid.value,
-                        apikey: form.apikey.value,
+                        uid,
+                        apikey,
                     },
                 })
                 .then((response) => response.json())
