@@ -13,7 +13,6 @@
 // @inject-into  content
 // ==/UserScript==
 if (!navigator.onLine) return;
-//navigator.__defineGetter__('language', () => 'en');
 
 function log(msg) {
     console.log(
@@ -37,17 +36,18 @@ async function getBase64FromUrl(url) {
     });
 }
 
-(async function noCaptcha(secondTime = false) {
 
-    const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    const baseUrl = "https://free.nocaptchaai.com/api/solve";
-    const searchParams = new URLSearchParams(location.hash);
-    const headers = {
-        "Content-Type": "application/json",
-        uid: 'UID',
-        apikey: 'APIKEY'
-    };
+const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const searchParams = new URLSearchParams(location.hash);
+const baseUrl = "https://free.nocaptchaai.com/api/solve";
+const headers = {
+    "Content-Type": "application/json",
+    uid: 'UID',
+    apikey: 'APIKEY'
+};
+
+(async function noCaptcha(secondTime = false) {
     const imgs = document.querySelectorAll(".task-image .image");
     const images = {};
     const target = document.querySelector(".prompt-text")?.textContent;
@@ -94,6 +94,8 @@ async function getBase64FromUrl(url) {
         if (response.status == "new") {
             let status = await (await fetch(response.url)).json();
             while (status.status == "in queue") {
+                log("🕘 waiting for response");
+
                 await sleep(500);
                 status = await (await fetch(response.url)).json();
             }
