@@ -5,7 +5,7 @@ function get($item) {
 
 $dir_to_save = "./userscript/";
 if (is_dir($dir_to_save)) {
-    array_map('unlink', glob("$dir_to_save/*.*"));
+    array_map('unlink', glob("$dir_to_save/*.js"));
 } else {
     mkdir($dir_to_save);
 }
