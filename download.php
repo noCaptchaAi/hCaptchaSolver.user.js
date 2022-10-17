@@ -1,4 +1,3 @@
-<?php
 function get($item) {
     return isset($_REQUEST[$item]) ? trim(htmlentities($_REQUEST[$item], ENT_QUOTES, "UTF-8")) : "";
 }
@@ -11,9 +10,9 @@ if (is_dir($dir_to_save)) {
 }
 
 $string = file_get_contents("https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js");
-$code = strtr($string, array("UID" => get('uid') or die, "APIKEY" => get('apikey') or die));
+$code = strtr($string, array("UID" => get('uid'), "APIKEY" => get('apikey')));
 
 $tempfile = $dir_to_save . md5(rand()) . ".user.js";
 
 file_put_contents($tempfile, $code);
-echo "<script>window.location = \"$tempfile\";</script>";
+header('Location: ' . $tempfile);
