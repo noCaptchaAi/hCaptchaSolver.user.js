@@ -75,7 +75,10 @@
             btn.onclick = function () {
                 window.location = "./download.php?uid=" + uid + "&apikey=" + apikey;
             }
-            document.body.innerHTML += `<a href="/dowanload.php?uid=${uid}&apikey=${apikey}&type=python_requests.py"><img style="width: 100px;height: 100px;src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png"></a>`
+            document.body.innerHTML += `
+            <a href="/dowanload.php?uid=${uid}&apikey=${apikey}&type=python_requests.py"><img style="width: 100px;height: 100px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png"></a>
+            <a href="/dowanload.php?uid=${uid}&apikey=${apikey}&type=puppeteer.js"><img style="width: 100px;height: 100px;" src="https://user-images.githubusercontent.com/10379601/29446482-04f7036a-841f-11e7-9872-91d1fc2ea683.png"></a>
+            `
             document.getElementById("wrap").append(btn);            
         }
         
