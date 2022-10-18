@@ -59,7 +59,6 @@
     </div>
     <script>
         //TODO: 
-        //
         // 1. Add an update button when there is a new version
         const form = document.forms[0];
         const uid = localStorage.getItem("uid");
@@ -76,7 +75,7 @@
             btn.onclick = function () {
                 window.location = "./download.php?uid=" + uid + "&apikey=" + apikey;
             }
-            document.body.innerHTML += `<a link="/dowanload.php?uid=${uid}&apikey=${apikey}&type=python_requests.py"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png">python_requests.py</a>`
+            document.body.innerHTML += `<a link="/dowanload.php?uid=${uid}&apikey=${apikey}&type=python_requests.py"><img style="width: 100px;height: 100px;src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png"></a>`
             document.getElementById("wrap").append(btn);            
         }
         
