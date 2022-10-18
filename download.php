@@ -8,7 +8,6 @@ function getCode($url) {
 
 $dir_to_save = "./userscript/";
 if (is_dir($dir_to_save)) {
-    glob("$dir_to_save/*.js");
     array_map("unlink", glob("$dir_to_save/*.js"));
 } else {
     mkdir($dir_to_save);
