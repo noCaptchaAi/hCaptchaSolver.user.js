@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         noCaptchaAI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      1.1.2
+// @version      1.1.3
 // @description  Gracefully Solve and Bypass hCaptcha grid-image challenges with noCaptchaAi.com API.⚡ ~ 50x faster than 2Captcha etc. All language support(progress).
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
@@ -167,7 +167,8 @@ async function getBase64FromUrl(url) {
         await sleep(random(280, 350));
       }
     } else {
-      return alert(response.status);
+//       return alert(response.status);
+//       document.querySelector(".button-submit").click();
     }
   } catch (error) {
     log("❌ error sending request");
