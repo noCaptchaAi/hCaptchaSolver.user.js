@@ -1,19 +1,24 @@
 // ==UserScript==
 // @name         noCaptchaAI hCaptcha Solver
 // @namespace    https://nocaptchaai.com
-// @version      1.1.3
-// @description  Gracefully Solve and Bypass hCaptcha grid-image challenges with noCaptchaAi.com API.⚡ ~ 50x faster than 2Captcha etc. All language support(progress).
+// @version      1.1.4
+// @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
 // @match        https://config.nocaptchaai.com/*
-// @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
-// @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
+// @name:ar      noCaptchaAI hCaptcha Solver حلال
+// @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
+// @name:ru     noCaptchaAI Решатель капчи hCaptcha
+// @description:ru  hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
+// @name:sh-CN   noCaptchaAI 验证码求解器
+// @description:zh-CN hCaptcha Solver 自动绕过 Ai 服务的 Captcha Solver。 免费 6000 🔥解决/月！ 比 2Captcha 和其他人快 50x⚡
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_openInTab
 // @grant        GM_registerMenuCommand
 // @inject-into  content
+// @license      MIT
 // ==/UserScript==
 if (location.origin === "https://config.nocaptchaai.com") {
   const broadcastChannel = new BroadcastChannel("nocaptcha");
