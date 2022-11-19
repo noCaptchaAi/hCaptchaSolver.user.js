@@ -18,7 +18,7 @@
 ## [Get Free Apikey](https://nocaptchaai.com/register) 🔥 6000/m (200 per day) solves just ⭐ this Repo ↗️
 ### a) Install: [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
 ### b) Get Apikey: ~
- - Free Apikey: Free 6000 per month [Signup](https://nocaptchaai.com/register)
+ - Free Apikey: Free 6000 per month (200 per day) [Signup](https://nocaptchaai.com/register)
  - Paid Apikey: [Buy here](https://nocaptchaai.com/plans) or  DM admins on Telegram or Discord
 ### b) Open Config [Webpage](https://config.nocaptchaai.com/)
 ### d) Click Save and start solving
