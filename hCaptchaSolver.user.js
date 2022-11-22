@@ -132,6 +132,7 @@ async function getBase64FromUrl(url) {
   try {
     let response = await fetch(baseUrl, {
       method: "POST",
+        proxy: searchParams.get("proxy") || null,
       headers: {
         "Content-Type": "application/json",
         uid: GM_getValue("uid"),
