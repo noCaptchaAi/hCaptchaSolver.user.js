@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hCaptcha Captcha Solver by noCaptchaAi
 // @namespace    https://nocaptchaai.com
-// @version      1.1.4
+// @version      1.1.6
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @author       noCaptcha AI and Diego
 // @match        https://*.hcaptcha.com/*
