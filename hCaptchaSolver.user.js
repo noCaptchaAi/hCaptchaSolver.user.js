@@ -1,127 +1,156 @@
 // ==UserScript==
-// @name         noCaptchaAI hCaptcha Solver
+// @name         hCaptcha Captcha Solver by noCaptchaAi
+// @name:ar      noCaptchaAI hCaptcha Solver حلال
+// @name:ru     noCaptchaAI Решатель капчи hCaptcha
+// @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      1.1.3
-// @description  Gracefully Solve and Bypass hCaptcha grid-image challenges with noCaptchaAi.com API.⚡ ~ 50x faster than 2Captcha etc. All language support(progress).
+// @version      2.0.0
+// @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
+// @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
+// @description:ru  hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
+// @description:zh-CN hCaptcha Solver 自动绕过 Ai 服务的 Captcha Solver。 免费 6000 🔥解决/月！ 比 2Captcha 和其他人快 50x⚡
 // @author       noCaptcha AI and Diego
-// @match        https://newassets.hcaptcha.com/*
+// @match        *://*/*
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
+// @require      https://raw.github.com/odyniec/MonkeyConfig/master/monkeyconfig.js
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @grant        GM_registerMenuCommand
-// @inject-into  content
+// @grant        GM_addStyle
+// @license      MIT
 // ==/UserScript==
-if (!navigator.onLine) return;
+const baseUrl = 'https://free.nocaptchaai.com/api/solve';
+const cfg = new MonkeyConfig({
+    title: 'noCaptchaAi Configuration',
+    menuCommand: true,
+    params: {
+        UID: {
+            type: 'text',
+            default: ''
+        },
+        APIKEY: {
+            type: 'text',
+            default: ''
+        },
+        auto_solve: {
+            type: 'checkbox',
+            default: true
+        },
+        auto_open: {
+            type: 'checkbox',
+            default: true
+        },
+        disabled_hosts: {
+            type: 'text',
+            default: ''
+        }
+    }
+});
 
-function log(msg) {
-    console.log(
-        "%cnoCaptchaAi.com ~ %c" + msg,
-        "background: #222; color: #bada55",
-        ""
-    );
+function isWidget() {
+    if (document.body.getBoundingClientRect()?.width === 0 || document.body.getBoundingClientRect()?.height === 0) {
+        return false;
+    }
+    return document.querySelector('div.check') !== null;
 }
 
-async function getBase64FromUrl(url) {
-    const blob = await (await fetch(url)).blob();
-    return new Promise(function(resolve) {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.addEventListener("loadend", function() {
-            resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ""));
-        });
-        reader.addEventListener("error", function() {
-            log("❌ Failed to convert url to base64");
-        });
-    });
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function on_task_ready(i = 500) {
+    return new Promise(async resolve => {
+        const check_interval = setInterval(async function() {
+            let target = document.querySelector(".prompt-text")?.textContent;
+            if (!target) return;
 
-const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const searchParams = new URLSearchParams(location.hash);
-const baseUrl = "https://free.nocaptchaai.com/api/solve";
-const headers = {
-    "Content-Type": "application/json",
-    uid: 'UID',
-    apikey: 'APIKEY'
-};
+            const cells = document.querySelectorAll('.task-image .image');
+            if (cells.length !== 9) return;
+            // await Promise.all(
+            //     Array.from(document.images).filter(img => !img.complete).map(img => new Promise(resolve => { img.onload = img.onerror = resolve; }))).then((d) => {
+            //     console.log('images finished loading');
+            //})
+            const images = {};
+            for (let i = 0; i < cells.length; i++) {
+                const img = cells[i];
+                if (!img) return;
+                const url = img.style.background.match(/url\("(.*)"/).at(1) || null;
+                if (!url || url === '') return;
+                images[i] = url;
+            }
 
-(async function noCaptcha(secondTime = false) {
-    const imgs = document.querySelectorAll(".task-image .image");
-    const images = {};
-    const target = document.querySelector(".prompt-text")?.textContent;
+            clearInterval(check_interval);
+            return resolve({target, cells, images});
+        }, i);
+    })
+}
 
-    console.time("noCaptchaAi.com ~ ⌛ solved in");
-    if (!secondTime) {
-        await sleep(1000);
-        document.querySelector("#checkbox")?.click();
-        await sleep(2000);
+async function solve() {
+    const {target, cells, images} = await on_task_ready();
+    console.log(target, cells, images)
+    if (!cfg.get('auto_solve')) {
+        return;
     }
-
-    if (!target) {
-        return log("❌ Couldn't find the target");
-    }
-
-    const start = performance.now() / 1000;
-    for (let i = 0; i < imgs.length; i++) {
-        const url = imgs[i].style.background.match(/url\("(.*)"/)[1];
-        if (!url) break;
-        images[i] = await getBase64FromUrl(url);
-    }
-    if (Object.keys(images).length === 0) {
-        return log("❌ Couldn't find the pictures");
-    }
-    const end = performance.now() / 1000;
-    log("☑️ converted to base64 ~ " + (end - start).toFixed(2) + "s");
+    const searchParams = new URLSearchParams(location.hash);
 
     try {
         let response = await fetch(baseUrl, {
             method: "POST",
-            headers,
+            headers: {
+                "Content-Type": "application/json",
+                uid: cfg.get('UID'),
+                apikey: cfg.get('APIKEY'),
+            },
             body: JSON.stringify({
                 images,
                 target,
-                method: "hcaptcha_base64",
-                sitekey: searchParams.get("sitekey"),
-                site: searchParams.get("host"),
+                data_type: 'url',
+                site_key: searchParams.get('sitekey'),
+                site: searchParams.get('host'),
                 ln: document.documentElement.lang || navigator.language,
                 softid: "UserScript",
             })
         });
+
         response = await response.json();
 
         if (response.status == "new") {
-            let status = await (await fetch(response.url)).json();
-            while (status.status == "in queue") {
-                log("🕘 waiting for response");
+            await sleep(6000);
+            const status = await (await fetch(response.url)).json();
+            for (const index of status.solution) {
+                cells[index].click();
 
-                await sleep(500);
-                status = await (await fetch(response.url)).json();
             }
-            if (status.status == "solved") {
-                log("☑️ solved");
-                for (const index of status.solution) {
-                    imgs[index].click();
-                    await sleep(200);
-                }
-            }
-            console.log(response, status);
         } else if (response.status === "solved") {
-            log("☑️ solved");
             for (const index of response.solution) {
-                imgs[index].click();
-                await sleep(random(280, 350));
+                cells[index].click();
             }
         } else {
-            return alert(response.status);
+            return console.log(response.status);
         }
+
+        await sleep(200);
+        document.querySelector('.button-submit').click();
     } catch (error) {
-        log("❌ error sending request");
+        console.error(error);
+    }
+}
+
+while (true) {
+    if (!navigator.onLine) break;
+
+    await sleep(1000);
+
+    if (cfg.get('disabled_hosts').split(',').includes(location.hostname)) {
+        continue;
     }
 
-    log("🕓 waiting 2-3s");
-    await sleep(random(2000, 3000));
-    document.querySelector(".button-submit").click();
-    console.timeEnd("noCaptchaAi.com ~ ⌛ solved in");
-    log("☑️ verifiying");
-    await sleep(1000);
-    noCaptcha(true);
-})();
+    if (cfg.get('auto_open') && document.querySelector('h2.prompt-text') !== null) {
+        const isSolved = document.querySelector('div.check')?.style.display === 'block';
+        if (isSolved) break;
+        await sleep(500);
+        document.querySelector("#checkbox")?.click();
+    } else if (cfg.get('auto_solve') && isWidget()) {
+        await solve();
+    }
+}
