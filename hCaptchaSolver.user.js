@@ -66,8 +66,8 @@ function on_task_ready(i = 500) {
 
             const cells = document.querySelectorAll('.task-image .image');
             if (cells.length !== 9) return;
-            const images = {};
 
+            const images = {};
             for (let i = 0; i < cells.length; i++) {
                 const img = cells[i];
                 if (!img) return;
@@ -142,12 +142,12 @@ while (true) {
         continue;
     }
 
-    if (cfg.get('auto_open') && document.querySelector('h2.prompt-text') !== null) {
+    if (cfg.get('auto_open') && isWidget()) {
         const isSolved = document.querySelector('div.check')?.style.display === 'block';
         if (isSolved) break;
         await sleep(500);
         document.querySelector("#checkbox")?.click();
-    } else if (cfg.get('auto_solve') && isWidget()) {
+    } else if (cfg.get('auto_solve') && document.querySelector('h2.prompt-text') !== null) {
         await solve();
     }
 }
