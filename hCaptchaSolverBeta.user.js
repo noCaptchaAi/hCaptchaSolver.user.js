@@ -131,7 +131,7 @@ async function getBase64FromUrl(url) {
             },
             body: JSON.stringify({
                 images,
-                target: document.querySelector(".prompt-text").textContent,
+                target,
                 method: "hcaptcha_base64",
                 sitekey: searchParams.get("sitekey"),
                 site: searchParams.get("host"),
