@@ -135,7 +135,7 @@ async function getBase64FromUrl(url) {
                 method: "hcaptcha_base64",
                 sitekey: searchParams.get("sitekey"),
                 site: searchParams.get("host"),
-                ln: document.documentElement.lang,
+                ln: document.documentElement.lang || navigator.language,
                 softid: "UserScript",
             }),
         });
