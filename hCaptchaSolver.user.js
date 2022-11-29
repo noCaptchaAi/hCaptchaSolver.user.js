@@ -73,7 +73,7 @@ function on_task_ready(i = 500) {
                 if (!img) return;
                 const url = img.style.background.match(/url\("(.*)"/).at(1) || null;
                 if (!url || url === '') return;
-                images[i] = url;
+                images[i] = await getBase64FromUrl(url);
             }
 
             clearInterval(check_interval);
@@ -81,6 +81,18 @@ function on_task_ready(i = 500) {
         }, i);
     })
 }
+
+async function getBase64FromUrl(url) {
+    const blob = await (await fetch(url)).blob();
+    return new Promise(function (resolve) {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.addEventListener("loadend", function () {
+            resolve(reader.result.replace(/^data:image\/(png|jpeg);base64,/, ""));
+        });
+    });
+}
+
 
 async function solve() {
     const {target, cells, images} = await on_task_ready();
@@ -101,9 +113,9 @@ async function solve() {
             body: JSON.stringify({
                 images,
                 target,
-                data_type: 'url',
-                site_key: searchParams.get('sitekey'),
-                site: searchParams.get('host'),
+                method: "hcaptcha_base64",
+                sitekey: searchParams.get("sitekey"),
+                site: searchParams.get("host"),
                 ln: document.documentElement.lang || navigator.language,
                 softid: "UserScript",
             })
