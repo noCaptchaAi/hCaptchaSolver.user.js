@@ -66,11 +66,8 @@ function on_task_ready(i = 500) {
 
             const cells = document.querySelectorAll('.task-image .image');
             if (cells.length !== 9) return;
-            // await Promise.all(
-            //     Array.from(document.images).filter(img => !img.complete).map(img => new Promise(resolve => { img.onload = img.onerror = resolve; }))).then((d) => {
-            //     console.log('images finished loading');
-            //})
             const images = {};
+
             for (let i = 0; i < cells.length; i++) {
                 const img = cells[i];
                 if (!img) return;
