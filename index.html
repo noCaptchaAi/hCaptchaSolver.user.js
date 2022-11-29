@@ -1,147 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Userscript config ~ noCaptchaAi</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css" />
     <link rel="stylesheet" href="style.css" />
-  </head>
+</head>
 
-  <body>
+<body>
     <header>
-      <h1>
-        <img
-          src="https://docs.nocaptchaai.com/img/nocaptchaai.com.png"
-          alt="noCaptchaAi logo"
-          width="30px"
-        />
-        <a href="https://noCaptchaAi.com" target="_blank">noCaptchaAi.com</a>
-      </h1>
-      <br />
-      <h3>Apikey Setup and Balance info for hCaptchaSolver.js</h3>
-      <br />
-      <h3>
-        Need api key?
-        <a href="https://nocaptchaai.com/" target="_blank"> Register here</a>
-      </h3>
-      <br />
-      <h3>
-        <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs</a>
-        ~
-        <a href="https://discord.gg/E7FfzhZqzA" target="_blank"
-          >Buy on Discord</a
-        >
-        ~
-        <a
-          href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/"
-          target="_blank"
-          >Github</a
-        >
-        ~
-        <a href="https://t.me/noCaptchaAi" target="_blank">Telegram</a>
-      </h3>
-      <br />
+        <h1>
+            <img src="https://docs.nocaptchaai.com/img/nocaptchaai.com.png" alt="noCaptchaAi logo" width="30px" />
+            <a href="https://noCaptchaAi.com" target="_blank">noCaptchaAi.com</a>
+        </h1>
+        <br />
+        <h3>Apikey Setup and Balance info for hCaptchaSolver.js</h3>
+        <br />
+        <h3>
+            Need api key?
+            <a href="https://nocaptchaai.com/" target="_blank"> Register here</a>
+        </h3>
+        <br />
+        <h3>
+            <a href="https://docs.noCaptchaAi.com" target="_blank">Api Docs</a>
+            ~
+            <a href="https://discord.gg/E7FfzhZqzA" target="_blank">Buy on Discord</a>
+            ~
+            <a href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/" target="_blank">Github</a>
+            ~
+            <a href="https://t.me/noCaptchaAi" target="_blank">Telegram</a>
+        </h3>
+        <br />
     </header>
 
     <div id="wrap">
-      <div>
-        <h4>Sync uid and api with userscript</h4>
-        <hr />
-        <form style="display: none">
-          <div>
-            <input type="text" name="uid" placeholder="uid" class="form" />
-          </div>
-          <div>
-            <input
-              type="text"
-              name="apikey"
-              placeholder="apikey"
-              class="form"
-            />
-          </div>
-          <br />
-          <button type="submit" class="form">Save & Fetch Balance</button>
-        </form>
-      </div>
-      <div id="balance">
-        <h4>Account Info</h4>
-        <hr />
-        <div id="balance"></div>
-      </div>
+        <div>
+            <h4>Sync uid and api with userscript</h4>
+            <hr />
+            <form>
+                <div>
+                    <input type="text" name="uid" placeholder="uid" class="form" />
+                </div>
+                <div>
+                    <input type="text" name="apikey" placeholder="apikey" class="form" />
+                </div>
+                <br />
+                <button type="submit" class="form">Save & Fetch Balance</button>
+            </form>
+        </div>
+        <div id="balance" style="display: none;">
+            <h4>Account Info</h4>
+            <hr />
+            <div id="balance"></div>
+        </div>
     </div>
-    <div id="no">
-      It looks like you haven't installed the userscript
-      <a
-        href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js"
-        >hCaptchaSolver.user.js</a
-      >
-    </div>
-
     <script>
-      const broadcastChannel = new BroadcastChannel("nocaptcha"),
-        searchParams = new URLSearchParams(location.search),
-        form = document.forms[0];
-
-      if (searchParams.get("msg")) {
-        alert(searchParams.get("msg"));
-      }
-
-      broadcastChannel.addEventListener("message", function ({ data, origin }) {
-        console.log("Got message", data, origin);
-        if (origin != "https://config.nocaptchaai.com") return;
-        form.uid.value = data.uid || "";
-        form.apikey.value = data.apikey || "";
-        form.style.display = "block";
-        // document.getElementById('no').style.display = 'none';
-        balance();
-      });
-
-      function balance() {
-        fetch("https://free.nocaptchaai.com/api/account/balance", {
-          headers: {
-            "Content-Type": "application/json",
-            uid: form.uid.value,
-            apikey: form.apikey.value,
-          },
-        })
-          .then((response) => response.json())
-          .then(function ({ failed, limit, status, type, used }) {
-            const div = document.createElement("div");
-            if (status.startsWith("Not")) {
-              div.innerText = "Solve a captcha first then check balance again.";
-            } else {
-              div.innerText =
-                "type: " +
-                type +
-                "\nstatus: " +
-                status +
-                "\nlimit: " +
-                limit +
-                "\nused: " +
-                used +
-                "\nfailed: " +
-                failed +
-                "\nremaining: " +
-                (limit - used);
+        //TODO: 
+        // 1. Add an update button when there is a new version
+        const form = document.forms[0];
+        const uid = localStorage.getItem("uid");
+        const apikey = localStorage.getItem("apikey");
+        form.uid.value = uid || "";
+        form.apikey.value = apikey || "";
+      
+        if (uid && apikey) {
+            
+            balance();
+            document.getElementById('balance').style = "display: block";
+            const btn = document.createElement('button');
+            btn.innerText = 'download userscript'
+            btn.onclick = function () {
+                window.location = "./download.php?uid=" + uid + "&apikey=" + apikey;
             }
-            document.getElementById("balance").append(div);
-          });
-      }
+            document.body.innerHTML += `
+            <a href="/dowanload.php?uid=${uid}&apikey=${apikey}&type=python_requests.py"><img style="width: 100px;height: 100px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png"></a>
+            <a href="/dowanload.php?uid=${uid}&apikey=${apikey}&type=puppeteer.js"><img style="width: 100px;height: 100px;" src="https://user-images.githubusercontent.com/10379601/29446482-04f7036a-841f-11e7-9872-91d1fc2ea683.png"></a>
+            `
+            document.getElementById("wrap").append(btn);            
+        }
+        
+        function balance() {
+            fetch("https://free.nocaptchaai.com/api/account/balance", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        uid,
+                        apikey,
+                    },
+                })
+                .then((response) => response.json())
+                .then(function({
+                    failed,
+                    limit,
+                    status,
+                    type,
+                    used
+                }) {
+                    const div = document.createElement("div");
+                    if (status.startsWith("Not")) {
+                        div.innerText = "Solve a captcha first then check balance again.";
+                    } else {
+                        div.innerText =
+                            "type: " +
+                            type +
+                            "\nstatus: " +
+                            status +
+                            "\nlimit: " +
+                            limit +
+                            "\nused: " +
+                            used +
+                            "\nfailed: " +
+                            failed +
+                            "\nremaining: " +
+                            (limit - used);
+                    }
+                    document.getElementById("balance").append(div);
+                });
+        }
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        const { uid, apikey } = e.target;
-        broadcastChannel.postMessage({
-          uid: uid.value,
-          apikey: apikey.value,
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const {uid, apikey} = e.target;
+            localStorage.setItem('uid', uid.value);
+            localStorage.setItem('apikey', apikey.value);
+            balance();
+            alert("Saved successfully");
         });
-        alert("Saved successfully");
-      });
     </script>
-  </body>
+</body>
 </html>
