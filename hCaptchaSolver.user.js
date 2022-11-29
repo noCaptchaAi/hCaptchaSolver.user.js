@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         hCaptcha Captcha Solver by noCaptchaAi
 // @name:ar      noCaptchaAI hCaptcha Solver حلال
-// @name:ru     noCaptchaAI Решатель капчи hCaptcha
+// @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
 // @version      2.0.0
