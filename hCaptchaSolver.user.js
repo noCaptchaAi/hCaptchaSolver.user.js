@@ -39,10 +39,6 @@ const cfg = new MonkeyConfig({
         auto_open: {
             type: 'checkbox',
             default: true
-        },
-        disabled_hosts: {
-            type: 'text',
-            default: ''
         }
     }
 });
@@ -149,10 +145,6 @@ while (true) {
     if (!navigator.onLine) break;
 
     await sleep(1000);
-
-    if (cfg.get('disabled_hosts').split(',').includes(location.hostname)) {
-        continue;
-    }
 
     if (cfg.get('auto_open') && isWidget()) {
         const isSolved = document.querySelector('div.check')?.style.display === 'block';
