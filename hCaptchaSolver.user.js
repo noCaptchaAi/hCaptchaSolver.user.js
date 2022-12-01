@@ -129,6 +129,7 @@ async function solve() {
         } else if (response.status === "solved") {
             for (const index of response.solution) {
                 cells[index].click();
+                await sleep(300);
             }
         } else {
             return console.log(response.status);
