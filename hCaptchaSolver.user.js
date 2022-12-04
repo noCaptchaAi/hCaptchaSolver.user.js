@@ -12,7 +12,7 @@
 // @author       noCaptcha AI and Diego
 // @match        *://*/*
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
-// @require      https://raw.github.com/odyniec/MonkeyConfig/master/monkeyconfig.js
+// @require      https://greasyfork.org/scripts/395037-monkeyconfig-modern/code/MonkeyConfig%20Modern.js
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
