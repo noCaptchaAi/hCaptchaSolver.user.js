@@ -10,7 +10,6 @@
 <a href="https://github.com/shimuldn/hCaptchaSolverApi/"><img alt="github stars" src="https://img.shields.io/npm/v/nocaptchaai-puppeteer?label=npm-puppeteer-solver&style=for-the-badge"></a>
 <a href="https://github.com/shimuldn/hCaptchaSolverApi/"><img alt="github stars" src="https://img.shields.io/npm/v/nocaptchasolver?label=npm-selenium-solver&style=for-the-badge"></a>
 </p>
-<video  src="https://user-images.githubusercontent.com/4178343/193617753-078eb586-6a7a-407f-8b98-e80894c0eae2.mp4" controls></video>
 <p>
 
 
