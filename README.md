@@ -23,10 +23,10 @@
 ### d) Click Save and start solving
 
 
-# 🙈 Monkey Clients
+## UserScript  Supported platforms:
 
- * Firefox ~ Tampermonkey (✔️), Violentmonkey (✔️)
- * Chrome Based ~ Tampermonkey (✔️), Violentmonkey  (✔️)
+- Chromium based - > Tampermonkey & Violentmonkey
+- FireFox  -> Tampermonkey
 
 
 # Other Solver Scripts:
