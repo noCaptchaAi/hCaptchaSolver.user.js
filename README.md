@@ -1,8 +1,4 @@
 <h1><img src="https://avatars.githubusercontent.com/u/110127579?s=200&v=4" width="30px" /> hCaptcha Solver UserScript </h1>
-⚡ fast and easy hCaptcha challenge bypass Solver with noCaptchaAi.com API
-
-### [Project](https://github.com/shimuldn/hCaptchaSolverApi) ~ [API DOCS](https://docs.nocaptchaai.com) ~ [Website](https://nocaptchaai.com)
-</p>
 <p>
 <a href="https://t.me/noCaptchaAi" target="_blank"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"></a>
 <a href="https://discord.gg/E7FfzhZqzA" target="_blank"><img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"></a>
@@ -13,17 +9,27 @@
 <p>
 
 
-# 🎯 Requirements
+⚡ fast and easy hCaptcha challenge bypass Solver with noCaptchaAi.com API
+
 ## [Get Free Apikey](https://nocaptchaai.com/register) 🔥 6000/m (200 per day) solves just ⭐ this Repo ↗️
-### a) Install: [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
-### b) Get Apikey: ~
+### [Project](https://github.com/shimuldn/hCaptchaSolverApi) ~ [API DOCS](https://docs.nocaptchaai.com) ~ [Website](https://nocaptchaai.com)
+</p>
+
+
+
+## 🎯 Requirements
+
+
+
+a) Install: [Click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
+b) Get Apikey: ~
  - Free Apikey: Free 6000 per month (200 per day) [Signup](https://nocaptchaai.com/register)
  - Paid Apikey: [Buy here](https://nocaptchaai.com/plans) or  DM admins on Telegram or Discord
-### b) Open Config [Webpage](https://config.nocaptchaai.com/)
-### d) Click Save and start solving
+c) Open Config [Webpage](https://config.nocaptchaai.com/)
+d) Click Save and start solving
 
 
-## UserScript  Supported platforms:
+## UserScript Supported platforms:
 
 - Chromium based - > Tampermonkey & Violentmonkey
 - FireFox  -> Tampermonkey
