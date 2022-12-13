@@ -1,6 +1,6 @@
 <h1><img src="https://avatars.githubusercontent.com/u/110127579?s=200&v=4" width="30px" /> hCaptcha Solver UserScript </h1>
 
-## ⚡ fast and easy hCaptcha challenge bypass Solver with noCaptchaAi.com API
+### ⚡ fast and easy hCaptcha challenge bypass Solver with noCaptchaAi.com API
 
 <p>
 <a href="https://t.me/noCaptchaAi" target="_blank"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"></a>
