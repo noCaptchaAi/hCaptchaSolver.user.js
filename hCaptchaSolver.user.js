@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.0.0
+// @version      3.2.0
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -16,6 +16,7 @@
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
+// @grant        GM_info
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
@@ -29,7 +30,7 @@
 // ==/UserScript==
 
 let unauth;
-let count = 1;
+let startTime;
 
 const base = "https://free.nocaptchaai.com/api/";
 const balUrl = base + "account/balance";
@@ -79,67 +80,65 @@ const cfg = new MonkeyConfig({
       type: "number",
       default: "1000",
     },
-    delay_between_image_clicking_min: {
+    image_click_RandMin: {
       type: "number",
       default: "250",
     },
-    delay_between_image_clicking_max: {
+    image_click_RandMax: {
       type: "number",
       default: "450",
     },
-    delay_before_submit: {
+    solve_puzzle_within_RandMin: {
       type: "number",
-      default: "2000",
+      default: "4000",
+    },
+    solve_puzzle_within_RandMax: {
+      type: "number",
+      default: "5500",
     },
     loop_run_interval: {
       type: "number",
       default: "1000",
     },
-    // show_balance_every: {
-    //   type: "select",
-    //   choices: ["5", "10", "20"],
-    //   default: "5",
-    // },
-    // show_balance_notification: {
-    //   type: "checkbox",
-    //   default: false,
-    // },
-    // show_balance_log: {
-    //   type: "checkbox",
-    //   default: false,
-    // },
     Disable_showing_this_popup_on_all_sites: {
       type: "checkbox",
       default: false,
     },
   },
 });
-// const cfg2 = new MonkeyConfig({
-//   title: "⚙️Api Only Settings",
-//   menuCommand: true,
-//   displayed: true,
-//   overlay: true,
-//   openLayer: true,
-//   params: {
-//     UID: {
-//       type: "text",
-//       default: cfg.get("UID"),
-//     },
-//     APIKEY: {
-//       type: "text",
-//       default: cfg.get("APIKEY"),
-//     },
-//   },
-// });
+
+log(
+  "auto open= " +
+    cfg.get("checkbox_auto_open") +
+    " | " +
+    "auto solve= " +
+    cfg.get("auto_solve") +
+    " | " +
+    "loop running in bg"
+);
+
+async function Toaster(status, text, response) {
+  Toast.fire({
+    icon: status,
+    title: text + "\n" + response,
+    timer: 10000,
+    width: "38em",
+    timerProgressBar: true,
+    allowOutsideClick: "true",
+    color: "#222",
+    grow: "row",
+    background: "#fff",
+    padding: "4em",
+    backdrop: true,
+    showCloseButton: true,
+  });
+}
 
 // show balance
 GM_registerMenuCommand("👛 Check Balance", async function showBalMenu() {
   log(cfg.get("UID") + cfg.get("APIKEY"));
   let response = await fetch(balUrl, {
     method: "get",
-    // referrer: "none",
-    // cache: "no-cache",
-    // mode: "no-cors",
     headers: {
       "Content-Type": "application/json",
       uid: cfg.get("UID"),
@@ -151,132 +150,44 @@ GM_registerMenuCommand("👛 Check Balance", async function showBalMenu() {
   baljson = response;
   response = JSON.stringify(await response, null, "\t");
 
-  if (baljson.status === "Unauthorized") {
-    Toast.fire({
-      icon: "error",
-      title:
-        "<b>noCaptchaAi.com ~</b><i> Balance:-</i>" +
-        "\n \n" +
-        (await response),
-      timer: 10000,
-      width: "28em",
-      timerProgressBar: true,
-      allowOutsideClick: "true",
-      color: "#222",
-      grow: "row",
-      background: "#fff",
-      padding: "2em",
-      backdrop: true,
-      showCloseButton: true,
-    });
-
+  if (response.status === "Unauthorized") {
+    Toaster(
+      "error",
+      "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
+      await response
+    );
     await sleep(2000);
-    cfg.open();
+    cfg.open("layer");
   } else {
-    Toast.fire({
-      icon: "success",
-      title:
-        "<b>noCaptchaAi.com ~</b><i> Balance:-</i>" +
-        "\n \n" +
-        (await response),
-      timer: 10000,
-      width: "28em",
-      timerProgressBar: true,
-      allowOutsideClick: "true",
-      color: "#222",
-      grow: "row",
-      background: "#fff",
-      padding: "2em",
-      backdrop: true,
-      showCloseButton: true,
-    });
+    Toaster(
+      "success",
+      "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
+      await response
+    );
   }
 });
-GM_registerMenuCommand("💸 Buy Quota Balance", () => {
+GM_registerMenuCommand("🏠 HomePage", () => {
+  window.open("https://nocaptchaai.com");
+});
+GM_registerMenuCommand("📈 Dashboard", () => {
+  window.open("https://dash.nocaptchaai.com");
+});
+GM_registerMenuCommand("💸 Buy Solving Quota", () => {
   window.open("https://nocaptchaai.com/buy.html");
 });
 GM_registerMenuCommand("📄 Api Docs", () => {
   window.open("https://docs.nocaptchaai.com/category/api-methods");
 });
-GM_registerMenuCommand("📈 Dashboard", () => {
-  window.open("https://dash.nocaptchaai.com");
+GM_registerMenuCommand("📄 Github", () => {
+  window.open("https://github.com/shimuldn/hCaptchaSolverApi");
 });
-// const apipop = GM_registerMenuCommand("Api setup", async () => {
-//   const { value: formValues } = await Swal.fire({
-//     title: "Setup noCaptchaAi.com Api",
-//     html: `<input id="swal-uid" class="swal2-input" placeholder="UID">
-//       <input id="swal-apikey" class="swal2-input" placeholder="APIKEY">`,
-//     focusConfirm: true,
-//     confirmButtonText: "Save",
-//     preConfirm: () => {
-//       return [
-//         document.getElementById("swal-uid").value,
-//         document.getElementById("swal-apikey").value,
-//       ];
-//     },
-//   });
+GM_registerMenuCommand("❓ Discord", () => {
+  window.open("https://discord.gg/E7FfzhZqzA");
+});
+GM_registerMenuCommand("❓ Telegram", () => {
+  window.open("https://t.me/noCaptchaAi");
+});
 
-//   if (formValues) {
-//     // set("UID", document.getElementById("swal-uid").value);
-//     // set("APIKEY", document.getElementById("swal-apikey").value);
-//     cfg.set = function () {
-//       set("UID", "uid232");
-//       set("APIKEY", "paik3434");
-//       update();
-//       console.log(update());
-//     };
-//   }
-// });
-
-// async function showBal() {
-//   console.log("check balance ran");
-//   let response = await fetch(balUrl, {
-//     method: "get",
-//     // cache: "no-cache",
-//     // mode: "no-cors",
-//     headers: {
-//       "Content-Type": "application/json",
-//       uid: cfg.get("UID"),
-//       apikey: cfg.get("APIKEY"),
-//     },
-//   })
-//     .then((response) => response.json())
-//     .catch((error) => console.log(error));
-
-//   response = JSON.stringify(await response, null, "\t");
-
-//   if (cfg.get("show_balance_notification")) {
-//     Toast.fire({
-//       icon: "success",
-//       title:
-//         "<b>noCaptchaAi.com ~</b><i> Balance:-</i>" +
-//         "\n \n" +
-//         (await response),
-//       timer: 10000,
-//       width: "28em",
-//       timerProgressBar: true,
-//       allowOutsideClick: "true",
-//       color: "#222",
-//       grow: "row",
-//       background: "#fff !important",
-//       padding: "2em",
-//       backdrop: true,
-//       showCloseButton: true,
-//     });
-//   }
-//   if (cfg.get("show_balance_log")) {
-//     console.log("balance info" + response);
-//   }
-// }
-
-//
-// function callEveryTen() {
-//   setInterval(showBal, 1000 * cfg.get("show_balance_every") * 60);
-// }
-
-//
-
-// type of capctha frame
 function isWidget() {
   if (
     document.body.getBoundingClientRect()?.width === 0 ||
@@ -291,9 +202,7 @@ function isWidget() {
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-function random(min, max) {
-  min = cfg.get("delay_between_image_clicking_min");
-  max = cfg.get("delay_between_image_clicking_max");
+function randTimer(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -346,6 +255,7 @@ async function getBase64FromUrl(url) {
 
 // solver
 async function solve() {
+  startTime = new Date();
   const { target, cells, images } = await on_task_ready();
   //   log(target, cells, images);
   if (!cfg.get("auto_solve")) {
@@ -371,9 +281,9 @@ async function solve() {
         softid: "UserScript",
       }),
     });
-    log("🕘 waiting for 📨");
 
     response = await response.json();
+    log("🕘 waiting for response");
 
     if (response.status === "new") {
       log("waiting 2s");
@@ -383,61 +293,51 @@ async function solve() {
         cells[index].click();
       }
     } else if (response.status === "solved") {
-      log("☑️ -> 🖱️ -> 🖼️");
+      console.log("noCaptchaAi.com ~ ☑️ server procssed in", await response.processing_time);
+      log("🖱️ -> 🖼️");
+
       for (const index of response.solution) {
         cells[index].click();
-        await sleep(random(cfg.get("delay_between_image_clicking_max")));
+        let randmin = parseInt(cfg.get("image_click_RandMin"));
+        let randmax = parseInt(cfg.get("image_click_RandMax"));
+        await sleep(randTimer(parseInt(randmin), parseInt(randmax)));
       }
     } else if (response.status === "Unauthorized") {
       unauth = true;
-
-      Toast.fire({
-        icon: "error",
-        title: "Apikey or uid not valid,",
-        text: "please check details again on script menu.",
-        timer: 10000,
-        width: "58em",
-        timerProgressBar: true,
-        allowOutsideClick: "true",
-        color: "#000",
-        grow: "row",
-        background: "#b04040",
-        background: "#b04040 !important",
-        padding: "1em",
-        backdrop: true,
-        showCloseButton: true,
-      });
-
-      await sleep(3000);
-
-      // cfg.open("layer");
+      Toaster("error", "noCaptchaAi.com Apikey or uid not valid", response);
+      await sleep(2000);
+      cfg.open("window");
 
       return log(response.status, response.message);
     } else {
       return log(response.status);
     }
 
-    await sleep(cfg.get("delay_before_submit"));
+    let randmin = parseInt(cfg.get("solve_puzzle_within_RandMin"));
+    let randmax = parseInt(cfg.get("solve_puzzle_within_RandMax"));
+    // console.log(randTimer(randmin, randmax));
+    // console.log("rand", typeof randmax, randmax, randmin);
+
+    const elapsedTime = new Date() - startTime;
+    // console.log("elapsed", elapsedTime);
+    // TODO
+    const remainingTime = randTimer(randmin, randmax) - elapsedTime;
+    // console.log("remaining", remainingTime);
+    await sleep(remainingTime);
+
+    // await sleep(cfg.get("delay_before_submit"));
     log("☑️ sent!");
     document.querySelector(".button-submit").click();
+    startTime = 0;
   } catch (error) {
     console.error(error);
   }
 }
 
 // looper
-
 (async () => {
-  // await sleep(1000);
-  // callEveryTen();
-
-  log("Auto 🖱️ is " + cfg.get("checkbox_auto_open"));
-  log("Auto ☑️ is " + cfg.get("auto_solve"));
-  log("Running in 🌅 background");
-
   while (true) {
-    //
-    log("🕒 session duration:- " + count++ + "s");
+    await sleep(parseInt(cfg.get("loop_run_interval")));
     if (!navigator.onLine) break;
     if (unauth) break;
 
@@ -457,21 +357,17 @@ async function solve() {
       const isSolved =
         document.querySelector("div.check")?.style.display === "block";
       if (isSolved) {
+        startTime = 0;
         ("new ones not found, loop stopped");
       }
       // if (isSolved) break;
       await sleep(cfg.get("delay_before_checkbox_open"));
-      // log(
-      //   "loop interval " +
-      //     " " +
-      //     cfg.get("delay_before_checkbox_open") / 1000 +
-      //     "s"
-      // );
+
       document.querySelector("#checkbox")?.click();
     } else if (cfg.get("checkbox_auto_open")) {
       const isSolved =
         document.querySelector("div.check")?.style.display === "block";
-      // if (isSolved) break;
+      if (isSolved) startTime = 0;
       await sleep(cfg.get("delay_before_checkbox_open"));
       document.querySelector("#checkbox")?.click();
       await solve();
@@ -482,6 +378,6 @@ async function solve() {
       await solve();
     }
   }
-  
-  console.log("Run done")
+
+  console.log("Run done");
 })();
