@@ -20,6 +20,7 @@ a) Install Requirements:
 b) Get Apikey: ~
  - Free Apikey: [🔥 Get Free Apikey](https://nocaptchaai.com/register)
  - Paid Apikey: [Buy here](https://nocaptchaai.com/plans) and DM admins on Telegram or Discord for activation
+ 
 c) Enter uid, apikey when prompted or from script menu. start solving
 
 ## Supports Tampermonkey only
