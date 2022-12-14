@@ -23,4 +23,4 @@ b) Get Apikey: ~
  
 c) Enter uid, apikey when prompted or from script menu. start solving
 
-## Supports Tampermonkey only
+## Supports Tampermonkey and Violentmonkey
