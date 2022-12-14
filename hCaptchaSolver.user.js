@@ -121,6 +121,7 @@
   let unauth = !new Boolean(cfg.get("UID") && cfg.get("APIKEY"));
   const headers = {
     "Content-Type": "application/json",
+    // get apikey http://nocaptchaai.com
     uid: cfg.get("UID"),
     apikey: cfg.get("APIKEY"),
   };
