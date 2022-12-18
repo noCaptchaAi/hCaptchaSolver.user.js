@@ -142,7 +142,7 @@ GM_registerMenuCommand("❓ Telegram", function() {
     });
 });
 
-while (!navigator.onLine || stop) {
+while (!(!navigator.onLine || stop)) {
 
     await sleep(1000)
 
