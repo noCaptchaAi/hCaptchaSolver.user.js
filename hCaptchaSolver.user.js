@@ -211,7 +211,7 @@ async function solve() {
                 await sleep(200);
             }
         } else if (data.status === "Unauthorized") {
-            stop = false;
+            stop = true;
             Toast.fire({
                 icon: "error",
                 title: "noCaptchaAi.com Apikey or uid not valid. \n Popup window will open, if blocked enable and refresh"
