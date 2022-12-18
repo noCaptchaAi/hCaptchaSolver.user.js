@@ -75,7 +75,7 @@ const cfg = new MonkeyConfig({
             label: "delay before checkbox open",
             default: 200,
         },
-        SOLVE_IN_TIME: {
+        SOLVE_IN_SEC: {
             type: "number",
             label: 'solve in sec (can\'t be less than 3 sec)',
             default: 3
@@ -227,7 +227,7 @@ async function solve() {
             return log(response.status);
         }
 
-        let delay = parseInt(cfg.get('SOLVE_IN_TIME'));
+        let delay = parseInt(cfg.get('SOLVE_IN_SEC'));
         delay = (delay > 3 ? delay : 3) * 1000;
 
         const d = delay - (Date.now() - start_time)
