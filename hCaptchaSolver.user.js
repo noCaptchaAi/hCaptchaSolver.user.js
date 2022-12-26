@@ -33,23 +33,14 @@
         params: {
             APIKEY: {
                 type: "text",
-                label: "apikey",
+                label: "🔑 apikey",
                 default: "",
             },
             APIENDPOINT: {
                 type: "select",
+                label: "api endpoint",
                 choices: ["free", "pro"],
                 default: "free"
-            },
-            AUTO_SOLVE: {
-                type: "checkbox",
-                label: "auto solve",
-                default: true,
-            },
-            CHECKBOX_AUTO_OPEN: {
-                type: "checkbox",
-                label: "checkbox auto open",
-                default: true,
             },
             DELAY_BEFORE_CHECKBOX_OPEN: {
                 type: "number",
@@ -60,6 +51,16 @@
                 type: "number",
                 label: 'solve in sec',
                 default: 3
+            },
+                AUTO_SOLVE: {
+                type: "checkbox",
+                label: "auto solve",
+                default: true,
+            },
+            CHECKBOX_AUTO_OPEN: {
+                type: "checkbox",
+                label: "checkbox auto open",
+                default: true,
             },
             DEBUG_LOGS: {
                 type: "checkbox",
