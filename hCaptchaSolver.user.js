@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.3.0
+// @version      3.5.0
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -30,10 +30,17 @@
 (async () => {
   let startTime;
   let stop;
+  const v = "3.5.0";
 
-  const base = "https://free.nocaptchaai.com/api/";
-  const balUrl = base + "account/balance";
-  const baseUrl = base + "solve";
+  const freeApi = "https://free.nocaptchaai.com/api/";
+  const freeBalApi = freeApi + "user/free_balance";
+  const freeSolveApi = freeApi + "solve";
+
+  const proSolveApi = "https://pro.nocaptchaai.com/api/solve";
+  const proStatusApi = "https://manage.nocaptchaai.com/api/status";
+  const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
+
+  const detectapi = "https://manage.nocaptchaai.com/api/user/get_endpoint";
 
   function log(msg) {
     console.log(
@@ -71,11 +78,11 @@
     openLayer: true,
     mode: "iframe",
     params: {
-      UID: {
+      APIKEY: {
         type: "text",
         default: "",
       },
-      APIKEY: {
+      Api_Endpoint: {
         type: "text",
         default: "",
       },
@@ -118,14 +125,24 @@
     },
   });
 
-  let unauth = !new Boolean(cfg.get("UID") && cfg.get("APIKEY"));
+  // let isApikeyEmpty = !new Boolean(cfg.get("APIKEY"));
+  let isApikeyEmpty = cfg.get("APIKEY").length === 0;
+  let isApiEndEmpty = cfg.get("Api_Endpoint").length === 0;
+  if (isApikeyEmpty || isApiEndEmpty) {
+    Toaster(
+      "error",
+      "Please setup ApiKey or Api Endpoint Url from https://dash.nocaptchaai.com"
+    );
+    await sleep(4000);
+    cfg.open("iframe");
+
+    stop;
+  }
   const headers = {
     "Content-Type": "application/json",
-    // get apikey http://nocaptchaai.com
-    uid: cfg.get("UID"),
     apikey: cfg.get("APIKEY"),
   };
-
+  console.log(cfg.get("APIKEY").length === 0);
   log(
     "auto open= " +
       cfg.get("checkbox_auto_open") +
@@ -135,13 +152,46 @@
       " | " +
       "loop running in bg"
   );
+  // if (cfg.get("APIKEY").length !== 0 && !GM_getValue("initdone")) {
+  //   GM_xmlhttpRequest({
+  //     method: "GET",
+  //     headers,
+  //     responseType: "json",
+  //     url: detectapi,
+  //     onload: function (xhr) {
+  //       log(xhr.responseText);
+  //       log(xhr.status === 200);
+  //       if (xhr) {
+  //         let json = JSON.parse(xhr.responseText);
+  //         console.log("api2", json.endpoint);
+  //         console.log("api2", json.error);
+  //         GM_setValue("api_endpoint", json.endpoint);
+  //         if (json.error) {
+  //           GM_setValue("initdone", "no");
+  //         } else {
+  //           GM_setValue("initdone", "yes");
+  //         }
 
-  if (!unauth) {
+  //         Toaster(
+  //           "success",
+  //           "<b>noCaptchaAi.com ~</b><i>Allowed endpoint for Apikey</i>",
+  //           json.endpoint
+  //         );
+  //       }
+  //     },
+  //   });
+  // }
+
+  if (!isApikeyEmpty && !isApiEndEmpty) {
     GM_registerMenuCommand("💲 Check Balance fetch", async function () {
-      //   log(cfg.get("UID") + cfg.get("APIKEY"));
-      let response = await fetch(balUrl, {
-        headers,
-      });
+      let response = await fetch(
+        cfg.get("Api_Endpoint") === "https://free.nocaptchaai.com/api/solve"
+          ? freeBalApi
+          : proBalApi,
+        {
+          headers,
+        }
+      );
       const baljson = JSON.stringify(await response.json(), null, "\t");
       if (response.status === "Unauthorized") {
         Toaster("error", "<b>noCaptchaAi.com ~</b><i> Balance:-</i>", baljson);
@@ -162,28 +212,32 @@
     };
     div.style =
       "color: rgb(235, 87, 87); font-size: 10px; bottom: 5px; left: 5px; width: 75%; position: absolute;";
-    div.innerHTML =
-      "<code>apikey</code> or <code>uid</code> not set. Click here to set up";
+    div.innerHTML = "<code>apikey</code> not set. Click here to set up";
     document.querySelector("#warning").insertAdjacentElement("afterEnd", div);
   }
-  GM_registerMenuCommand("💲 Check Balance xmlHttp ", function () {
-    GM_xmlhttpRequest({
-      method: "GET",
-      headers,
-      url: balUrl,
-      onload: function (response) {
-        log(response.responseText);
-        log(response.status === 200);
-        if (response) {
-          Toaster(
-            "success",
-            "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
-            response.responseText
-          );
-        }
-      },
+  if (!isApikeyEmpty && !isApiEndEmpty) {
+    GM_registerMenuCommand("💲 Check Balance xmlHttp ", function () {
+      GM_xmlhttpRequest({
+        method: "GET",
+        headers,
+        url:
+          cfg.get("Api_Endpoint") === "https://free.nocaptchaai.com/api/solve"
+            ? freeBalApi
+            : proBalApi,
+        onload: function (response) {
+          log(response.responseText);
+          log(response.status === 200);
+          if (response) {
+            Toaster(
+              "success",
+              "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
+              response.responseText
+            );
+          }
+        },
+      });
     });
-  });
+  }
 
   GM_registerMenuCommand("🏠 HomePage", function () {
     GM_openInTab("https://nocaptchaai.com", {
@@ -192,26 +246,17 @@
     });
   });
 
-  GM_registerMenuCommand("📈 Dashboard", function () {
-    GM_openInTab("https://dash.nocaptchaai.com", {
-      active: true,
-      setParent: true,
-    });
-  });
-  GM_registerMenuCommand("💸 Buy Solving Quota", function () {
-    GM_openInTab("https://nocaptchaai.com/buy.html", {
-      active: true,
-      setParent: true,
-    });
-  });
+  GM_registerMenuCommand(
+    "📈 Dashboard/ 💰 Buy Plan / 👛 Balance info",
+    function () {
+      GM_openInTab("https://dash.nocaptchaai.com", {
+        active: true,
+        setParent: true,
+      });
+    }
+  );
   GM_registerMenuCommand("📄 Api Docs", function () {
     GM_openInTab("https://docs.nocaptchaai.com/category/api-methods", {
-      active: true,
-      setParent: true,
-    });
-  });
-  GM_registerMenuCommand("📄 Github", function () {
-    GM_openInTab("https://github.com/shimuldn/hCaptchaSolverApi", {
       active: true,
       setParent: true,
     });
@@ -232,7 +277,7 @@
   log("Run done");
 
   while (true) {
-    if (!navigator.onLine || unauth) break;
+    if (!navigator.onLine || isApikeyEmpty) break;
     if (stop) break;
 
     await sleep(cfg.get("loop_run_interval"));
@@ -310,7 +355,7 @@
     const searchParams = new URLSearchParams(location.hash);
 
     try {
-      let response = await fetch(baseUrl, {
+      let response = await fetch(cfg.get("Api_Endpoint"), {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -320,7 +365,7 @@
           sitekey: searchParams.get("sitekey"),
           site: searchParams.get("host"),
           ln: document.documentElement.lang || navigator.language,
-          softid: "UserScript",
+          softid: "UserScript" + v,
         }),
       });
 
@@ -352,10 +397,10 @@
           await sleep(randTimer(randmin, randmax));
         }
       } else if (response.status === "Unauthorized") {
-        unauth = true;
+        isApikeyEmpty = true;
         Toaster(
           "error",
-          "noCaptchaAi.com Apikey or uid not valid. \n Popup window will open, if blocked enable and refresh",
+          "noCaptchaAi.com Apikey not valid. \n Popup window will open, if blocked enable and refresh",
           response.status
         );
         await sleep(2000);
@@ -369,14 +414,20 @@
         );
         stop = true;
         await sleep(3000);
-        window.open("https://nocaptchaai.com/buy.html");
-      } else if (response.error) {
-        Toaster("error", response.error);
+        window.open("https://dash.nocaptchaai.com");
+      } else if (response.error === "Invalid apikey.") {
+        Toaster("error", "Please check your apikey details.", response.error);
+        console.log(response.error);
+        await sleep(4000);
+        cfg.open("window");
         stop = true;
-        await sleep(3000);
-      } else {
-        Toaster(response.status);
-        return log(response.status);
+      } else if (response.error) {
+        Toaster("error", "please verify Apikey and api url", response.error);
+        console.log(response.error);
+        await sleep(4000);
+        cfg.open("window");
+        stop = true;
+        // return log(response.status);
       }
 
       let randmin = parseInt(cfg.get("solve_puzzle_within_RandMin"));
