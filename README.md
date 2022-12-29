@@ -33,4 +33,4 @@
 - Others with Tampermonkey support
 
 -----
-### If you liked hte free solves, would you leave a 👍 up rating? Thank you.
+### If you liked the free solves, would you leave a 👍 up rating? Thank you.
