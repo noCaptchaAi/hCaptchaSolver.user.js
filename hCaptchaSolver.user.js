@@ -17,12 +17,11 @@
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @connect      nocaptchaai.com
-// @inject-into  content
+// @grant        GM_registerMenuCommand
+// @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
-// @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @grant        GM_addElement
 // @license      MIT
@@ -34,7 +33,7 @@
         params: {
             APIKEY: {
                 type: "text",
-                label: "🔑 apikey",
+                label: "apikey",
                 default: "",
             },
             APIENDPOINT: {
@@ -53,7 +52,7 @@
                 label: 'solve in sec',
                 default: 3
             },
-                AUTO_SOLVE: {
+            AUTO_SOLVE: {
                 type: "checkbox",
                 label: "auto solve",
                 default: true,
@@ -102,10 +101,12 @@
     };
 
     let stop = false;
-
-    log(!cfg.get("APIKEY"));
-    log("auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"), "auto solve= " + cfg.get("AUTO_SOLVE"), "loop running in bg");
-
+    
+    if (window.top === window) {
+        log(!cfg.get("APIKEY"));
+    l   log("auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"), "auto solve= " + cfg.get("AUTO_SOLVE"), "loop running in bg");
+    }
+    
     if (!isApikeyEmpty) {
         GM_registerMenuCommand("💲 Check Balance ", function() {
             GM_xmlhttpRequest({
@@ -125,14 +126,13 @@
             });
         });
     }
-
+    
     GM_registerMenuCommand("🏠 HomePage", function() {
         GM_openInTab("https://nocaptchaai.com", {
             active: true,
             setParent: true,
         });
     });
-
     GM_registerMenuCommand(
         "📈 Dashboard/ 💰 Buy Plan / 👛 Balance info",
         function() {
@@ -181,11 +181,7 @@
     }
 
     async function solve() {
-        const {
-            target,
-            cells,
-            images
-        } = await on_task_ready();
+        const {target, cells, images} = await on_task_ready();
 
         if (!cfg.get("AUTO_SOLVE")) {
             return;
@@ -306,11 +302,7 @@
                 }
 
                 clearInterval(check_interval);
-                return resolve({
-                    target,
-                    cells,
-                    images
-                });
+                return resolve({target, cells, images});
             }, i);
         });
     }
