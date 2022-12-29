@@ -104,7 +104,7 @@
     
     if (window.top === window) {
         log(!cfg.get("APIKEY"));
-    l   log("auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"), "auto solve= " + cfg.get("AUTO_SOLVE"), "loop running in bg");
+        log("auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"), "auto solve= " + cfg.get("AUTO_SOLVE"), "loop running in bg");
     }
     
     if (!isApikeyEmpty) {
