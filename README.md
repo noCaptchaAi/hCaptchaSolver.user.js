@@ -33,4 +33,4 @@
 - Others with Tampermonkey support
 
 -----
-### 2000 solves extra free if you leave a positive review on greasyfork 👍, ping us on telegram discord to claim.
+### If you liked hte free solves, would you leave a 👍 up rating? Thank you.
