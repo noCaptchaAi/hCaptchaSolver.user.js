@@ -32,6 +32,9 @@
     const lang = document.documentElement.lang || navigator.language;
     const langs = JSON.parse(GM_getResourceText("lan"));
     const {title, params} = langs[lang] || langs.en;
+    const version = GM_info.script.version
+    
+    params.VERSION.html = params.VERSION.html.replace("%version%", version)
     
     const cfg = new MonkeyConfig({title, params, menuCommand: true});
 
@@ -164,7 +167,7 @@
                     sitekey: searchParams.get("sitekey"),
                     site: searchParams.get("host"),
                     ln: lang,
-                    softid: "UserScript" + GM_info.script.version,
+                    softid: "UserScript" + version,
                 }),
             });
             log("sent for solving", "🕘 waiting for response");
