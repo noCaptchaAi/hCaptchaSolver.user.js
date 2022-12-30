@@ -31,13 +31,9 @@
 (async function() {
     const lang = document.documentElement.lang || navigator.language;
     const langs = JSON.parse(GM_getResourceText("lan"));
-    const l = langs[lang] || langs.en;
+    const {title, params} = langs[lang] || langs.en;
     
-    const cfg = new MonkeyConfig({
-        title: l.title,
-        menuCommand: true,
-        params: l.params
-    });
+    const cfg = new MonkeyConfig({title, params, menuCommand: true});
 
     const Toast = Swal.mixin({
         toast: true,
