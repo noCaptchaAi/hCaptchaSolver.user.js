@@ -16,8 +16,10 @@
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
+// @resource lan https://raw.githubusercontent.com/DiegoSawyer/hCaptchaSolver.user.js/main/languages.txt
 // @connect      nocaptchaai.com
 // @grant        GM_registerMenuCommand
+// @grant        GM_getResourceText
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -27,47 +29,14 @@
 // @license      MIT
 // ==/UserScript==
 (async function() {
+    const lang = document.documentElement.lang || navigator.language;
+    const langs = JSON.parse(GM_getResourceText("lan"));
+    const l = langs[lang] || langs.en;
+    
     const cfg = new MonkeyConfig({
-        title: "⚙️noCaptchaAi.com All Settings",
+        title: l.title,
         menuCommand: true,
-        params: {
-            APIKEY: {
-                type: "text",
-                label: "apikey",
-                default: "",
-            },
-            APIENDPOINT: {
-                type: "select",
-                label: "api endpoint",
-                choices: ["free", "pro"],
-                default: "free"
-            },
-            DELAY_BEFORE_CHECKBOX_OPEN: {
-                type: "number",
-                label: "delay before checkbox open",
-                default: 200,
-            },
-            SOLVE_IN_SEC: {
-                type: "number",
-                label: 'solve in sec',
-                default: 3
-            },
-            AUTO_SOLVE: {
-                type: "checkbox",
-                label: "auto solve",
-                default: true,
-            },
-            CHECKBOX_AUTO_OPEN: {
-                type: "checkbox",
-                label: "checkbox auto open",
-                default: true,
-            },
-            DEBUG_LOGS: {
-                type: "checkbox",
-                label: "debug logs",
-                default: true,
-            },
-        },
+        params: l.params
     });
 
     const Toast = Swal.mixin({
@@ -101,12 +70,11 @@
     };
 
     let stop = false;
-    
     if (window.top === window) {
         log(!cfg.get("APIKEY"));
         log("auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"), "auto solve= " + cfg.get("AUTO_SOLVE"), "loop running in bg");
     }
-    
+
     if (!isApikeyEmpty) {
         GM_registerMenuCommand("💲 Check Balance ", function() {
             GM_xmlhttpRequest({
@@ -126,7 +94,7 @@
             });
         });
     }
-    
+
     GM_registerMenuCommand("🏠 HomePage", function() {
         GM_openInTab("https://nocaptchaai.com", {
             active: true,
@@ -199,7 +167,7 @@
                     method: "hcaptcha_base64",
                     sitekey: searchParams.get("sitekey"),
                     site: searchParams.get("host"),
-                    ln: document.documentElement.lang || navigator.language,
+                    ln: lang,
                     softid: "UserScript" + GM_info.script.version,
                 }),
             });
