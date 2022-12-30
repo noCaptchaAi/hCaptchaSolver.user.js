@@ -43,6 +43,7 @@
          },
          "VERSION":{
             "type":"custom",
+            "label": "version",
             "html":"%version%"
          }
       }
