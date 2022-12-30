@@ -43,7 +43,7 @@
          },
          "VERSION":{
             "type":"custom",
-            "html":GM_info.script.version
+            "html":"%version%"
          }
       }
    }
