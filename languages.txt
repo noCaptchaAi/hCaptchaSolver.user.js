@@ -40,6 +40,10 @@
             "type":"checkbox",
             "label":"debug logs",
             "default":true
+         },
+         "VERSION":{
+            "type":"custom",
+            "html":GM_info.script.version
          }
       }
    }
