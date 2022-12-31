@@ -56,12 +56,7 @@
         },
     });
 
-    const apiUrl = "https://" + cfg.get('APIENDPOINT') + ".nocaptchaai.com/api"
-    const solveApi = apiUrl + "/solve";
-
     const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
-    const freeBalApi = apiUrl + "/user/free_balance";
-
     const isApikeyEmpty = !cfg.get("APIKEY");
     const headers = {
         "Content-Type": "application/json",
@@ -79,7 +74,7 @@
             GM_xmlhttpRequest({
                 method: "GET",
                 headers,
-                url: cfg.get('APIENDPOINT') == 'pro' ? proBalApi : freeBalApi,
+                url: cfg.get('APIENDPOINT') == 'pro' ? proBalApi : getApi("balance"),
                 onload: function(response) {
                     log(response.responseText);
                     log(response.status === 200);
@@ -147,17 +142,17 @@
         }
     }
 
-    async function solve() {
-        const {target, cells, images} = await on_task_ready();
-
+    async function solve() 
         if (!cfg.get("AUTO_SOLVE")) {
             return;
         }
+    
+        const {target, cells, images} = await on_task_ready();
         const start_time = Date.now();
         const searchParams = new URLSearchParams(location.hash);
 
         try {
-            const response = await fetch(solveApi, {
+            const response = await fetch(getApi("solve"), {
                 method: "POST",
                 headers,
                 body: JSON.stringify({
@@ -250,6 +245,10 @@
         console.table(arg)
     }
 
+    function getApi(v) {
+        return "https://" + cfg.get('APIENDPOINT') + ".nocaptchaai.com/" + v;
+    }
+    
     function on_task_ready(i = 500) {
         return new Promise(async (resolve) => {
             const check_interval = setInterval(async function() {
