@@ -16,7 +16,7 @@
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
-// @resource ln  https://raw.githubusercontent.com/DiegoSawyer/hCaptchaSolver.user.js/main/languages.txt
+// @resource lan https://raw.githubusercontent.com/DiegoSawyer/hCaptchaSolver.user.js/main/languages.txt
 // @connect      nocaptchaai.com
 // @grant        GM_registerMenuCommand
 // @grant        GM_getResourceText
@@ -30,10 +30,10 @@
 // ==/UserScript==
 (async function() {
     const lang = document.documentElement.lang || navigator.language;
-    const langs = JSON.parse(GM_getResourceText("ln"));
+    const langs = JSON.parse(GM_getResourceText("lan"));
     const {title, params} = langs[lang] || langs.en;
-    const version = GM_info.script.version;  
-    const cfg = new MonkeyConfig({title, params, menuCommand: true});
+    const version = GM_info.script.version;
+    const cfg = new MonkeyConfig({title, params, onSave, menuCommand: true});
     const Toast = Swal.mixin({
         toast: true,
         showConfirmButton: false,
@@ -51,6 +51,7 @@
             toast.addEventListener("mouseleave", Swal.resumeTimer);
         },
     });
+
     const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
     const isApikeyEmpty = !cfg.get("APIKEY");
     const headers = {
@@ -141,7 +142,7 @@
         if (!cfg.get("AUTO_SOLVE")) {
             return;
         }
-    
+
         const {target, cells, images} = await on_task_ready();
         const start_time = Date.now();
         const searchParams = new URLSearchParams(location.hash);
@@ -243,7 +244,29 @@
     function getApi(v) {
         return "https://" + cfg.get('APIENDPOINT') + ".nocaptchaai.com/" + v;
     }
-    
+
+    function onSave({APIKEY}) {
+        if (headers.apikey === APIKEY || APIKEY === '') return;
+        console.log('here');
+        GM_xmlhttpRequest({
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                apikey: APIKEY
+            },
+            responseType: "json",
+            url: "https://manage.nocaptchaai.com/api/user/get_endpoint",
+            onload: function({response}) {
+                if (response.error) {
+                    cfg.set('APIKEY', '');
+                    return alert('wrong apikey');
+                }
+                cfg.set('APIENDPOINT', response.plan === "prepaid" ? 'pro': 'free');
+            },
+        });
+
+    }
+
     function on_task_ready(i = 500) {
         return new Promise(async (resolve) => {
             const check_interval = setInterval(async function() {
