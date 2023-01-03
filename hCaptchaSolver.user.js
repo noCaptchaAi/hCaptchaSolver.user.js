@@ -16,7 +16,7 @@
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
-// @resource lan https://raw.githubusercontent.com/DiegoSawyer/hCaptchaSolver.user.js/main/languages.txt
+// @resource ln https://raw.githubusercontent.com/DiegoSawyer/hCaptchaSolver.user.js/main/languages.txt
 // @connect      nocaptchaai.com
 // @grant        GM_registerMenuCommand
 // @grant        GM_getResourceText
@@ -30,7 +30,7 @@
 // ==/UserScript==
 (async function() {
     const lang = document.documentElement.lang || navigator.language;
-    const langs = JSON.parse(GM_getResourceText("lan"));
+    const langs = JSON.parse(GM_getResourceText("ln"));
     const {title, params} = langs[lang] || langs.en;
     const version = GM_info.script.version;
     const cfg = new MonkeyConfig({title, params, onSave, menuCommand: true});
