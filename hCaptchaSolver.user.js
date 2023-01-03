@@ -142,7 +142,7 @@
         }
     }
 
-    async function solve() 
+    async function solve() {
         if (!cfg.get("AUTO_SOLVE")) {
             return;
         }
