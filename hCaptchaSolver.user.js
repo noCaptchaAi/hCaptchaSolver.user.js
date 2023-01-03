@@ -32,12 +32,8 @@
     const lang = document.documentElement.lang || navigator.language;
     const langs = JSON.parse(GM_getResourceText("lan"));
     const {title, params} = langs[lang] || langs.en;
-    const version = GM_info.script.version
-    
-    params.VERSION.html = params.VERSION.html.replace("%version%", version)
-    
+    const version = GM_info.script.version;  
     const cfg = new MonkeyConfig({title, params, menuCommand: true});
-
     const Toast = Swal.mixin({
         toast: true,
         showConfirmButton: false,
@@ -55,7 +51,6 @@
             toast.addEventListener("mouseleave", Swal.resumeTimer);
         },
     });
-
     const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
     const isApikeyEmpty = !cfg.get("APIKEY");
     const headers = {
