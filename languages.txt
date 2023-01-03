@@ -40,11 +40,6 @@
             "type":"checkbox",
             "label":"debug logs",
             "default":true
-         },
-         "VERSION":{
-            "type":"custom",
-            "label": "version",
-            "html":"%version%"
          }
       }
    }
