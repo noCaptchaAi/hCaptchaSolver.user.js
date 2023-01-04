@@ -16,10 +16,8 @@
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
-// @resource ln https://raw.githubusercontent.com/DiegoSawyer/hCaptchaSolver.user.js/main/languages.txt
 // @connect      nocaptchaai.com
 // @grant        GM_registerMenuCommand
-// @grant        GM_getResourceText
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -29,11 +27,50 @@
 // @license      MIT
 // ==/UserScript==
 (async function() {
-    const lang = document.documentElement.lang || navigator.language;
-    const langs = JSON.parse(GM_getResourceText("ln"));
-    const {title, params} = langs[lang] || langs.en;
     const version = GM_info.script.version;
-    const cfg = new MonkeyConfig({title, params, onSave, menuCommand: true});
+    const cfg = new MonkeyConfig({
+        title: "⚙️noCaptchaAi.com All Settings",
+        params: {
+            "APIKEY": {
+                "type": "text",
+                "label": "apikey",
+                "default": ""
+            },
+            "APIENDPOINT": {
+                "type": "select",
+                "label": "api endpoint",
+                "choices": ["free", "pro"],
+                "default": "free"
+            },
+            "DELAY_BEFORE_CHECKBOX_OPEN": {
+                "type": "number",
+                "label": "delay before checkbox open",
+                "default": 200
+            },
+            "SOLVE_IN_SEC": {
+                "type": "number",
+                "label": "solve in sec",
+                "default": 3
+            },
+            "AUTO_SOLVE": {
+                "type": "checkbox",
+                "label": "auto solve",
+                "default": true
+            },
+            "CHECKBOX_AUTO_OPEN": {
+                "type": "checkbox",
+                "label": "checkbox auto open",
+                "default": true
+            },
+            "DEBUG_LOGS": {
+                "type": "checkbox",
+                "label": "debug logs",
+                "default": true
+            }
+        },
+        onSave,
+        menuCommand: true
+    });
     const Toast = Swal.mixin({
         toast: true,
         showConfirmButton: false,
@@ -157,7 +194,7 @@
                     method: "hcaptcha_base64",
                     sitekey: searchParams.get("sitekey"),
                     site: searchParams.get("host"),
-                    ln: lang,
+                    ln: document.documentElement.lang || navigator.language,
                     softid: "UserScript" + version,
                 }),
             });
@@ -243,12 +280,14 @@
             },
             responseType: "json",
             url: "https://manage.nocaptchaai.com/api/user/get_endpoint",
-            onload: function({response}) {
+            onload: function({
+                response
+            }) {
                 if (response.error) {
                     cfg.set('APIKEY', '');
                     return alert('wrong apikey');
                 }
-                cfg.set('APIENDPOINT', response.plan === "prepaid" ? 'pro': 'free');
+                cfg.set('APIENDPOINT', response.plan === "prepaid" ? 'pro' : 'free');
             },
         });
 
