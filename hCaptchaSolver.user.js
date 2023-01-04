@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         hCaptcha Captcha Solver by noCaptchaAi - old
+// @name         hCaptcha Captcha Solver by noCaptchaAi
 // @name:ar      noCaptchaAI hCaptcha Solver حلال
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
