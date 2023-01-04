@@ -180,19 +180,6 @@
                     cells[index].click();
                     await sleep(200);
                 }
-            } else if (data.status === "Unauthorized") {
-                stop = true;
-                Toast.fire({
-                    icon: "error",
-                    title: "noCaptchaAi.com Apikey or uid not valid. \n Popup window will open, if blocked enable and refresh"
-                }).then(function() {
-                    cfg.open("window", {
-                        windowFeatures: {
-                            width: 500
-                        },
-                    });
-                })
-                return log(response.status, response.message);
             } else {
                 return log(response.status);
             }
