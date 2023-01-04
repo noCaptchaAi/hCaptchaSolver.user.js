@@ -271,7 +271,6 @@
 
     function onSave({APIKEY}) {
         if (headers.apikey === APIKEY || APIKEY === '') return;
-        console.log('here');
         GM_xmlhttpRequest({
             method: "GET",
             headers: {
@@ -280,9 +279,7 @@
             },
             responseType: "json",
             url: "https://manage.nocaptchaai.com/api/user/get_endpoint",
-            onload: function({
-                response
-            }) {
+            onload: function({response}) {
                 if (response.error) {
                     cfg.set('APIKEY', '');
                     return alert('wrong apikey');
