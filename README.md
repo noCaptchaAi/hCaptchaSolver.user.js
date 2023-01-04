@@ -13,6 +13,8 @@
 # [Dashboard](https://dash.nocaptchaai.com)  ~ [API DOCS](https://docs.nocaptchaai.com) ~ [Website](https://nocaptchaai.com)
 -----
 
+# Install [click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
+
 ## Free Apikey: [🔥 Get Free](https://nocaptchaai.com/register)
 ## Paid Apikey: [Buy Cheap](https://dash.nocaptchaai.com) 
 ### Questions or issues? Join our Telegram or Discord
