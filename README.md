@@ -32,7 +32,6 @@
 
 - Iceraven => Tampermonkey [Get Apk Here](https://github.com/fork-maintainers/iceraven-browser)
 - Kiwi Browser => Tampermonkey/Violentmonkey [Get Apk here](https://kiwibrowser.com/)
-- Others with Tampermonkey support
 
 -----
 ### Support us by starring this repo. Thanks
