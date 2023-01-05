@@ -35,4 +35,4 @@
 - Others with Tampermonkey support
 
 -----
-### If you liked the free solves, would you leave a 👍 up rating? Thank you.
+### Support us by starring this repo. Thanks
