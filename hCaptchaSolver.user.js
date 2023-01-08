@@ -39,7 +39,7 @@
             },
             "APIENDPOINT": {
                 "type": "select",
-                "label": "api endpoint",
+                "label": "plan",
                 "choices": ["free", "pro"],
                 "default": "free"
             },
