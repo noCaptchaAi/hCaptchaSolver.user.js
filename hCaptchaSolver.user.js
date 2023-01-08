@@ -37,7 +37,7 @@
                 "label": "apikey",
                 "default": ""
             },
-            "APIENDPOINT": {
+            "PLAN": {
                 "type": "select",
                 "label": "plan",
                 "choices": ["free", "pro"],
@@ -117,7 +117,7 @@
             GM_xmlhttpRequest({
                 method: "GET",
                 headers,
-                url: cfg.get('APIENDPOINT') == 'pro' ? proBalApi : getApi("balance"),
+                url: cfg.get("PLAN") == 'pro' ? proBalApi : getApi("balance"),
                 onload: function(response) {
                     log(response.responseText, response.status === 200);
                     if (response) {
@@ -269,7 +269,7 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
     function getApi(v) {
-        return "https://" + cfg.get('APIENDPOINT') + ".nocaptchaai.com/" + v;
+        return "https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v;
     }
     function log() {
         if (!cfg.get('DEBUG_LOGS')) return;
@@ -294,7 +294,7 @@
                         cfg.set('APIKEY', '');
                         return alert('wrong apikey');
                     }
-                    cfg.set('APIENDPOINT', response.plan === "prepaid" ? 'pro' : 'free');
+                    cfg.set("PLAN", response.plan === "prepaid" ? 'pro' : 'free');
                 },
             });
         } catch (error) {
