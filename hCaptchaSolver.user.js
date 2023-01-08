@@ -283,24 +283,39 @@
     }
 
     function onSave({APIKEY}) {
-        if (headers.apikey === APIKEY || APIKEY === '') return;
-        GM_xmlhttpRequest({
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                apikey: APIKEY
-            },
-            responseType: "json",
-            url: "https://manage.nocaptchaai.com/api/user/get_endpoint",
-            onload: function({response}) {
-                if (response.error) {
-                    cfg.set('APIKEY', '');
-                    return alert('wrong apikey');
-                }
-                cfg.set('APIENDPOINT', response.plan === "prepaid" ? 'pro' : 'free');
-            },
-        });
-
+        try {
+            if (headers.apikey === APIKEY || APIKEY === '') return;
+            GM_xmlhttpRequest({
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    apikey: APIKEY
+                },
+                responseType: "json",
+                url: "https://manage.nocaptchaai.com/api/user/get_endpoint",
+                onload: function({response}) {
+                    if (response.error) {
+                        cfg.set('APIKEY', '');
+                        return alert('wrong apikey');
+                    }
+                    cfg.set('APIENDPOINT', response.plan === "prepaid" ? 'pro' : 'free');
+                },
+            });
+        } catch (error) {
+            log(error);
+        } finally {
+            log('reload');
+            const array = [...document.querySelectorAll("[src*=newassets]")]
+            const url = array.map(el => el.src);
+            array.forEach(el => {
+                el.src = "about:blank"
+            })
+            setTimeout(function() {
+                array.forEach((el,index) => {
+                    el.src = url[index];
+                })
+            }, 10);
+        }
     }
 
     function on_task_ready(i = 500) {
