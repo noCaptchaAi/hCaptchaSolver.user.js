@@ -27,6 +27,7 @@
 // @license      MIT
 // ==/UserScript==
 (async function() {
+
     const version = GM_info.script.version;
     const cfg = new MonkeyConfig({
         title: "⚙️noCaptchaAi.com All Settings",
@@ -88,6 +89,18 @@
             toast.addEventListener("mouseleave", Swal.resumeTimer);
         },
     });
+
+    if (location.hostname === 'dash.nocaptchaai.com') {
+        const d = document.createElement('div');
+        d.onclick = function(e) {
+            const dd = [...document.querySelectorAll('[readonly]')].map(el => el.value);
+            log(dd.at(1));
+            cfg.set('APIKEY', dd.at(1))
+        }
+        d.id = 'test';
+        d.innerText = 'setup userscript';
+        document.body.insertBefore(d, document.body.firstChild);
+    }
 
     const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
     const isApikeyEmpty = !cfg.get("APIKEY");
