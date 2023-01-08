@@ -281,7 +281,7 @@
 
     function onSave({APIKEY}) {
         try {
-            if (headers.apikey === APIKEY || APIKEY === '') return;
+            if (headers.apikey === APIKEY || APIKEY === '') throw new Error('empty or eq');
             GM_xmlhttpRequest({
                 method: "GET",
                 headers: {
@@ -303,15 +303,13 @@
         } finally {
             log('reload');
             const array = [...document.querySelectorAll("[src*=newassets]")]
-            const url = array.map(el => el.src);
             array.forEach(el => {
-                el.src = "about:blank"
+                const url = el.src;
+                el.src = "about:blank";
+                setTimeout(function() {
+                    el.src = url;
+                }, 10)
             })
-            setTimeout(function() {
-                array.forEach((el,index) => {
-                    el.src = url[index];
-                })
-            }, 10);
         }
     }
     function on_task_ready(i = 500) {
