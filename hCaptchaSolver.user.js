@@ -119,8 +119,7 @@
                 headers,
                 url: cfg.get('APIENDPOINT') == 'pro' ? proBalApi : getApi("balance"),
                 onload: function(response) {
-                    log(response.responseText);
-                    log(response.status === 200);
+                    log(response.responseText, response.status === 200);
                     if (response) {
                         Toast.fire({
                             icon: "success",
