@@ -27,7 +27,7 @@
 // @license      MIT
 // ==/UserScript==
 (async function() {
-
+    // variables
     const version = GM_info.script.version;
     const cfg = new MonkeyConfig({
         title: "⚙️noCaptchaAi.com All Settings",
@@ -89,7 +89,19 @@
             toast.addEventListener("mouseleave", Swal.resumeTimer);
         },
     });
+    const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
+    const isApikeyEmpty = !cfg.get("APIKEY");
+    const headers = {
+        "Content-Type": "application/json",
+        apikey: cfg.get("APIKEY"),
+    };
+    let stop = false;
 
+    // statements
+    if (window.top === window) {
+        log(!cfg.get("APIKEY"));
+        log("auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"), "auto solve= " + cfg.get("AUTO_SOLVE"), "loop running in bg");
+    }
     if (location.hostname === 'dash.nocaptchaai.com') {
         const d = document.createElement('div');
         d.onclick = function(e) {
@@ -101,20 +113,6 @@
         d.innerText = 'setup userscript';
         document.body.insertBefore(d, document.body.firstChild);
     }
-
-    const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
-    const isApikeyEmpty = !cfg.get("APIKEY");
-    const headers = {
-        "Content-Type": "application/json",
-        apikey: cfg.get("APIKEY"),
-    };
-
-    let stop = false;
-    if (window.top === window) {
-        log(!cfg.get("APIKEY"));
-        log("auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"), "auto solve= " + cfg.get("AUTO_SOLVE"), "loop running in bg");
-    }
-
     if (!isApikeyEmpty) {
         GM_registerMenuCommand("💲 Check Balance ", function() {
             GM_xmlhttpRequest({
@@ -135,6 +133,7 @@
         });
     }
 
+    // menu
     GM_registerMenuCommand("🏠 HomePage", function() {
         GM_openInTab("https://nocaptchaai.com", {
             active: true,
@@ -169,7 +168,7 @@
         });
     });
 
-
+    // main loop
     while (!(!navigator.onLine || stop || isApikeyEmpty)) {
 
         await sleep(1000)
@@ -188,6 +187,7 @@
         }
     }
 
+    //async functions
     async function solve() {
         if (!cfg.get("AUTO_SOLVE")) {
             return;
@@ -245,7 +245,6 @@
             log(error);
         }
     }
-
     async function getBase64FromUrl(url) {
         const blob = await (await fetch(url)).blob();
         return new Promise(function(resolve) {
@@ -260,6 +259,7 @@
         });
     }
 
+    // normal functions
     function isWidget() {
         const rect = document.body.getBoundingClientRect();
         if (rect?.width === 0 || rect?.height === 0) {
@@ -267,13 +267,17 @@
         }
         return document.querySelector("div.check") !== null;
     }
-
     function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
-
     function getApi(v) {
         return "https://" + cfg.get('APIENDPOINT') + ".nocaptchaai.com/" + v;
+    }
+    function log() {
+        if (!cfg.get('DEBUG_LOGS')) return;
+        for (const arg of arguments) {
+            console.debug(arg);
+        }
     }
 
     function onSave({APIKEY}) {
@@ -311,7 +315,6 @@
             }, 10);
         }
     }
-
     function on_task_ready(i = 500) {
         return new Promise(async (resolve) => {
             const check_interval = setInterval(async function() {
@@ -334,12 +337,5 @@
                 return resolve({target, cells, images});
             }, i);
         });
-    }
-
-    function log() {
-        if (!cfg.get('DEBUG_LOGS')) return;
-        for (const arg of arguments) {
-            console.debug(arg);
-        }
     }
 })();
