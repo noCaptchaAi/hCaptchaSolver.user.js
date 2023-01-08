@@ -224,8 +224,7 @@
                     cells[index].click();
                 }
             } else if (data.status === "solved") {
-                table(data);
-                log("🖱️ -> 🖼️");
+                log(data, "🖱️ -> 🖼️");
                 for (const index of data.solution) {
                     cells[index].click();
                     await sleep(200);
@@ -271,11 +270,6 @@
 
     function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    function table(arg) {
-        if (!cfg.get('DEBUG_LOGS')) return;
-        console.table(arg)
     }
 
     function getApi(v) {
@@ -342,8 +336,10 @@
         });
     }
 
-    function log(...args) {
+    function log() {
         if (!cfg.get('DEBUG_LOGS')) return;
-        console.debug(args.join('\n'))
+        for (const arg of arguments) {
+            console.debug(arg);
+        }
     }
 })();
