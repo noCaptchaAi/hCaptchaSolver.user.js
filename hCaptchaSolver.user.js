@@ -302,14 +302,14 @@
             log(error);
         } finally {
             log('reload');
-            const array = [...document.querySelectorAll("[src*=newassets]")]
-            array.forEach(el => {
-                const url = el.src;
-                el.src = "about:blank";
+            const iframes = [...document.querySelectorAll("[src*=newassets]")]
+            for (const iframe of iframes) {
+                const url = iframe.src;
+                iframe.src = "about:blank";
                 setTimeout(function() {
-                    el.src = url;
+                    iframe.src = url;
                 }, 10)
-            })
+            }
         }
     }
     function on_task_ready(i = 500) {
