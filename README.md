@@ -8,12 +8,15 @@
 <a href="https://github.com/shimuldn/hCaptchaSolverApi/"><img alt="github stars" src="https://img.shields.io/github/stars/shimuldn/hCaptchaSolverApi?style=for-the-badge"></a>
 <a href="https://github.com/shimuldn/hCaptchaSolverApi/"><img alt="github stars" src="https://img.shields.io/npm/v/nocaptchaai-puppeteer?label=npm-puppeteer-solver&style=for-the-badge"></a>
 <a href="https://github.com/shimuldn/hCaptchaSolverApi/"><img alt="github stars" src="https://img.shields.io/npm/v/nocaptchasolver?label=npm-selenium-solver&style=for-the-badge"></a>
+<a href="https://greasyfork.org/en/scripts/454941-nocaptchaai-hcaptcha-solver"><img alt="github stars" src="https://user-images.githubusercontent.com/4178343/202253849-adb3f27a-24cf-444e-916c-2e58cba00362.png">
 </p>
 
 # [Dashboard](https://dash.nocaptchaai.com)  ~ [API DOCS](https://docs.nocaptchaai.com) ~ [Website](https://nocaptchaai.com)
 -----
 
-# Install [click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
+## Install [click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
+
+### Auto setup userscript from https://dash.nocaptchaai.com
 
 ## Free Apikey: [🔥 Get Free](https://nocaptchaai.com/register)
 ## Paid Apikey: [Buy Cheap](https://dash.nocaptchaai.com) 
@@ -34,4 +37,4 @@
 - Kiwi Browser => Tampermonkey/Violentmonkey [Get Apk here](https://kiwibrowser.com/)
 
 -----
-### Support us by starring this repo. Thanks
+### Support us by starring github repo and leaving a thumbs up on greasyfork. Thanks
