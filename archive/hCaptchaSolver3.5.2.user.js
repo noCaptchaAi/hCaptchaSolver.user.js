@@ -4,14 +4,13 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.6.0
+// @version      3.5.2
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
 // @description:zh-CN hCaptcha Solver 自动绕过 Ai 服务的 Captcha Solver。 免费 6000 🔥解决/月！ 比 2Captcha 和其他人快 50x⚡
 // @author       noCaptcha AI and Diego
 // @match        *://*/*
-// @match        https://config.nocaptchaai.com/?apikey=*
 // @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
 // @require      https://greasyfork.org/scripts/395037-monkeyconfig-modern/code/MonkeyConfig%20Modern.js
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
@@ -29,83 +28,19 @@
 // ==/UserScript==
 
 (async () => {
-  "use strict";
-
-  const cfg = new MonkeyConfig({
-    title: "⚙️noCaptchaAi.com All Settings",
-    params: {
-      auto_solve: {
-        type: "checkbox",
-        default: true,
-      },
-      checkbox_auto_open: {
-        type: "checkbox",
-        default: true,
-      },
-      debug_logs: {
-        type: "checkbox",
-        label: "Enable logs",
-        default: true,
-      },
-      APIKEY: {
-        type: "text",
-        default: "",
-      },
-      PLAN: {
-        type: "select",
-        label: "noCaptchaAi Plan",
-        choices: ["FREE", "PRO"],
-        default: "FREE",
-      },
-      Custom_Endpoint: {
-        type: "text",
-        label: "Custom API URL (OPTIONAL)",
-        default: "",
-      },
-      delay_before_checkbox_open: {
-        type: "number",
-        label: "checkbox open (ms)",
-        default: 200,
-      },
-      image_click_RandMin: {
-        type: "number",
-        label: "img click max (ms)",
-        default: 150,
-      },
-      image_click_RandMax: {
-        type: "number",
-        label: "img click min (ms)",
-        default: 250,
-      },
-      solve_puzzle_within_RandMin: {
-        type: "number",
-        label: "solve within min (ms)",
-        default: 5000,
-      },
-      solve_puzzle_within_RandMax: {
-        type: "number",
-        label: "solve within max (ms)",
-        default: 6000,
-      },
-      loop_run_interval: {
-        type: "number",
-        label: "loop run interval (ms)",
-        default: 1000,
-      },
-    },
-    onSave,
-    menuCommand: true,
-  });
-
   let startTime;
-  let stop = false;
-  const v = GM_info.script.version;
+  let stop;
+  const v = "3.5.0";
 
   const freeApi = "https://free.nocaptchaai.com/api/";
   const freeBalApi = freeApi + "user/free_balance";
+  const freeSolveApi = freeApi + "solve";
+
+  const proSolveApi = "https://pro.nocaptchaai.com/api/solve";
+  const proStatusApi = "https://manage.nocaptchaai.com/api/status";
   const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
 
-  let isApikeyEmpty = !cfg.get("APIKEY");
+  const detectapi = "https://manage.nocaptchaai.com/api/user/get_endpoint";
 
   function log(msg) {
     console.log(
@@ -117,14 +52,14 @@
   (() => {
     GM_addStyle(
       `.swal2-container{
-         z-index:9990; }
-      `
+           z-index:9990; }   
+        `
     );
   })();
 
   const Toast = Swal.mixin({
     toast: true,
-    position: "top-center",
+    position: "top-end",
     showConfirmButton: false,
     showCloseButton: true,
     timer: 8000,
@@ -135,59 +70,79 @@
     },
   });
 
-  if (location.search.startsWith("?apikey=")) {
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-    let apikey = params.apikey;
-    let plan = params.plan;
-    let custom_api = params.custom_api;
+  const cfg = new MonkeyConfig({
+    title: "⚙️noCaptchaAi.com All Settings",
+    menuCommand: true,
+    displayed: true,
+    overlay: true,
+    openLayer: true,
+    mode: "iframe",
+    params: {
+      APIKEY: {
+        type: "text",
+        default: "",
+      },
+      Api_Endpoint: {
+        type: "text",
+        default: "",
+      },
+      auto_solve: {
+        type: "checkbox",
+        default: true,
+      },
+      checkbox_auto_open: {
+        type: "checkbox",
+        default: true,
+      },
+      delay_before_checkbox_open: {
+        type: "number",
+        default: 200,
+      },
+      image_click_RandMin: {
+        type: "number",
+        default: 150,
+      },
+      image_click_RandMax: {
+        type: "number",
+        default: 250,
+      },
+      solve_puzzle_within_RandMin: {
+        type: "number",
+        default: 2000,
+      },
+      solve_puzzle_within_RandMax: {
+        type: "number",
+        default: 3000,
+      },
+      loop_run_interval: {
+        type: "number",
+        default: 1000,
+      },
+      debug_logs: {
+        type: "checkbox",
+        default: true,
+      },
+    },
+  });
 
-    if (
-      apikey !== undefined ||
-      "" ||
-      plan !== undefined ||
-      "" ||
-      custom_api !== undefined ||
-      ""
-    ) {
-      cfg.set("APIKEY", apikey);
-      cfg.set("PLAN", plan);
-      cfg.set("Custom_Endpoint", custom_api);
-      await sleep(1000);
-      cfg.open();
-      await sleep(1000);
-      if (document.getElementById("__MonkeyConfig_frame")) {
-        let iframe = document.getElementById("__MonkeyConfig_frame");
-        let innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        innerDoc.getElementById("__MonkeyConfig_button_save")?.click();
-        console.log(iframe);
-        console.log(innerDoc);
-      }
-      await sleep(1000);
-
-      if (cfg.get("APIKEY").length != 0 && cfg.get("PLAN").length != 0) {
-        Toast.fire(
-          "noCaptchaAi.com \n Config Saved Successfully. \n Refresh capctha pages to solve."
-        );
-      }
-    }
-  }
-
-  if (window.top === window) {
-    //log(!cfg.get("APIKEY"));
-    log(
-      "auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"),
-      "auto solve= " + cfg.get("AUTO_SOLVE"),
-      "loop running in bg"
+  // let isApikeyEmpty = !new Boolean(cfg.get("APIKEY"));
+  let isApikeyEmpty = cfg.get("APIKEY").length === 0;
+  let isApiEndEmpty = cfg.get("Api_Endpoint").length === 0;
+  if (isApikeyEmpty || isApiEndEmpty) {
+    Toaster(
+      "error",
+      "Please setup ApiKey or Api Endpoint Url from https://dash.nocaptchaai.com"
     );
-  }
+    await sleep(4000);
+    cfg.open("iframe");
 
+    stop;
+  }
   const headers = {
     "Content-Type": "application/json",
     apikey: cfg.get("APIKEY"),
   };
-
+  console.log(cfg.get("APIKEY").length === 0);
   log(
     "auto open= " +
       cfg.get("checkbox_auto_open") +
@@ -197,11 +152,40 @@
       " | " +
       "loop running in bg"
   );
+  // if (cfg.get("APIKEY").length !== 0 && !GM_getValue("initdone")) {
+  //   GM_xmlhttpRequest({
+  //     method: "GET",
+  //     headers,
+  //     responseType: "json",
+  //     url: detectapi,
+  //     onload: function (xhr) {
+  //       log(xhr.responseText);
+  //       log(xhr.status === 200);
+  //       if (xhr) {
+  //         let json = JSON.parse(xhr.responseText);
+  //         console.log("api2", json.endpoint);
+  //         console.log("api2", json.error);
+  //         GM_setValue("api_endpoint", json.endpoint);
+  //         if (json.error) {
+  //           GM_setValue("initdone", "no");
+  //         } else {
+  //           GM_setValue("initdone", "yes");
+  //         }
 
-  if (!isApikeyEmpty) {
+  //         Toaster(
+  //           "success",
+  //           "<b>noCaptchaAi.com ~</b><i>Allowed endpoint for Apikey</i>",
+  //           json.endpoint
+  //         );
+  //       }
+  //     },
+  //   });
+  // }
+
+  if (!isApikeyEmpty && !isApiEndEmpty) {
     GM_registerMenuCommand("💲 Check Balance fetch", async function () {
       let response = await fetch(
-        cfg.get("Custom_Endpoint").length === 0 && cfg.get("PLAN") === "FREE"
+        cfg.get("Api_Endpoint") === "https://free.nocaptchaai.com/api/solve"
           ? freeBalApi
           : proBalApi,
         {
@@ -216,13 +200,28 @@
       }
       Toaster("success", "<b>noCaptchaAi.com ~</b><i> Balance:-</i>", baljson);
     });
-
+  } else if (document.querySelector("#warning")) {
+    const div = document.createElement("div");
+    div.onclick = function (e) {
+      e.preventDefault();
+      cfg.open("window", {
+        windowFeatures: {
+          width: 500,
+        },
+      });
+    };
+    div.style =
+      "color: rgb(235, 87, 87); font-size: 10px; bottom: 5px; left: 5px; width: 75%; position: absolute;";
+    div.innerHTML = "<code>apikey</code> not set. Click here to set up";
+    document.querySelector("#warning").insertAdjacentElement("afterEnd", div);
+  }
+  if (!isApikeyEmpty && !isApiEndEmpty) {
     GM_registerMenuCommand("💲 Check Balance xmlHttp ", function () {
       GM_xmlhttpRequest({
         method: "GET",
         headers,
         url:
-          cfg.get("Custom_Endpoint").length === 0 && cfg.get("PLAN") === "FREE"
+          cfg.get("Api_Endpoint") === "https://free.nocaptchaai.com/api/solve"
             ? freeBalApi
             : proBalApi,
         onload: function (response) {
@@ -248,7 +247,7 @@
   });
 
   GM_registerMenuCommand(
-    "📈 Dashboard /💰 Buy Solves /💲 Balance",
+    "📈 Dashboard/ 💰 Buy Plan / 👛 Balance info",
     function () {
       GM_openInTab("https://dash.nocaptchaai.com", {
         active: true,
@@ -275,24 +274,27 @@
     });
   });
 
-  while (!(!navigator.onLine || stop || isApikeyEmpty)) {
+  log("Run done");
+
+  while (true) {
+    if (!navigator.onLine || isApikeyEmpty) break;
+    if (stop) break;
+
     await sleep(cfg.get("loop_run_interval"));
 
     if (cfg.get("checkbox_auto_open") && isWidget()) {
       const isSolved =
         document.querySelector("div.check")?.style.display === "block";
-      if (isSolved) {
-        log("found solved");
-        break;
-      }
+      if (isSolved && cfg.get("debug_logs")) log("found solved");
+      if (isSolved) break;
       await sleep(cfg.get("delay_before_checkbox_open"));
       document.querySelector("#checkbox")?.click();
     } else if (
       cfg.get("auto_solve") &&
       document.querySelector("h2.prompt-text") !== null
     ) {
-      if (cfg.get("debug_logs") === true) log("opening box");
       await solve();
+      if (cfg.get("debug_logs") === true) log("opening box");
     }
   }
 
@@ -343,7 +345,7 @@
   }
 
   async function solve() {
-    const { target, cells, images } = await onTaskReady();
+    const { target, cells, images } = await on_task_ready();
 
     if (!cfg.get("auto_solve")) {
       return;
@@ -353,7 +355,7 @@
     const searchParams = new URLSearchParams(location.hash);
 
     try {
-      let response = await fetch(getApi("solve"), {
+      let response = await fetch(cfg.get("Api_Endpoint"), {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -430,9 +432,12 @@
 
       let randmin = parseInt(cfg.get("solve_puzzle_within_RandMin"));
       let randmax = parseInt(cfg.get("solve_puzzle_within_RandMax"));
+      // console.log(randTimer(randmin, randmax));
+      // console.log("rand", typeof randmax, randmax, randmin);
 
       const elapsedTime = new Date() - startTime;
-
+      // console.log("elapsed", elapsedTime);
+      // TODO
       const remainingTime = randTimer(randmin, randmax) - elapsedTime;
       // console.log("remaining", remainingTime);
       await sleep(remainingTime);
@@ -445,46 +450,8 @@
       console.error(error);
     }
   }
-  function getApi(v) {
-    return "https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v;
-  }
 
-  function onSave({ APIKEY }) {
-    try {
-      if (headers.apikey === APIKEY || APIKEY === "")
-        throw new Error("empty or eq");
-      GM_xmlhttpRequest({
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: APIKEY,
-        },
-        responseType: "json",
-        url: "https://manage.nocaptchaai.com/api/user/get_endpoint",
-        onload: function ({ response }) {
-          if (response.error) {
-            cfg.set("APIKEY", "");
-            return alert("wrong apikey");
-          }
-          cfg.set("PLAN", response.plan === "prepaid" ? "pro" : "free");
-        },
-      });
-    } catch (error) {
-      log(error);
-    } finally {
-      log("reload");
-      const iframes = [...document.querySelectorAll("[src*=newassets]")];
-      for (const iframe of iframes) {
-        const url = iframe.src;
-        iframe.src = "about:blank";
-        setTimeout(function () {
-          iframe.src = url;
-        }, 10);
-      }
-    }
-  }
-
-  function onTaskReady(i = 500) {
+  function on_task_ready(i = 500) {
     return new Promise(async (resolve) => {
       const check_interval = setInterval(async function () {
         let target = document.querySelector(".prompt-text")?.textContent;
