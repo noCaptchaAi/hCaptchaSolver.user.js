@@ -168,7 +168,7 @@
 
       if (cfg.get("APIKEY").length != 0 && cfg.get("PLAN").length != 0) {
         Toast.fire(
-          "noCaptchaAi.com \n Config Saved Successfully. \n Refresh capctha pages to solve."
+          "noCaptchaAi.com \n Config Saved Successfully. \n Refresh captcha pages to solve."
         );
       }
     }
