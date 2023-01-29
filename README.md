@@ -11,16 +11,11 @@
 <a href="https://greasyfork.org/en/scripts/454941-nocaptchaai-hcaptcha-solver"><img alt="github stars" src="https://user-images.githubusercontent.com/4178343/202253849-adb3f27a-24cf-444e-916c-2e58cba00362.png">
 </p>
 
-# [Dashboard](https://dash.nocaptchaai.com)  ~ [API DOCS](https://docs.nocaptchaai.com) ~ [Website](https://nocaptchaai.com)
 -----
 
 ## Install [click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
 
-### Auto setup userscript from https://dash.nocaptchaai.com
-
-## Free Apikey: [🔥 Get Free](https://nocaptchaai.com/register)
-## Paid Apikey: [Buy Cheap](https://dash.nocaptchaai.com) 
-### Questions or issues? Join our Telegram or Discord
+### Dashboard https://dash.nocaptchaai.com
 
 -----
 
@@ -35,6 +30,3 @@
 
 - Iceraven => Tampermonkey [Get Apk Here](https://github.com/fork-maintainers/iceraven-browser)
 - Kiwi Browser => Tampermonkey/Violentmonkey [Get Apk here](https://kiwibrowser.com/)
-
------
-### Support us by starring github repo and leaving a thumbs up on greasyfork. Thanks
