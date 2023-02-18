@@ -1,7 +1,10 @@
-<h1><img src="https://avatars.githubusercontent.com/u/110127579?s=200&v=4" width="30px" /> hCaptcha Solver UserScript </h1>
+<div align="center">
+<img src="https://avatars.githubusercontent.com/u/110127579?s=200&v=4" alt="Logo" width="50" />
+<br />
+<h1>hCaptcha Solver UserScript </h1>
+<p>Machine Learning Solution Powered by noCaptchaAi.com</p>
 
-### ⚡ fast and easy hCaptcha challenge bypass Solver with noCaptchaAi.com API
-
+[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/) &nbsp; [![npm version](https://badge.fury.io/js/nocaptchaai-puppeteer.svg)](https://www.npmjs.com/package/nocaptchaai-puppeteer) &nbsp; [![Discord](https://img.shields.io/badge/chat%20on-Discord-7289da.svg)](https://discord.gg/E7FfzhZqzA) &nbsp; [![Telegram](https://img.shields.io/badge/chat%20on-Telegram-blue.svg)](https://t.me/noCaptchaAi)
 <p>
 <a href="https://t.me/noCaptchaAi" target="_blank"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"></a>
 <a href="https://discord.gg/E7FfzhZqzA" target="_blank"><img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"></a>
@@ -10,14 +13,29 @@
 <a href="https://github.com/shimuldn/hCaptchaSolverApi/"><img alt="github stars" src="https://img.shields.io/npm/v/nocaptchasolver?label=npm-selenium-solver&style=for-the-badge"></a>
 <a href="https://greasyfork.org/en/scripts/454941-nocaptchaai-hcaptcha-solver"><img alt="github stars" src="https://user-images.githubusercontent.com/4178343/202253849-adb3f27a-24cf-444e-916c-2e58cba00362.png">
 </p>
+<img src="https://user-images.githubusercontent.com/38348819/219877368-e2f36cf0-4fac-4b12-980e-1aa0b741b407.png" />
+<img src="https://user-images.githubusercontent.com/38348819/219877336-b1fb2388-d8bc-4ddc-b26b-fc9df36042df.png" />
+
+<br />
+
+<h1><a target="_blank"  href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js">⚡ Click to Install</a></h1>
+
+<a target="_blank" href="https://github.com/noCaptchaAi/noCaptcha_extension">🔥 Chrome Extension</a> <br />
+<a target="_blank" href="https://github.com/noCaptchaAi/nocaptchaai-puppeteer">🔥 NPM puppeteer Package</a>
+</div>
+
 
 -----
-
-## Install [click](https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js)
 
 ### Dashboard https://dash.nocaptchaai.com
 
------
+<p align="left">
+6000 solves free monthly 🔥 just by social sharing <br />
+CHEAPEST Plans for bots Anywhere https://nocaptchaai.com/plans <br />
+Software list https://dash.nocaptchaai.com/software <br />
+autosetup userscript link ( https://dash.nocaptchaai.com > login )
+</p>
+
 
 ## Desktop Browsers
 
