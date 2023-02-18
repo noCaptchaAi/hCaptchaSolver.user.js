@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         hCaptcha Captcha Solver by noCaptchaAi
+// @name         hCaptcha Solver UserScript by noCaptchaAi
 // @name:ar      noCaptchaAI hCaptcha Solver حلال
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.6.0
+// @version      3.6.5
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -44,7 +44,7 @@
       },
       debug_logs: {
         type: "checkbox",
-        label: "Enable logs",
+        label: "Console logs",
         default: true,
       },
       APIKEY: {
@@ -59,43 +59,37 @@
       },
       Custom_Endpoint: {
         type: "text",
-        label: "Custom API URL (OPTIONAL)",
+        label: "Custom API",
         default: "",
       },
-      delay_before_checkbox_open: {
+      delay_open: {
         type: "number",
-        label: "checkbox open (ms)",
-        default: 200,
+        label: "Delay Open",
+        default: 1,
       },
-      image_click_RandMin: {
+      solve_in_sec: {
         type: "number",
-        label: "img click max (ms)",
-        default: 150,
+        label: "Solve In Second",
+        default: 4,
       },
-      image_click_RandMax: {
+      loop_interval: {
         type: "number",
-        label: "img click min (ms)",
-        default: 250,
-      },
-      solve_puzzle_within_RandMin: {
-        type: "number",
-        label: "solve within min (ms)",
-        default: 5000,
-      },
-      solve_puzzle_within_RandMax: {
-        type: "number",
-        label: "solve within max (ms)",
-        default: 6000,
-      },
-      loop_run_interval: {
-        type: "number",
-        label: "loop run interval (ms)",
-        default: 1000,
+        label: "Loop Interval",
+        default: 1,
       },
     },
     onSave,
     menuCommand: true,
   });
+
+  let target = "";
+  const open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function () {
+    this.addEventListener("readystatechange", onXHReady);
+    open.apply(this, arguments);
+  };
+
+  localStorage.setItem("noCaptchaAi", "true");
 
   let startTime;
   let stop = false;
@@ -104,7 +98,6 @@
   const freeApi = "https://free.nocaptchaai.com/api/";
   const freeBalApi = freeApi + "user/free_balance";
   const proBalApi = "https://manage.nocaptchaai.com/api/user/get_balance";
-
   let isApikeyEmpty = !cfg.get("APIKEY");
 
   function log(msg) {
@@ -124,16 +117,33 @@
 
   const Toast = Swal.mixin({
     toast: true,
-    position: "top-center",
+    position: "center",
     showConfirmButton: false,
     showCloseButton: true,
-    timer: 8000,
+    timer: 5000,
+    width: "60%",
+    color: "#222",
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
       toast.addEventListener("mouseleave", Swal.resumeTimer);
     },
   });
+  function Toaster(status, text, response) {
+    Toast.fire({
+      target: "body",
+      icon: status,
+      title: text + "\n" + response,
+      timer: 10000,
+      width: "90%",
+      timerProgressBar: true,
+      color: "#222",
+      grow: "row",
+      background: "#fff",
+      padding: "4em",
+      showCloseButton: true,
+    });
+  }
 
   if (location.search.startsWith("?apikey=")) {
     const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -177,9 +187,8 @@
   if (window.top === window) {
     //log(!cfg.get("APIKEY"));
     log(
-      "auto open= " + cfg.get("CHECKBOX_AUTO_OPEN"),
-      "auto solve= " + cfg.get("AUTO_SOLVE"),
-      "loop running in bg"
+      "auto open= " + cfg.get("checkbox_auto_open"),
+      "auto solve= " + cfg.get("auto_solve")
     );
   }
 
@@ -193,50 +202,58 @@
       cfg.get("checkbox_auto_open") +
       " | " +
       "auto solve= " +
-      cfg.get("auto_solve") +
-      " | " +
-      "loop running in bg"
+      cfg.get("auto_solve")
   );
 
   if (!isApikeyEmpty) {
-    GM_registerMenuCommand("💲 Check Balance fetch", async function () {
-      let response = await fetch(
-        cfg.get("Custom_Endpoint").length === 0 && cfg.get("PLAN") === "FREE"
-          ? freeBalApi
-          : proBalApi,
-        {
+    GM_registerMenuCommand("💲 Check Balance ", async function () {
+      if (window.top === window) {
+        GM_xmlhttpRequest({
+          method: "GET",
           headers,
-        }
-      );
-      const baljson = JSON.stringify(await response.json(), null, "\t");
-      if (response.status === "Unauthorized") {
-        Toaster("error", "<b>noCaptchaAi.com ~</b><i> Balance:-</i>", baljson);
-        await sleep(2000);
-        return cfg.open("layer");
-      }
-      Toaster("success", "<b>noCaptchaAi.com ~</b><i> Balance:-</i>", baljson);
-    });
+          url:
+            cfg.get("Custom_Endpoint").length === 0 &&
+            cfg.get("PLAN") === "FREE"
+              ? freeBalApi
+              : proBalApi,
+          onload: function (response) {
+            log(response.responseText);
+            log(response.status === 200);
+            if (response) {
+              Toaster(
+                "success",
+                "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
+                response.responseText
+              );
+            }
+          },
+        });
 
-    GM_registerMenuCommand("💲 Check Balance xmlHttp ", function () {
-      GM_xmlhttpRequest({
-        method: "GET",
-        headers,
-        url:
+        await sleep(3000);
+        let response = await fetch(
           cfg.get("Custom_Endpoint").length === 0 && cfg.get("PLAN") === "FREE"
             ? freeBalApi
             : proBalApi,
-        onload: function (response) {
-          log(response.responseText);
-          log(response.status === 200);
-          if (response) {
-            Toaster(
-              "success",
-              "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
-              response.responseText
-            );
+          {
+            headers,
           }
-        },
-      });
+        );
+        const baljson = JSON.stringify(await response.json(), null, "\t");
+        if (response.status === "Unauthorized") {
+          Toaster(
+            "error",
+            "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
+            baljson
+          );
+          await sleep(2000);
+          return cfg.open("layer");
+        }
+        Toaster(
+          "success",
+          "<b>noCaptchaAi.com ~</b><i> Balance:-</i>",
+          baljson
+        );
+      }
     });
   }
 
@@ -275,8 +292,23 @@
     });
   });
 
+  if (
+    isApikeyEmpty &&
+    window.top === window &&
+    location.href === "https://dash.nocaptchaai.com/home"
+  ) {
+    Toast.fire({
+      imageUrl: "https://i.postimg.cc/6qf6Gw4t/image.png",
+      duration: 4000,
+      color: "#222",
+      width: "85vw",
+      background: "#333",
+      padding: "2em",
+    });
+  }
+
   while (!(!navigator.onLine || stop || isApikeyEmpty)) {
-    await sleep(cfg.get("loop_run_interval"));
+    await sleep(cfg.get("loop_interval") * 1000);
 
     if (cfg.get("checkbox_auto_open") && isWidget()) {
       const isSolved =
@@ -285,7 +317,7 @@
         log("found solved");
         break;
       }
-      await sleep(cfg.get("delay_before_checkbox_open"));
+      await sleep(cfg.get("delay_open") * 1000);
       document.querySelector("#checkbox")?.click();
     } else if (
       cfg.get("auto_solve") &&
@@ -312,22 +344,6 @@
     return Math.floor(Math.random() * (max - min) + min);
   }
 
-  function Toaster(status, text, response) {
-    Toast.fire({
-      target: "body",
-      icon: status,
-      title: text + "\n" + response,
-      timer: 10000,
-      width: "90%",
-      timerProgressBar: true,
-      color: "#222",
-      grow: "row",
-      background: "#fff",
-      padding: "4em",
-      showCloseButton: true,
-    });
-  }
-
   async function getBase64FromUrl(url) {
     const blob = await (await fetch(url)).blob();
     return new Promise(function (resolve) {
@@ -345,11 +361,12 @@
   async function solve() {
     const { target, cells, images } = await onTaskReady();
 
+    if (cfg.get("debug_logs")) console.log("xhrlang", target);
+
     if (!cfg.get("auto_solve")) {
       return;
     }
     startTime = new Date();
-
     const searchParams = new URLSearchParams(location.hash);
 
     try {
@@ -362,8 +379,10 @@
           method: "hcaptcha_base64",
           sitekey: searchParams.get("sitekey"),
           site: searchParams.get("host"),
-          ln: document.documentElement.lang || navigator.language,
-          softid: "UserScript" + v,
+          ln: target
+            ? "en"
+            : document.documentElement.lang || navigator.language,
+          softid: "UserScript_V" + v,
         }),
       });
 
@@ -378,7 +397,14 @@
         const status = await (await fetch(response.url)).json();
         for (const index of status.solution) {
           cells[index].click();
+          await sleep(randTimer(200, 250));
         }
+      } else if (response.status === "skip") {
+        console.log(response.message);
+        Toast.fire("⚠ Model needs update (Skipped) \n");
+      } else if (response.status === "error") {
+        console.log(response.message);
+        Toast.fire(response.message);
       } else if (response.status === "solved") {
         if (cfg.get("debug_logs") === true) console.table(response);
         if (cfg.get("debug_logs") === true)
@@ -388,12 +414,44 @@
           );
 
         log("🖱️ -> 🖼️");
-        const randmin = parseInt(cfg.get("image_click_RandMin"));
-        const randmax = parseInt(cfg.get("image_click_RandMax"));
-        for (const index of response.solution) {
-          cells[index].click();
-          await sleep(randTimer(randmin, randmax));
+
+        const elapsedTime = new Date() - startTime;
+        const remainingTime = cfg.get("solve_in_sec") * 1000 - elapsedTime;
+        let clicktime;
+        if (remainingTime >= 600) {
+          clicktime = (remainingTime - 300) / response.solution.length;
+        } else {
+          clicktime = 150;
         }
+
+        // shuffle click
+        function shuffle(array) {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        }
+        const shuffledSolution = shuffle(response.solution);
+
+        // click with shuffled Solution
+        for (const index of shuffledSolution) {
+          const x = Math.floor(Math.random() * window.innerWidth);
+          const y = Math.floor(Math.random() * window.innerHeight);
+          const element = document.elementFromPoint(x, y);
+          if (element) {
+            element.dispatchEvent(
+              new MouseEvent("mousemove", { clientX: x, clientY: y })
+            );
+          }
+          cells[index].click();
+          await sleep(clicktime);
+        }
+
+        // for (const index of response.solution) {
+        //   cells[index].click();
+        //   await sleep(randTimer(rmin, rmax));
+        // }
       } else if (response.status === "Unauthorized") {
         isApikeyEmpty = true;
         Toaster(
@@ -408,20 +466,21 @@
         Toaster(
           "error",
           "<h3>Account flagged</h3> <h4>a) Buy Plan</h4> <h4>b) Ping on Discord/Telegram for activation</h4> ",
-          response.error
+          response.message
         );
         stop = true;
         await sleep(3000);
         window.open("https://dash.nocaptchaai.com");
       } else if (response.error === "Invalid apikey.") {
-        Toaster("error", "Please check your apikey details.", response.error);
+        Toaster("error", response.message);
         console.log(response.error);
         await sleep(4000);
         cfg.open("window");
         stop = true;
       } else if (response.error) {
-        Toaster("error", "please verify Apikey and api url", response.error);
+        Toaster("error", response.message);
         console.log(response.error);
+
         await sleep(4000);
         cfg.open("window");
         stop = true;
@@ -437,7 +496,6 @@
       // console.log("remaining", remainingTime);
       await sleep(remainingTime);
       if (cfg.get("debug_logs") === true) log("waiting random time");
-      // await sleep(cfg.get("delay_before_submit"));
       log("☑️ sent!");
       document.querySelector(".button-submit").click();
       startTime = 0;
@@ -445,8 +503,14 @@
       console.error(error);
     }
   }
+
   function getApi(v) {
-    return "https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v;
+    if (cfg.get("Custom_Endpoint")) {
+      console.log("custom", cfg.get("Custom_Endpoint"));
+      return cfg.get("Custom_Endpoint") + v;
+    } else {
+      return "https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v;
+    }
   }
 
   function onSave({ APIKEY }) {
@@ -483,28 +547,51 @@
       }
     }
   }
+  async function onXHReady() {
+    if (
+      !this.responseType != ("" && undefined) &&
+      typeof this.responseText != "string"
+    ) {
+      if (!this.responseText || !location.hash) return;
+      if (this.responseURL.startsWith("https://hcaptcha.com/getcaptcha")) {
+        // target = JSON.parse(this.responseText).requester_question.en;
+        // console.log("target", target);
+        try {
+          console.log("ressss", typeof this.responseText);
+          const responseJSON = JSON.parse(this.responseText);
+
+          target = responseJSON.requester_question?.en;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+  }
 
   function onTaskReady(i = 500) {
     return new Promise(async (resolve) => {
       const check_interval = setInterval(async function () {
-        let target = document.querySelector(".prompt-text")?.textContent;
-        if (!target) return;
+        let targetText =
+          target || document.querySelector(".prompt-text")?.textContent;
+        if (!targetText) return;
 
         const cells = document.querySelectorAll(".task-image .image");
         if (cells.length !== 9) return;
 
         const images = {};
+
         for (let i = 0; i < cells.length; i++) {
           const img = cells[i];
           if (!img) return;
           const url = img.style.background.match(/url\("(.*)"/)?.at(1) || null;
           if (!url || url === "") return;
+          // images[i] = await getBase64FromUrl(url);
           images[i] = await getBase64FromUrl(url);
         }
 
         clearInterval(check_interval);
         return resolve({
-          target,
+          target: targetText,
           cells,
           images,
         });
