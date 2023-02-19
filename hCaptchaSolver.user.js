@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.6.6
+// @version      3.6.8
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -82,7 +82,11 @@
     menuCommand: true,
   });
 
+  const logs = cfg.get("debug_logs");
+
   let target_xhr = "";
+  let lang_xhr = "";
+  const searchParams = new URLSearchParams(location.hash);
   const open = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function () {
     this.addEventListener("readystatechange", onXHReady);
@@ -101,11 +105,12 @@
   let isApikeyEmpty = !cfg.get("APIKEY");
 
   function log(msg) {
-    console.log(
-      "%cnoCaptchaAi.com ~ %c" + msg,
-      "background: #222; color: #bada55",
-      ""
-    );
+    if (logs)
+      console.log(
+        "%cnoCaptchaAi.com ~ %c" + msg,
+        "background: #222; color: #bada55",
+        ""
+      );
   }
   (() => {
     GM_addStyle(
@@ -171,8 +176,8 @@
         let iframe = document.getElementById("__MonkeyConfig_frame");
         let innerDoc = iframe.contentDocument || iframe.contentWindow.document;
         innerDoc.getElementById("__MonkeyConfig_button_save")?.click();
-        console.log(iframe);
-        console.log(innerDoc);
+        if (logs) console.log(iframe);
+        if (logs) console.log(innerDoc);
       }
       await sleep(1000);
 
@@ -186,10 +191,11 @@
 
   if (window.top === window) {
     //log(!cfg.get("APIKEY"));
-    log(
-      "auto open= " + cfg.get("checkbox_auto_open"),
-      "auto solve= " + cfg.get("auto_solve")
-    );
+    if (logs)
+      log(
+        "auto open= " + cfg.get("checkbox_auto_open"),
+        "auto solve= " + cfg.get("auto_solve")
+      );
   }
 
   const headers = {
@@ -314,7 +320,7 @@
       const isSolved =
         document.querySelector("div.check")?.style.display === "block";
       if (isSolved) {
-        log("found solved");
+        if (logs) log("found solved");
         break;
       }
       await sleep(cfg.get("delay_open") * 1000);
@@ -361,8 +367,6 @@
   async function solve() {
     const { target, cells, images } = await onTaskReady();
 
-    if (cfg.get("debug_logs")) console.log("xhrlang", target);
-
     if (!cfg.get("auto_solve")) {
       return;
     }
@@ -379,20 +383,21 @@
           method: "hcaptcha_base64",
           sitekey: searchParams.get("sitekey"),
           site: searchParams.get("host"),
-          ln: target
-            ? "en"
-            : document.documentElement.lang || navigator.language,
+          ln:
+            lang_xhr !== ""
+              ? "en"
+              : document.documentElement.lang || navigator.language,
           softid: "UserScript_V" + v,
         }),
       });
 
       response = await response.json();
       if (cfg.get("debug_logs") === true) log("sent for solving");
-      log("🕘 waiting for response");
+      if (logs) log("🕘 waiting for response");
 
       if (response.status === "new") {
         if (cfg.get("debug_logs") === true) console.table(response);
-        log("waiting 2s");
+        if (logs) log("waiting 2s");
         await sleep(2000);
         const status = await (await fetch(response.url)).json();
         for (const index of status.solution) {
@@ -400,20 +405,21 @@
           await sleep(randTimer(200, 250));
         }
       } else if (response.status === "skip") {
-        console.log(response.message);
+        if (logs) console.log(response.message);
         Toast.fire("⚠ Model needs update (Skipped) \n");
       } else if (response.status === "error") {
-        console.log(response.message);
+        if (logs) console.log(response.message);
         Toast.fire(response.message);
       } else if (response.status === "solved") {
         if (cfg.get("debug_logs") === true) console.table(response);
         if (cfg.get("debug_logs") === true)
-          console.log(
-            "noCaptchaAi.com ~ ☑️ server procssed in",
-            response.processing_time
-          );
+          if (logs)
+            console.log(
+              "noCaptchaAi.com ~ ☑️ server procssed in",
+              response.processing_time
+            );
 
-        log("🖱️ -> 🖼️");
+        if (logs) log("🖱️ -> 🖼️");
 
         const elapsedTime = new Date() - startTime;
         const remainingTime = cfg.get("solve_in_sec") * 1000 - elapsedTime;
@@ -473,13 +479,13 @@
         window.open("https://dash.nocaptchaai.com");
       } else if (response.error === "Invalid apikey.") {
         Toaster("error", response.message);
-        console.log(response.error);
+        if (logs) console.log(response.error);
         await sleep(4000);
         cfg.open("window");
         stop = true;
       } else if (response.error) {
         Toaster("error", response.message);
-        console.log(response.error);
+        if (logs) console.log(response.error);
 
         await sleep(4000);
         cfg.open("window");
@@ -487,16 +493,13 @@
         // return log(response.status);
       }
 
-      let randmin = parseInt(cfg.get("solve_puzzle_within_RandMin"));
-      let randmax = parseInt(cfg.get("solve_puzzle_within_RandMax"));
+      // const elapsedTime = new Date() - startTime;
+      // const remainingTime = cfg.get("solve_in_sec") - elapsedTime;
+      // if (logs) console.log("🕘 waiting solve_in_sec", remainingTime);
+      await sleep(randTimer(300, 500));
 
-      const elapsedTime = new Date() - startTime;
-
-      const remainingTime = randTimer(randmin, randmax) - elapsedTime;
-      // console.log("remaining", remainingTime);
-      await sleep(remainingTime);
       if (cfg.get("debug_logs") === true) log("waiting random time");
-      log("☑️ sent!");
+      if (logs) log("☑️ sent!");
       document.querySelector(".button-submit").click();
       startTime = 0;
     } catch (error) {
@@ -506,7 +509,7 @@
 
   function getApi(v) {
     if (cfg.get("Custom_Endpoint")) {
-      console.log("custom", cfg.get("Custom_Endpoint"));
+      if (logs) console.log("custom", cfg.get("Custom_Endpoint"));
       return cfg.get("Custom_Endpoint") + v;
     } else {
       return "https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v;
@@ -550,9 +553,18 @@
 
   async function onXHReady() {
     if (!this.responseType != "") {
-      if (!this.responseText || !location.hash) return;
+      if (!this.responseText) return;
       if (this.responseURL.startsWith("https://hcaptcha.com/getcaptcha")) {
-        target_xhr = JSON.parse(this.responseText).requester_question.en;
+        target_xhr = JSON.parse(this.responseText).requester_question?.en;
+        lang_xhr = "en";
+      } else if (
+        this.responseURL.endsWith(
+          `getcaptcha/${searchParams?.get("sitekey")}`
+        ) === true
+      ) {
+        target_xhr = JSON.parse(this.responseText).requester_question?.en;
+        lang_xhr = "en";
+        if (logs) console.log("target_siteky filter", target_xhr);
       }
     }
   }
@@ -564,7 +576,6 @@
           ? target_xhr
           : document.querySelector(".prompt-text")?.textContent;
         if (!targetText) return;
-        console.log("targetText", targetText);
 
         const cells = document.querySelectorAll(".task-image .image");
         if (cells.length !== 9) return;
