@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.6.5
+// @version      3.6.6
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -82,7 +82,7 @@
     menuCommand: true,
   });
 
-  let target = "";
+  let target_xhr = "";
   const open = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function () {
     this.addEventListener("readystatechange", onXHReady);
@@ -547,23 +547,12 @@
       }
     }
   }
+
   async function onXHReady() {
-    if (
-      !this.responseType != ("" && undefined) &&
-      typeof this.responseText != "string"
-    ) {
+    if (!this.responseType != "") {
       if (!this.responseText || !location.hash) return;
       if (this.responseURL.startsWith("https://hcaptcha.com/getcaptcha")) {
-        // target = JSON.parse(this.responseText).requester_question.en;
-        // console.log("target", target);
-        try {
-          console.log("ressss", typeof this.responseText);
-          const responseJSON = JSON.parse(this.responseText);
-
-          target = responseJSON.requester_question?.en;
-        } catch (error) {
-          console.error(error);
-        }
+        target_xhr = JSON.parse(this.responseText).requester_question.en;
       }
     }
   }
@@ -571,9 +560,11 @@
   function onTaskReady(i = 500) {
     return new Promise(async (resolve) => {
       const check_interval = setInterval(async function () {
-        let targetText =
-          target || document.querySelector(".prompt-text")?.textContent;
+        let targetText = target_xhr
+          ? target_xhr
+          : document.querySelector(".prompt-text")?.textContent;
         if (!targetText) return;
+        console.log("targetText", targetText);
 
         const cells = document.querySelectorAll(".task-image .image");
         if (cells.length !== 9) return;
