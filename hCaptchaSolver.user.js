@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.6.9
+// @version      3.7.0
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -41,6 +41,10 @@
       checkbox_auto_open: {
         type: "checkbox",
         default: true,
+      },
+      Always_Solving: {
+        type: "checkbox",
+        default: false,
       },
       debug_logs: {
         type: "checkbox",
@@ -86,6 +90,8 @@
 
   let target_xhr = "";
   let lang_xhr = "";
+  let req_q;
+
   const searchParams = new URLSearchParams(location.hash);
   const open = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function () {
@@ -316,12 +322,22 @@
   while (!(!navigator.onLine || stop || isApikeyEmpty)) {
     await sleep(cfg.get("loop_interval") * 1000);
 
+    // if (isWidget()) {
+    //   console.log(
+    //     "is solved",
+    //     document.querySelector("#checkbox")?.ariaChecked,
+    //     document.body.getBoundingClientRect()?.width,
+    //     document.querySelector("div.check")?.style.display,
+    //     document.location.href.slice(8, 30)
+    //   );
+    // }
+
     if (cfg.get("checkbox_auto_open") && isWidget()) {
       const isSolved =
         document.querySelector("div.check")?.style.display === "block";
       if (isSolved) {
         if (logs) log("found solved");
-        break;
+        if (cfg.get("Always_Solving") === false) break;
       }
       await sleep(cfg.get("delay_open") * 1000);
       document.querySelector("#checkbox")?.click();
@@ -374,12 +390,15 @@
     const searchParams = new URLSearchParams(location.hash);
 
     try {
+      let ob = req_q;
+      ob.frame = document.querySelector(".prompt-text")?.textContent;
       let response = await fetch(getApi("solve"), {
         method: "POST",
         headers,
         body: JSON.stringify({
           images,
           target,
+          altln: ob,
           method: "hcaptcha_base64",
           sitekey: searchParams.get("sitekey"),
           site: searchParams.get("host"),
@@ -387,7 +406,7 @@
             lang_xhr !== ""
               ? "en"
               : document.documentElement.lang || navigator.language,
-          softid: "UserScript_V" + v,
+          softid: "UserScript_v" + v,
         }),
       });
 
@@ -555,6 +574,7 @@
     if (!this.responseType != "") {
       if (!this.responseText) return;
       if (this.responseURL.startsWith("https://hcaptcha.com/getcaptcha")) {
+        req_q = JSON.parse(this.responseText)?.requester_question;
         target_xhr = JSON.parse(this.responseText).requester_question?.en;
         lang_xhr = "en";
       } else if (
