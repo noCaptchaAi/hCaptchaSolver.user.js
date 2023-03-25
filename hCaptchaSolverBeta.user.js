@@ -68,8 +68,7 @@ const headers = {
     apikey: cfg.get("APIKEY"),
 };
 
-let target, error, copy = [];
-
+let target, error, copy;
 XMLHttpRequest.prototype.open = function() {
     this.addEventListener("readystatechange", async function() {
         if(isApikeyEmpty || !cfg.get("AUTO_SOLVE") || this.responseType === "arraybuffer" || !this.responseText) {
@@ -95,7 +94,7 @@ XMLHttpRequest.prototype.open = function() {
                     method: "hcaptcha_base64",
                     sitekey: searchParams.get("sitekey"),
                     site: searchParams.get("host"),
-                    softid: "UserScript" + GM_info.script.version,
+                    softid: "UserScript " + GM_info.script.version,
                 }
             };
             if (data.request_type === "image_label_multiple_choice") {
@@ -104,6 +103,7 @@ XMLHttpRequest.prototype.open = function() {
                 options.body.choices = Object.keys(data.requester_restricted_answer_set);
             }
 
+            copy = [];
             for(let i = 0; i < data.tasklist.length; i++) {
                 const url = data.tasklist[i].datapoint_uri;
                 copy.push(url)
@@ -271,10 +271,10 @@ async function multiple(data) {
     log(copy);
     const image = document.querySelector('.image')?.style.backgroundImage.replace(/url\("|"\)/g, "");
     const finger = Object.values(copy).indexOf(image);
-    log(finger);
     if (finger === -1) {
         return;
     }
+    log(finger);
     const answer = data.answer?.at(finger);
     if (!answer) {
         return;
