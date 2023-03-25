@@ -247,19 +247,23 @@ async function getBase64FromUrl(url) {
         });
     });
 }
-function binary(data) {
-    const solutions = data.solution;
+async function binary(data) {
+    let solutions = data.solution;
     const finger = solutions.findIndex(index => index >= 8);
     const start = solutions.slice(0, finger);
     const end = solutions.slice(finger);
+    if (start.length > 0) {
+        solutions = start;
+    }
     const cells = document.querySelectorAll(".task-image .image");
-    for(const index of start) {
+    for (const index of solutions) {
         const math = index % 8;
         fireMouseEvents(cells[math]);
     }
-    if (end.length > 0) {
-        return binary({solution: end});
-    }
+    //need to fix
+    // if (end.length > 0) {
+    //     return binary({solution: end});
+    // }
     log("☑️ sent!");
     fireMouseEvents(document.querySelector(".button-submit"));
 }
