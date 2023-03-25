@@ -250,11 +250,12 @@ async function getBase64FromUrl(url) {
 function binary(data) {
     const solutions = data.solution;
     const finger = solutions.findIndex(index => index >= 8);
-    const start = solutions.slice(finger);
-    const end = solutions.slice(0, finger);
+    const start = solutions.slice(0, finger);
+    const end = solutions.slice(finger);
     const cells = document.querySelectorAll(".task-image .image");
-    for(const index of solutions) {
-        fireMouseEvents(cells[index])
+    for(const index of start) {
+        const math = index % 8;
+        fireMouseEvents(cells[math]);
     }
     if (end.length > 0) {
         return binary({solution: end});
