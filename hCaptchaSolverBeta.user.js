@@ -72,7 +72,7 @@ let target, error, copy;
 
 XMLHttpRequest.prototype.open = function() {
     this.addEventListener("readystatechange", async function() {
-        if(isApikeyEmpty || !cfg.get("AUTO_SOLVE") ||  this.responseType === "arraybuffer" || !this.responseText) {
+        if(isApikeyEmpty || !cfg.get("AUTO_SOLVE") || this.responseType === "arraybuffer" || !this.responseText) {
             return;
         }
 
@@ -101,7 +101,7 @@ XMLHttpRequest.prototype.open = function() {
             if (data.request_type === "image_label_multiple_choice") {
                 options.body.type = "desc";
                 // options.body.example = await getBase64FromUrl(data.requester_question_example);
-                options.body.example = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+                options.body.example = ""
                 options.body.choices = Object.keys(data.requester_restricted_answer_set);
             }
 
@@ -228,7 +228,7 @@ async function solve(options, label) {
         if(wait > 0) {
             await sleep(wait)
         }
-        return (label === "image_label_binary" ? binary : multiple)(data)//, start_time);
+        return await (label === "image_label_binary" ? binary : multiple)(data)//, start_time);
     } catch (error) {
         log(error);
     }
@@ -269,9 +269,10 @@ async function binary(data) {
 }
 async function multiple(data) {
     //need to be test
-    log(data, copy);
+    log(copy);
     const image = document.querySelector('.image')?.style.backgroundImage.replace(/url\("|"\)/g, "");
     const base64 = await getBase64FromUrl(image);
+    log(base64);
     const finger = Object.values(copy).indexOf(base64);
     const answer = data.answer?.at(finger);
     if (!answer) {
@@ -280,7 +281,8 @@ async function multiple(data) {
     const element = [...document.querySelectorAll(".answer-text")].find(element => element.textContent === answer)
     fireMouseEvents(element);
     fireMouseEvents(document.querySelector(".button-submit"))
-    multiple();
+    await sleep(100) //temp
+    multiple({answer: data.answer});
     //     await sleep(500);
 }
 
