@@ -68,7 +68,7 @@ const headers = {
     apikey: cfg.get("APIKEY"),
 };
 
-let target, error;
+let target, error, copy;
 
 XMLHttpRequest.prototype.open = function() {
     this.addEventListener("readystatechange", async function() {
@@ -100,6 +100,8 @@ XMLHttpRequest.prototype.open = function() {
             };
             if (data.request_type === "image_label_multiple_choice") {
                 options.body.type = "desc";
+                // options.body.example = await getBase64FromUrl(data.requester_question_example);
+                options.body.example = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
                 options.body.choices = Object.keys(data.requester_restricted_answer_set);
             }
 
@@ -107,6 +109,7 @@ XMLHttpRequest.prototype.open = function() {
                 options.body.images[i] = await getBase64FromUrl(data.tasklist[i].datapoint_uri);
             }
 
+            copy = options.body.images;
             options.body = JSON.stringify(options.body);
             await solve(options, data.request_type);
 
@@ -260,16 +263,20 @@ function binary(data) {
     fireMouseEvents(document.querySelector(".button-submit"));
 }
 async function multiple(data) {
-    // const d = data.answer.at(0);
-    // const f = [d,d,d];
-    // for (const answer of f) {
-    //     log(answer);
-    //     const element = [...document.querySelectorAll(".answer-text")].find(element => element.textContent === answer)
-    //     fireMouseEvents(element);
+    //need to be test
+    log(data, copy);
+    const image = document.querySelector('.image')?.style.backgroundImage.replace(/url\("|"\)/g, "");
+    const base64 = await getBase64FromUrl(image);
+    const finger = Object.values(copy).indexOf(base64);
+    const answer = data.answer?.at(finger);
+    if (!answer) {
+        return;
+    }
+    const element = [...document.querySelectorAll(".answer-text")].find(element => element.textContent === answer)
+    fireMouseEvents(element);
+    fireMouseEvents(document.querySelector(".button-submit"))
+    multiple();
     //     await sleep(500);
-    //     fireMouseEvents(document.querySelector(".button-submit"))
-    // }
-
 }
 
 function fireMouseEvents(element) {
