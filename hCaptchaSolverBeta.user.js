@@ -249,20 +249,15 @@ async function getBase64FromUrl(url) {
 async function binary(data) {
     let solutions = data.solution;
     const finger = solutions.findIndex(index => index >= 8);
-    const start = solutions.slice(0, finger);
     const end = solutions.slice(finger);
-    if (start.length > 0) {
-        solutions = start;
-    }
     const cells = document.querySelectorAll(".task-image .image");
     for (const index of solutions) {
         const math = index % 8;
         fireMouseEvents(cells[math]);
+        if (index >= finger && !data.stop) {
+            return binary({solution: solutions, stop: true});
+        }
     }
-    //need to fix
-    // if (end.length > 0) {
-    //     return binary({solution: end});
-    // }
     log("☑️ sent!");
     fireMouseEvents(document.querySelector(".button-submit"));
 }
@@ -271,12 +266,9 @@ async function multiple(data) {
     log(copy);
     const image = document.querySelector('.image')?.style.backgroundImage.replace(/url\("|"\)/g, "");
     const finger = Object.values(copy).indexOf(image);
-    if (finger === -1) {
-        return;
-    }
-    log(finger);
     const answer = data.answer?.at(finger);
-    if (!answer) {
+
+    if (finger < 0 || !answer) {
         return;
     }
     const element = [...document.querySelectorAll(".answer-text")].find(element => element.textContent === answer)
