@@ -50,6 +50,46 @@
         <span>Visit Dashboard</span> <br>
         <a href="https://dash.nocaptchaai.com/home">https://dash.nocaptchaai.com</a>
     </div>
+    <template id="tampermonkey">
+        <!-- <div style="background-color: rgb(59 130 246 / .5); border-radius: 25px; margin: auto; width: 50%;"> -->
+        <a href="https://accounts.hcaptcha.com/demo" style="text-decoration:none;">
+            <img alt="hcaptcha_logo" width="30px" src="https://www.google.com/s2/favicons?domain=hcaptcha.com">
+            hCaptcha
+        </a>
+        <div id="WALLET">
+        </div>
+        <div>
+            <label for="CHECKBOX_AUTO_OPEN">Auto Open</label>
+            <input id="CHECKBOX_AUTO_OPEN" type="checkbox">
+        </div>
+        <div>
+            <label for="AUTO_SOLVE">Auto Solve</label>
+            <input id="AUTO_SOLVE" type="checkbox">
+        </div>
+        <div>
+            <label for="DEBUG_LOGS">Logs</label>
+            <input id="DEBUG_LOGS" type="checkbox">
+        </div>
+        <div>
+            <label for="DELAY">Delay Timer</label>
+            <input id="DELAY" type="number" min="3" max="10" value="3">        
+        </div>
+        <!-- </div> -->
+        <!-- <p><a target="_blank" href="https://noCaptchaAi.com">2022-2023 @ noCaptchaAi.com</a><b>Version:1.1.0</b></p> -->
+    </template>
+    <script>
+    const searchParams = new URLSearchParams(location.search);
+    if (window.opener) {
+        /*
+        const template = document.getElementById("tampermonkey");
+        const clone = template.content.cloneNode(true);
+        const inputs = clone.querySelectorAll("input");
+        const wallet = clone.getElementById("WALLET");
+        */
+        window.addEventListener("blur", window.opener.close);
+    }
+    </script>
+
 </body>
 
 </html>
