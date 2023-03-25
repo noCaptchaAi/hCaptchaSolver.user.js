@@ -12,7 +12,7 @@
 // @author       noCaptcha AI and Diego
 // @match        *://*/*
 // @match        https://config.nocaptchaai.com/?apikey=*
-// @icon         https://docs.nocaptchaai.com/img/nocaptchaai.com.png
+// @icon         https://avatars.githubusercontent.com/u/110127579
 // @require      https://greasyfork.org/scripts/395037-monkeyconfig-modern/code/MonkeyConfig%20Modern.js
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js
