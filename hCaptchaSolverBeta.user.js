@@ -255,7 +255,7 @@ async function binary(data) {
         const math = index % 8;
         fireMouseEvents(cells[math]);
         if (index >= finger && !data.stop) {
-            return binary({solution: solutions, stop: true});
+            return binary({solution: end, stop: true});
         }
     }
     log("☑️ sent!");
