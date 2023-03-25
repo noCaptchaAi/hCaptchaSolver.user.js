@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      4.0.0
+// @version      4.0.1
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -495,7 +495,7 @@
     }
   }
 
-  function onSave({ apikey }) {
+  function onSave({ APIKEY }) {
     try {
       if (headers.apikey === apikey || apikey === "")
         throw new Error("empty or eq");
@@ -503,14 +503,14 @@
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          apikey: apikey,
+          apikey: APIKEY,
         },
         responseType: "json",
         url: "https://manage.nocaptchaai.com/api/user/get_endpoint",
         onload: function ({ response }) {
           if (response.error) {
             cfg.set("APIKEY", "");
-            return jsNotif("wrong apikey");
+            return jsNotif(response.error);
           }
           cfg.set("PLAN", response.plan === "prepaid" ? "pro" : "free");
         },
