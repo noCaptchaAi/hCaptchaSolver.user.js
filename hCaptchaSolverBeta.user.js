@@ -12,7 +12,7 @@
 // @author       noCaptcha AI and Diego
 // @match        https://newassets.hcaptcha.com/captcha/*
 // @match        https://config.nocaptchaai.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=nocaptchaai.com
+// @icon         https://avatars.githubusercontent.com/u/110127579
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolverBeta.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolverBeta.user.js
