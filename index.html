@@ -52,7 +52,7 @@
     </div>
     <template id="tampermonkey">
         <!-- <div style="background-color: rgb(59 130 246 / .5); border-radius: 25px; margin: auto; width: 50%;"> -->
-        <a href="https://accounts.hcaptcha.com/demo" style="text-decoration:none;">
+        <a href="https://accounts.hcaptcha.com/demo" target="_blank" style="text-decoration:none;">
             <img alt="hcaptcha_logo" width="30px" src="https://www.google.com/s2/favicons?domain=hcaptcha.com">
             hCaptcha
         </a>
@@ -69,6 +69,10 @@
         <div>
             <label for="DEBUG_LOGS">Logs</label>
             <input id="DEBUG_LOGS" type="checkbox">
+        </div>
+        <div>
+            <label for="LOOP">Infinity Loop</label>
+            <input id="LOOP" type="checkbox">
         </div>
         <div>
             <label for="DELAY">Delay Timer</label>

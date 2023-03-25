@@ -69,10 +69,9 @@ const headers = {
 };
 
 let target, error, copy;
-
 XMLHttpRequest.prototype.open = function() {
     this.addEventListener("readystatechange", async function() {
-        if(isApikeyEmpty || !cfg.get("AUTO_SOLVE") ||  this.responseType === "arraybuffer" || !this.responseText) {
+        if(isApikeyEmpty || !cfg.get("AUTO_SOLVE") || this.responseType === "arraybuffer" || !this.responseText) {
             return;
         }
 
@@ -95,21 +94,21 @@ XMLHttpRequest.prototype.open = function() {
                     method: "hcaptcha_base64",
                     sitekey: searchParams.get("sitekey"),
                     site: searchParams.get("host"),
-                    softid: "UserScript" + GM_info.script.version,
+                    softid: "UserScript " + GM_info.script.version,
                 }
             };
             if (data.request_type === "image_label_multiple_choice") {
                 options.body.type = "desc";
-                // options.body.example = await getBase64FromUrl(data.requester_question_example);
-                options.body.example = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+                options.body.example = ""
                 options.body.choices = Object.keys(data.requester_restricted_answer_set);
             }
 
+            copy = [];
             for(let i = 0; i < data.tasklist.length; i++) {
-                options.body.images[i] = await getBase64FromUrl(data.tasklist[i].datapoint_uri);
+                const url = data.tasklist[i].datapoint_uri;
+                copy.push(url)
+                options.body.images[i] = await getBase64FromUrl(url);
             }
-
-            copy = options.body.images;
             options.body = JSON.stringify(options.body);
             await solve(options, data.request_type);
 
@@ -161,7 +160,7 @@ if(location.hostname === "config.nocaptchaai.com") {
     });
     const data = await response.json();
     log(data);
-    wallet.innerText = `Wallet: ${data.response.user_id}, 💲${data.response.Balance}`
+    wallet.innerText = `Wallet: ${data.user_id}, 💲${data.Balance}`
 
     for(const input of inputs) {
         const type = input.type === "checkbox" ? "checked" : "value";
@@ -228,7 +227,7 @@ async function solve(options, label) {
         if(wait > 0) {
             await sleep(wait)
         }
-        return (label === "image_label_binary" ? binary : multiple)(data)//, start_time);
+        return await (label === "image_label_binary" ? binary : multiple)(data)//, start_time);
     } catch (error) {
         log(error);
     }
@@ -247,28 +246,35 @@ async function getBase64FromUrl(url) {
         });
     });
 }
-function binary(data) {
-    const solutions = data.solution;
+async function binary(data) {
+    let solutions = data.solution;
     const finger = solutions.findIndex(index => index >= 8);
     const start = solutions.slice(0, finger);
     const end = solutions.slice(finger);
+    if (start.length > 0) {
+        solutions = start;
+    }
     const cells = document.querySelectorAll(".task-image .image");
-    for(const index of start) {
+    for (const index of solutions) {
         const math = index % 8;
         fireMouseEvents(cells[math]);
     }
-    if (end.length > 0) {
-        return binary({solution: end});
-    }
+    //need to fix
+    // if (end.length > 0) {
+    //     return binary({solution: end});
+    // }
     log("☑️ sent!");
     fireMouseEvents(document.querySelector(".button-submit"));
 }
 async function multiple(data) {
     //need to be test
-    log(data, copy);
+    log(copy);
     const image = document.querySelector('.image')?.style.backgroundImage.replace(/url\("|"\)/g, "");
-    const base64 = await getBase64FromUrl(image);
-    const finger = Object.values(copy).indexOf(base64);
+    const finger = Object.values(copy).indexOf(image);
+    if (finger === -1) {
+        return;
+    }
+    log(finger);
     const answer = data.answer?.at(finger);
     if (!answer) {
         return;
@@ -276,7 +282,8 @@ async function multiple(data) {
     const element = [...document.querySelectorAll(".answer-text")].find(element => element.textContent === answer)
     fireMouseEvents(element);
     fireMouseEvents(document.querySelector(".button-submit"))
-    multiple();
+    await sleep(500) //temp soul
+    multiple({answer: data.answer});
     //     await sleep(500);
 }
 
