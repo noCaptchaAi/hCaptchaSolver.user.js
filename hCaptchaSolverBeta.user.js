@@ -161,7 +161,7 @@ if(location.hostname === "config.nocaptchaai.com") {
     });
     const data = await response.json();
     log(data);
-    wallet.innerText = `Wallet: ${data.response.user_id}, 💲${data.response.Balance}`
+    wallet.innerText = `Wallet: ${data.user_id}, 💲${data.Balance}`
 
     for(const input of inputs) {
         const type = input.type === "checkbox" ? "checked" : "value";
