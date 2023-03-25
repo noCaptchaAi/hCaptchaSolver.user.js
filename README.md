@@ -13,9 +13,12 @@
 <a href="https://github.com/shimuldn/hCaptchaSolverApi/"><img alt="github stars" src="https://img.shields.io/npm/v/nocaptchasolver?label=npm-selenium-solver&style=for-the-badge"></a>
 <a href="https://greasyfork.org/en/scripts/454941-nocaptchaai-hcaptcha-solver"><img alt="github stars" src="https://user-images.githubusercontent.com/4178343/202253849-adb3f27a-24cf-444e-916c-2e58cba00362.png">
 </p>
-<img src="https://user-images.githubusercontent.com/38348819/219877368-e2f36cf0-4fac-4b12-980e-1aa0b741b407.png" />
-<img src="https://user-images.githubusercontent.com/38348819/219877336-b1fb2388-d8bc-4ddc-b26b-fc9df36042df.png" />
 
+<p>
+<img src="https://user-images.githubusercontent.com/38348819/227741346-3dbf91ab-ffca-4bfa-a975-38d5cccc2ea3.png" width="350" />
+<img src="https://user-images.githubusercontent.com/38348819/227741358-cfed0050-879c-47e2-b0b6-54cecbab5a00.png" width="350" />
+<img src="https://user-images.githubusercontent.com/38348819/219877336-b1fb2388-d8bc-4ddc-b26b-fc9df36042df.png" width="350" />
+</p>
 <br />
 
 <h1><a target="_blank"  href="https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolver.user.js">⚡ Click to Install</a></h1>
