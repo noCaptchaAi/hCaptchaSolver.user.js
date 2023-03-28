@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.8.2
+// @version      3.8.3
 // @run-at       document-start
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
@@ -13,7 +13,7 @@
 // @author       noCaptcha AI and Diego
 // @match        https://newassets.hcaptcha.com/captcha/*
 // @match        https://config.nocaptchaai.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=nocaptchaai.com
+// @icon         https://avatars.githubusercontent.com/u/110127579
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
 // @updateURL    https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolverBeta.user.js
 // @downloadURL  https://github.com/noCaptchaAi/hCaptchaSolver.user.js/raw/main/hCaptchaSolverBeta.user.js
@@ -27,13 +27,13 @@
 // ==/UserScript==
 const proBalApi = "https://manage.nocaptchaai.com/balance";
 const searchParams = new URLSearchParams(location.hash);
+const isWidget = "checkbox" === searchParams.get("#frame");
 const open = XMLHttpRequest.prototype.open;
 const Toast = Swal.mixin({
     position: "top-end",
     showConfirmButton: false,
     timer: 1000
 })
-const isWidget = "checkbox" === searchParams.get("#frame") || document.contains(document.querySelector("div.check"))
 const cfg = new config({
     APIKEY: "",
     PLAN: "free",
@@ -109,6 +109,7 @@ addMenu("🏠 HomePage", "https://nocaptchaai.com");
 addMenu("📄 Api Docs", "https://docs.nocaptchaai.com/category/api-methods");
 addMenu("❓ Discord", "https://discord.gg/E7FfzhZqzA");
 addMenu("❓ Telegram", "https://t.me/noCaptchaAi");
+
 if(isWidget) {
     log("loop running in bg");
 
@@ -200,7 +201,7 @@ async function solve(options, isMulti) {
     } catch (error) {
         //todo handle
         //error, restricted, Invalid apikey
-        log(error);
+        console.error(error);
     }
 }
 
@@ -239,15 +240,11 @@ async function multiple(data) {
     await sleep(500); // temp
     multiple({ansswer: data.answer});
 }
-async function binary(data, stop = false) {
-    let solutions = data.solution;
+async function binary(data) {
+    const solutions = data.solution;
+    const solution = solutions.filter(index => index > 8);
     const wait = (delay / solutions.length) + 50
-    const finger = solutions.findIndex(index => index > 8);
-    const end = solutions.slice(finger);
     const cells = document.querySelectorAll(".task-image .image");
-    if (finger > -1 && !stop) {
-        solutions = solutions.slice(0, finger);
-    }
     for (const index of solutions) {
         await sleep(wait);
         fireMouseEvents(cells[index]);
@@ -255,8 +252,8 @@ async function binary(data, stop = false) {
     await sleep(wait + 150)
     fireMouseEvents(document.querySelector(".button-submit"));
     log("☑️ sent!");
-    if (finger !== -1 && !stop) {
-       return binary({solution: end }, true)
+    if (solutions[0] !== solution[0]) {
+       return binary({ solution })
     }
 }
 
@@ -264,15 +261,11 @@ function fireMouseEvents(element) {
     if(!document.contains(element)) {
         return;
     }
-    ["mouseover", "mousedown", "mouseup", "click"].forEach(eventName => {
-        if(element.fireEvent) {
-            element.fireEvent("on" + eventName);
-        } else {
-            const eventObject = document.createEvent("MouseEvents");
-            eventObject.initEvent(eventName, true, false);
-            element.dispatchEvent(eventObject);
-        }
-    });
+    for (const eventName of ["mouseover", "mousedown", "mouseup", "click"]) {
+        const eventObject = document.createEvent("MouseEvents");
+        eventObject.initEvent(eventName, true, false);
+        element.dispatchEvent(eventObject);
+    }
 }
 function config(data) {
     let openWin;
