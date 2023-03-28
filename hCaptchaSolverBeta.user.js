@@ -4,7 +4,8 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.8.1
+// @version      3.8.2
+// @run-at       document-start
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
 // @description:ru hCaptcha Solver автоматизирует решение Captcha Solver в обход сервиса Ai. Бесплатно 6000 🔥решений/месяц! В 50 раз⚡ быстрее, чем 2Captcha и другие
@@ -36,13 +37,15 @@ const isWidget = "checkbox" === searchParams.get("#frame") || document.contains(
 const cfg = new config({
     APIKEY: "",
     PLAN: "free",
-    DELAY: 4,
-    AUTO_SOLVE: true,
-    CHECKBOX_AUTO_OPEN: true,
+    DELAY: 3,
     LOOP: false,
+    // NOHCAPTCHA: [],
+    // NORECAPTCHA: [],
     HCAPTCHA: true,
     RECAPTCHA: true,
-    DEBUG_LOGS: false
+    AUTO_SOLVE: true,
+    DEBUG_LOGS: false,
+    CHECKBOX_AUTO_OPEN: true,
 });
 const delay = parseInt(cfg.get("DELAY")) * 1000;
 const isApikeyEmpty = !cfg.get("APIKEY");
@@ -65,6 +68,11 @@ XMLHttpRequest.prototype.open = function() {
 
         try {
             const data = JSON.parse(this.responseText);
+
+            // if (data.pass || !data.success) {
+            //     return;
+            // }
+
             const isMulti = data.request_type === "image_label_multiple_choice";
             const options = {
                 method: "POST",
@@ -88,13 +96,11 @@ XMLHttpRequest.prototype.open = function() {
             }
             options.body = JSON.stringify(options.body);
             await solve(options, isMulti);
-
         } catch (e) {
-            console.error(e, this);
+            console.error(this.responseText);
         }
     });
     open.apply(this, arguments);
-
 }
 
 addMenu("⚙️ Settings", cfg.open, !isApikeyEmpty);
@@ -103,9 +109,8 @@ addMenu("🏠 HomePage", "https://nocaptchaai.com");
 addMenu("📄 Api Docs", "https://docs.nocaptchaai.com/category/api-methods");
 addMenu("❓ Discord", "https://discord.gg/E7FfzhZqzA");
 addMenu("❓ Telegram", "https://t.me/noCaptchaAi");
-
 if(isWidget) {
-    log("loop running in bg", document.readyState);
+    log("loop running in bg");
 
     GM_addValueChangeListener("APIKEY", function(key, oldValue, newValue, remote) {
         log("The value of the '" + key + "' key has changed from '" + oldValue + "' to '" + newValue + "'");
@@ -113,6 +118,8 @@ if(isWidget) {
         location = location.href;
     });
 
+} else {
+    // log("hasFocus", document.hasFocus());
 }
 
 if(location.hostname === "config.nocaptchaai.com") {
@@ -181,7 +188,7 @@ async function solve(options, isMulti) {
                 data = await (await fetch(data.url)).json();
                 break;
             case "solved":
-                break; //todo
+                break;
             case "skip":
                 log("⚠️ Seems this a new challenge, please contact noCaptchaAi!");
                 break;
@@ -210,28 +217,9 @@ async function getBase64FromUrl(url) {
         });
     });
 }
-async function binary(data) {
-    const solutions = data.solution;
-    const wait = (delay / solutions.length) + 50
-    // const finger = solutions.findIndex(index => index >= 8);
-    // const end = solutions.slice(finger);
-
-    if (solutions.find(i => i > 8)) {
-        return log('18x18'); //todo
-    }
-    const cells = document.querySelectorAll(".task-image .image");
-    for (const index of solutions) {
-        // const math = index % 8;
-        await sleep(wait);
-        fireMouseEvents(cells[index]);
-    }
-    await sleep(wait + 150)
-    fireMouseEvents(document.querySelector(".button-submit"));
-    log("☑️ sent!");
-}
 async function multiple(data) {
     //need to be test
-    const wait = delay / (copy.length * 2)
+    const wait = delay / copy.length
     log(copy, wait);
     const image = document.querySelector('.image')?.style.backgroundImage.replace(/url\("|"\)/g, "");
     const finger = copy.indexOf(image);
@@ -251,7 +239,41 @@ async function multiple(data) {
     await sleep(500); // temp
     multiple({ansswer: data.answer});
 }
+async function binary(data, stop = false) {
+    let solutions = data.solution;
+    const wait = (delay / solutions.length) + 50
+    const finger = solutions.findIndex(index => index > 8);
+    const end = solutions.slice(finger);
+    const cells = document.querySelectorAll(".task-image .image");
+    if (finger > -1 && !stop) {
+        solutions = solutions.slice(0, finger);
+    }
+    for (const index of solutions) {
+        await sleep(wait);
+        fireMouseEvents(cells[index]);
+    }
+    await sleep(wait + 150)
+    fireMouseEvents(document.querySelector(".button-submit"));
+    log("☑️ sent!");
+    if (finger !== -1 && !stop) {
+       return binary({solution: end }, true)
+    }
+}
 
+function fireMouseEvents(element) {
+    if(!document.contains(element)) {
+        return;
+    }
+    ["mouseover", "mousedown", "mouseup", "click"].forEach(eventName => {
+        if(element.fireEvent) {
+            element.fireEvent("on" + eventName);
+        } else {
+            const eventObject = document.createEvent("MouseEvents");
+            eventObject.initEvent(eventName, true, false);
+            element.dispatchEvent(eventObject);
+        }
+    });
+}
 function config(data) {
     let openWin;
 
@@ -300,20 +322,6 @@ function config(data) {
     }
 
     return { get, set, open, close };
-}
-function fireMouseEvents(element) {
-    if(!document.contains(element)) {
-        return;
-    }
-    ["mouseover", "mousedown", "mouseup", "click"].forEach(eventName => {
-        if(element.fireEvent) {
-            element.fireEvent("on" + eventName);
-        } else {
-            const eventObject = document.createEvent("MouseEvents");
-            eventObject.initEvent(eventName, true, false);
-            element.dispatchEvent(eventObject);
-        }
-    });
 }
 function getApi(v) {
     return "https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v;
