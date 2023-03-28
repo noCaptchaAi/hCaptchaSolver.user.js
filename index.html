@@ -75,15 +75,15 @@
             <input id="LOOP" type="checkbox">
         </div>
         <div>
-            <label for="HCAPTCHA">Infinity Loop</label>
+            <label for="HCAPTCHA">Hcaptcha Enabled</label>
             <input id="HCAPTCHA" type="checkbox">
         </div>
         <div>
-            <label for="RECAPTCHA">Infinity Loop</label>
+            <label for="RECAPTCHA">Recaptcha Enabled</label>
             <input id="RECAPTCHA" type="checkbox">
         </div>
         <div>
-            <label for="DELAY">Delay Timer</label>
+            <label for="DELAY">Delay</label>
             <input id="DELAY" type="number" min="1" max="10" value="3">        
         </div>
         <!-- </div> -->
@@ -91,12 +91,6 @@
     </template>
     <script>
     if (window.opener) {
-        /*
-        const template = document.getElementById("tampermonkey");
-        const clone = template.content.cloneNode(true);
-        const inputs = clone.querySelectorAll("input");
-        const wallet = clone.getElementById("WALLET");
-        */
         window.addEventListener("blur", window.opener.close);
     }
     </script>
