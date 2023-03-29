@@ -64,7 +64,7 @@ XMLHttpRequest.prototype.open = function() {
         }
 
         //temp
-        if (this.responseURL.startWith("https://www.google.com/recaptcha/api2/")) {
+        if (this.responseURL.startsWith("https://www.google.com/recaptcha/api2/")) {
 
             const data = JSON.parse(this.responseText.replace(')]}\'\n', ''));
             const type = data.at(5);
