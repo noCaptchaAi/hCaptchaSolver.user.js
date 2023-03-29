@@ -12,6 +12,7 @@
 // @description:zh-CN hCaptcha Solver 自动绕过 Ai 服务的 Captcha Solver。 免费 6000 🔥解决/月！ 比 2Captcha 和其他人快 50x⚡
 // @author       noCaptcha AI and Diego
 // @match        https://newassets.hcaptcha.com/captcha/*
+// @match        https://www.google.com/recaptcha/api2/*
 // @match        https://config.nocaptchaai.com/*
 // @icon         https://avatars.githubusercontent.com/u/110127579
 // @require      https://cdn.jsdelivr.net/npm/sweetalert2@11
@@ -62,7 +63,30 @@ XMLHttpRequest.prototype.open = function() {
             return;
         }
 
-        if(!this.responseURL.startsWith("https://hcaptcha.com/getcaptcha/")) {
+        //temp
+        if (this.responseURL.startWith("https://www.google.com/recaptcha/api2/")) {
+
+            const data = JSON.parse(this.responseText.replace(')]}\'\n', ''));
+            const type = data.at(5);
+            if (type !== "audio") {
+                return;
+            }
+            const url = new URL(this.responseURL);
+            const uu = new URLSearchParams(url.search);
+            const audio = "https://www.google.com/recaptcha/api2/payload?p="+ data.at(9) +"&k=" + uu.get('k');
+            log(audio)
+            // const response = await fetch('', {
+            //     method: "POST",
+            //     headers,
+            //     body: {
+            //         url: audio
+            //     }
+            // });
+            return;
+        }
+        //
+
+        if (!this.responseURL.startsWith("https://hcaptcha.com/getcaptcha/")) {
             return;
         }
 
@@ -139,6 +163,7 @@ if(location.hostname === "config.nocaptchaai.com") {
     const clone = template.content.cloneNode(true);
     const inputs = clone.querySelectorAll("input");
     const wallet = clone.getElementById("WALLET");
+
     const url = cfg.get("PLAN") === "PRO" ? proBalApi : getApi("balance");
     const response = await fetch(url, {
         headers
@@ -199,9 +224,8 @@ async function solve(options, isMulti) {
 
         return await (isMulti ? multiple : binary)(data)
     } catch (error) {
-        //todo handle
-        //error, restricted, Invalid apikey
         console.error(error);
+        alert(error)
     }
 }
 
@@ -222,7 +246,7 @@ async function multiple(data) {
     //need to be test
     const wait = delay / copy.length
     log(copy, wait);
-    const image = document.querySelector('.image')?.style.backgroundImage.replace(/url\("|"\)/g, "");
+    const image = document.querySelector(".image")?.style.backgroundImage.replace(/url\("|"\)/g, "");
     const finger = copy.indexOf(image);
     if (finger === -1) {
         return;
@@ -253,7 +277,7 @@ async function binary(data) {
     fireMouseEvents(document.querySelector(".button-submit"));
     log("☑️ sent!");
     if (solutions[0] !== solution[0]) {
-       return binary({ solution })
+        return binary({ solution })
     }
 }
 
@@ -303,12 +327,12 @@ function config(data) {
     }
 
     const storedKeys = GM_listValues();
-    for(const name in data.params) {
+    for(const name in data) {
         console.log(name);
         if(storedKeys.includes(name)) {
             set(name, get(name));
-        } else if(data.params[name] !== undefined) {
-            set(name, data.params[name]);
+        } else if(data[name] !== undefined) {
+            set(name, data[name]);
         } else {
             set(name, "");
         }
