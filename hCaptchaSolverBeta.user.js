@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.8.3
+// @version      3.8.4
 // @run-at       document-start
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
@@ -73,15 +73,9 @@ XMLHttpRequest.prototype.open = function() {
             }
             const url = new URL(this.responseURL);
             const uu = new URLSearchParams(url.search);
-            const audio = "https://www.google.com/recaptcha/api2/payload?p="+ data.at(9) +"&k=" + uu.get('k');
-            log(audio)
-            // const response = await fetch('', {
-            //     method: "POST",
-            //     headers,
-            //     body: {
-            //         url: audio
-            //     }
-            // });
+            const audiourl = "https://www.google.com/recaptcha/api2/payload/audio.mp3?p="+ data.at(9) +"&k=" + uu.get('k');
+            log(audiourl)
+            audio(audiourl);
             return;
         }
         //
@@ -280,6 +274,23 @@ async function binary(data) {
         return binary({ solution })
     }
 }
+async function audio(url) {
+    const arrayBuffer = await fetch(url).then(response => response.arrayBuffer());
+    const body = new FormData();
+    body.append("audio", new Blob([arrayBuffer], { type: "audio/mp3" }), "audio.mp3");
+
+    const response = await fetch("https://workproxy2.nocaptchaai.com/audio", {
+        method: "POST",
+        headers: { //todo work with headers
+            apikey: cfg.get("APIKEY"),
+        },
+        body
+    });
+
+    const json = await response.json();
+    log(json);
+    document.querySelector("#audio-response").value = json.solution;
+}
 
 function fireMouseEvents(element) {
     if(!document.contains(element)) {
@@ -328,7 +339,6 @@ function config(data) {
 
     const storedKeys = GM_listValues();
     for(const name in data) {
-        console.log(name);
         if(storedKeys.includes(name)) {
             set(name, get(name));
         } else if(data[name] !== undefined) {
