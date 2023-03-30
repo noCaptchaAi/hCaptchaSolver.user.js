@@ -48,7 +48,6 @@ const cfg = new config({
     DEBUG_LOGS: false,
     CHECKBOX_AUTO_OPEN: true,
 });
-const delay = parseInt(cfg.get("DELAY")) * 1000;
 const isApikeyEmpty = !cfg.get("APIKEY");
 const headers = {
     "Content-Type": "application/json",
@@ -62,7 +61,6 @@ XMLHttpRequest.prototype.open = function() {
         if(isApikeyEmpty || !cfg.get("AUTO_SOLVE") || this.responseType === "arraybuffer" || !this.responseText) {
             return;
         }
-
         //temp
         if (this.responseURL.startsWith("https://www.google.com/recaptcha/api2/")) {
 
@@ -238,8 +236,7 @@ async function getBase64FromUrl(url) {
 }
 async function multiple(data) {
     //need to be test
-    const wait = delay / copy.length
-    log(copy, wait);
+    const [wait, sent] = waitCal(copy.length)
     const image = document.querySelector(".image")?.style.backgroundImage.replace(/url\("|"\)/g, "");
     const finger = copy.indexOf(image);
     if (finger === -1) {
@@ -255,22 +252,23 @@ async function multiple(data) {
     fireMouseEvents(element);
     await sleep(wait);
     fireMouseEvents(document.querySelector(".button-submit"))
-    await sleep(500); // temp
+    await sleep(sent); // temp
     multiple({ansswer: data.answer});
 }
 async function binary(data) {
     const solutions = data.solution;
     const solution = solutions.filter(index => index > 8);
-    const wait = (delay / solutions.length) + 50
+    const [wait, sent] = waitCal(solutions.length);
+    log(wait, sent);
     const cells = document.querySelectorAll(".task-image .image");
     for (const index of solutions) {
         await sleep(wait);
         fireMouseEvents(cells[index]);
     }
-    await sleep(wait + 150)
+    await sleep(sent)
     fireMouseEvents(document.querySelector(".button-submit"));
     log("☑️ sent!");
-    if (solutions[0] !== solution[0]) {
+    if (solution[0] && solutions[0] !== solution[0]) {
         return binary({ solution })
     }
 }
@@ -290,6 +288,13 @@ async function audio(url) {
     const json = await response.json();
     log(json);
     document.querySelector("#audio-response").value = json.solution;
+}
+function waitCal(len) {
+    const math = (parseInt(cfg.get("DELAY")) * 1000) / len;
+    if (math < 350) {
+        return [math + 100, math + 150];
+    }
+    return [math, math];
 }
 
 function fireMouseEvents(element) {
