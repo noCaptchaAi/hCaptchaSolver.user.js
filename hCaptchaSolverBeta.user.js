@@ -180,7 +180,7 @@ async function solve(body, isMulti) {
             case "new":
                 log("⏳ waiting a second");
                 await sleep(1000);
-                data = await apiFetch(data.url, "GET")
+                data = await apiFetch({}, "status?id=" + data.id, "GET")
                 break;
             case "solved":
                 break;
