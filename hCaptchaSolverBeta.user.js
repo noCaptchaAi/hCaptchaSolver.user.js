@@ -4,7 +4,7 @@
 // @name:ru      noCaptchaAI Решатель капчи hCaptcha
 // @name:sh-CN   noCaptchaAI 验证码求解器
 // @namespace    https://nocaptchaai.com
-// @version      3.8.4
+// @version      3.8.5
 // @run-at       document-start
 // @description  hCaptcha Solver automated Captcha Solver bypass Ai service. Free 6000 🔥solves/month! 50x⚡ faster than 2Captcha & others
 // @description:ar تجاوز برنامج Captcha Solver الآلي لخدمة hCaptcha Solver خدمة Ai. 6000 🔥 حل / شهر مجاني! 50x⚡ أسرع من 2Captcha وغيرها
@@ -26,7 +26,6 @@
 // @grant        GM_getValue
 // @license      MIT
 // ==/UserScript==
-const proBalApi = "https://manage.nocaptchaai.com/balance";
 const searchParams = new URLSearchParams(location.hash);
 const isWidget = "checkbox" === searchParams.get("#frame");
 const open = XMLHttpRequest.prototype.open;
@@ -47,12 +46,7 @@ const cfg = new config({
     CHECKBOX_AUTO_OPEN: true,
 });
 const isApikeyEmpty = !cfg.get("APIKEY");
-const headers = {
-    "Content-Type": "application/json",
-    apikey: cfg.get("APIKEY")
-};
-
-let copy;
+let copy, sitekey;
 
 XMLHttpRequest.prototype.open = function() {
     this.addEventListener("load", async function() {
@@ -60,18 +54,25 @@ XMLHttpRequest.prototype.open = function() {
             return;
         }
         //temp
-        if (this.responseURL.startsWith("https://www.google.com/recaptcha/api2/")) {
+        if (this.responseURL.startsWith("https://www.google.com/recaptcha/api2/") && cfg.get("RECAPTCHA")) {
+            if (!sitekey) {
+                const url = new URL(this.responseURL);
+                const uu = new URLSearchParams(url.search);
+                sitekey = uu.get('k');
+            }
 
             const data = JSON.parse(this.responseText.replace(')]}\'\n', ''));
             const type = data.at(5);
-            if (type !== "audio") {
+            const p = data.at(9);
+            if (type === "audio") {
+                return audio("https://www.google.com/recaptcha/api2/payload/audio.mp3?p="+ p +"&k=" + sitekey);
+            } else if (type === "imageselect") {
+                const image = await getBase64FromUrl('https://www.google.com/recaptcha/api2/payload?p='+ p +'&k='+ sitekey)
+                const target = data.at(4).at(1).at(6);
+                return imageselect(image, 33, target)
+            } else if (type === "nocaptcha") {
                 return;
             }
-            const url = new URL(this.responseURL);
-            const uu = new URLSearchParams(url.search);
-            const audiourl = "https://www.google.com/recaptcha/api2/payload/audio.mp3?p="+ data.at(9) +"&k=" + uu.get('k');
-            log(audiourl)
-            audio(audiourl);
             return;
         }
         //
@@ -83,33 +84,26 @@ XMLHttpRequest.prototype.open = function() {
         try {
             const data = JSON.parse(this.responseText);
 
-            // if (data.pass || !data.success) {
-            //     return;
-            // }
+            // if (data.pass || !data.success) {}
 
             const isMulti = data.request_type === "image_label_multiple_choice";
-            const options = {
-                method: "POST",
-                headers,
-                body: {
-                    images: {},
-                    target: data.requester_question.en, //"A big fat alien",
-                    type: isMulti ? "multi" : "grid",
-                    choices: isMulti ? Object.keys(data.requester_restricted_answer_set) : [],
-                    method: "hcaptcha_base64",
-                    sitekey: searchParams.get("sitekey"),
-                    site: searchParams.get("host"),
-                    softid: "UserScript " + GM_info.script.version,
-                }
-            };
+            const body = {
+                images: {},
+                target: data.requester_question.en,
+                type: isMulti ? "multi" : "grid",
+                choices: isMulti ? Object.keys(data.requester_restricted_answer_set) : [],
+                method: "hcaptcha_base64",
+                sitekey: searchParams.get("sitekey"),
+                site: searchParams.get("host"),
+                softid: "UserScript " + GM_info.script.version,
+            }
             copy = [];
             for(let i = 0; i < data.tasklist.length; i++) {
                 const url = data.tasklist[i].datapoint_uri;
                 copy.push(url)
-                options.body.images[i] = await getBase64FromUrl(url);
+                body.images[i] = await getBase64FromUrl(url);
             }
-            options.body = JSON.stringify(options.body);
-            await solve(options, isMulti);
+            await solve(body, isMulti);
         } catch (e) {
             console.error(this.responseText);
         }
@@ -125,16 +119,13 @@ addMenu("❓ Discord", "https://discord.gg/E7FfzhZqzA");
 addMenu("❓ Telegram", "https://t.me/noCaptchaAi");
 
 if(isWidget) {
-    log("loop running in bg");
+    log("loop running in bg"); //document.hasFocus()
 
     GM_addValueChangeListener("APIKEY", function(key, oldValue, newValue, remote) {
         log("The value of the '" + key + "' key has changed from '" + oldValue + "' to '" + newValue + "'");
-        log(location.href);
         location = location.href;
     });
 
-} else {
-    // log("hasFocus", document.hasFocus());
 }
 
 if(location.hostname === "config.nocaptchaai.com") {
@@ -152,15 +143,6 @@ if(location.hostname === "config.nocaptchaai.com") {
     const template = document.getElementById("tampermonkey");
     const clone = template.content.cloneNode(true);
     const inputs = clone.querySelectorAll("input");
-    const wallet = clone.getElementById("WALLET");
-
-    const url = cfg.get("PLAN") === "PRO" ? proBalApi : getApi("balance");
-    const response = await fetch(url, {
-        headers
-    });
-    const data = await response.json();
-    log(data);
-    wallet.innerText = `Wallet: ${data.user_id}, 💲${data.Balance}`
 
     for(const input of inputs) {
         const type = input.type === "checkbox" ? "checked" : "value";
@@ -191,17 +173,14 @@ while(!(!navigator.onLine || isApikeyEmpty)) {
     }
 }
 
-async function solve(options, isMulti) {
+async function solve(body, isMulti) {
     try {
-        const response = await fetch(getApi("solve"), options);
-        let data = await response.json();
-        log(data);
-
+        const data = await apiFetch(body);
         switch(data.status) {
             case "new":
                 log("⏳ waiting a second");
                 await sleep(1000);
-                data = await (await fetch(data.url)).json();
+                data = await apiFetch(data.url, "GET")
                 break;
             case "solved":
                 break;
@@ -209,7 +188,7 @@ async function solve(options, isMulti) {
                 log("⚠️ Seems this a new challenge, please contact noCaptchaAi!");
                 break;
             default:
-                log("😨 Unknown status", response.status);
+                log("😨 Unknown status", data.status);
         }
 
         return await (isMulti ? multiple : binary)(data)
@@ -231,6 +210,23 @@ async function getBase64FromUrl(url) {
             reject("❌ Failed to convert url to base64");
         });
     });
+}
+async function imageselect(image, type, target) {
+    const htmlTarget = document.querySelector('.rc-imageselect-desc-no-canonical strong')?.textContent;
+    const data = await apiFetch({
+        images: {
+            0: image
+        },
+        target: target || htmlTarget,
+        type,
+        method: "recaptcha2",
+    })
+    const [wait, sent] = waitCal(data.solution.length);
+    const cells = document.querySelectorAll('.rc-image-tile-wrapper');
+    for (const index of data.solution) {
+        await sleep(wait);
+        fireMouseEvents(cells[index]);
+    }
 }
 async function multiple(data) {
     //need to be test
@@ -256,8 +252,7 @@ async function multiple(data) {
 async function binary(data) {
     const solutions = data.solution;
     const solution = solutions.filter(index => index > 8);
-    const [wait, sent] = data.delay || waitCal(solutions.length);
-    log(wait, sent);
+    const [wait, sent] = data.timer || waitCal(solutions.length);
     const cells = document.querySelectorAll(".task-image .image");
     for (const index of solutions) {
         await sleep(wait);
@@ -267,40 +262,52 @@ async function binary(data) {
     log("☑️ sent!");
     fireMouseEvents(document.querySelector(".button-submit"));
     if (solution[0] && solutions[0] !== solution[0]) {
-        return binary({ solution, delay: [wait, sent] })
+        return binary({ solution, timer: [wait, sent] })
     }
 }
 async function audio(url) {
     const arrayBuffer = await fetch(url).then(response => response.arrayBuffer());
     const body = new FormData();
     body.append("audio", new Blob([arrayBuffer], { type: "audio/mp3" }), "audio.mp3");
+    const data = await apiFetch(body, "audio")
+    document.querySelector("#audio-response").value = data.solution;
+}
 
-    const response = await fetch("https://workproxy2.nocaptchaai.com/audio", {
-        method: "POST",
-        headers: { //todo work with headers
-            apikey: cfg.get("APIKEY"),
+async function apiFetch(body, v = "solve", method = "POST") {
+    const response = await fetch("https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v, {
+        method,
+        headers: {
+            "Content-Type": "application/json",
+            apikey: cfg.get("APIKEY")
         },
-        body
-    });
-
-    const json = await response.json();
-    log(json);
-    document.querySelector("#audio-response").value = json.solution;
+        body: JSON.stringify(body)
+    })
+    const data = await response.json();
+    log(data);
+    return data;
 }
-function waitCal(len) {
-    const math = (parseInt(cfg.get("DELAY")) * 1000) / len;
-    if (math < 350) {
-        return [math + 100, math + 150];
+function addMenu(name, url, check = true) {
+    if(!check) {
+        return;
     }
-    return [math, math];
-}
 
+    GM_registerMenuCommand(name, function() {
+        if(typeof url === "function") {
+            url();
+        } else {
+            GM_openInTab(url, {
+                active: true,
+                setParent: true
+            });
+        }
+    });
+}
 function fireMouseEvents(element) {
     if(!document.contains(element)) {
         return;
     }
     for (const eventName of ["mouseover", "mousedown", "mouseup", "click"]) {
-        const eventObject = document.createEvent("MouseEvents");
+        const eventObject = document.createEvent("MouseEvents"); //todo update
         eventObject.initEvent(eventName, true, false);
         element.dispatchEvent(eventObject);
     }
@@ -353,31 +360,15 @@ function config(data) {
 
     return { get, set, open, close };
 }
-function getApi(v) {
-    return "https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v;
+function waitCal(len) {
+    const math = (parseInt(cfg.get("DELAY")) * 1000) / len;
+    let data = math < 350 ? [math + 100, math + 150] : [math, math];
+    log(data[0], data[1]);
+    return data;
 }
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 function log() {
-    if(cfg.get("DEBUG_LOGS")) {
-        console.log.apply(this, arguments)
-    }
-}
-
-function addMenu(name, url, check = true) {
-    if(!check) {
-        return;
-    }
-
-    GM_registerMenuCommand(name, function() {
-        if(typeof url === "function") {
-            url();
-        } else {
-            GM_openInTab(url, {
-                active: true,
-                setParent: true
-            });
-        }
-    });
+    cfg.get("DEBUG_LOGS") && console.log.apply(this, arguments)
 }
