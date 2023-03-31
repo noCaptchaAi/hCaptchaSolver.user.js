@@ -40,8 +40,6 @@ const cfg = new config({
     PLAN: "free",
     DELAY: 3,
     LOOP: false,
-    // NOHCAPTCHA: [],
-    // NORECAPTCHA: [],
     HCAPTCHA: true,
     RECAPTCHA: true,
     AUTO_SOLVE: true,
@@ -258,18 +256,18 @@ async function multiple(data) {
 async function binary(data) {
     const solutions = data.solution;
     const solution = solutions.filter(index => index > 8);
-    const [wait, sent] = waitCal(solutions.length);
+    const [wait, sent] = data.delay || waitCal(solutions.length);
     log(wait, sent);
     const cells = document.querySelectorAll(".task-image .image");
     for (const index of solutions) {
         await sleep(wait);
         fireMouseEvents(cells[index]);
     }
-    await sleep(sent)
-    fireMouseEvents(document.querySelector(".button-submit"));
+    await sleep(sent);
     log("☑️ sent!");
+    fireMouseEvents(document.querySelector(".button-submit"));
     if (solution[0] && solutions[0] !== solution[0]) {
-        return binary({ solution })
+        return binary({ solution, delay: [wait, sent] })
     }
 }
 async function audio(url) {
