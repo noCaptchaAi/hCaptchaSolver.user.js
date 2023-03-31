@@ -60,18 +60,22 @@ XMLHttpRequest.prototype.open = function() {
                 const uu = new URLSearchParams(url.search);
                 sitekey = uu.get('k');
             }
-
-            const data = JSON.parse(this.responseText.replace(')]}\'\n', ''));
-            const type = data.at(5);
-            const p = data.at(9);
-            if (type === "audio") {
-                return audio("https://www.google.com/recaptcha/api2/payload/audio.mp3?p="+ p +"&k=" + sitekey);
-            } else if (type === "imageselect") {
-                const image = await getBase64FromUrl('https://www.google.com/recaptcha/api2/payload?p='+ p +'&k='+ sitekey)
-                const target = data.at(4).at(1).at(6);
-                return imageselect(image, 33, target)
-            } else if (type === "nocaptcha") {
-                return;
+            try {
+                const data = JSON.parse(this.responseText.replace(')]}\'\n', ''));
+                log(data);
+                const type = data.at(5);
+                const p = data.at(9);
+                if (type === "audio") {
+                    //return audio("https://www.google.com/recaptcha/api2/payload/audio.mp3?p="+ p +"&k=" + sitekey);
+                } else if (type === "imageselect") {
+                    const image = await getBase64FromUrl('https://www.google.com/recaptcha/api2/payload?p='+ p +'&k='+ sitekey)
+                    const target = data.at(4).at(1).at(6);
+                    return imageselect(image, 33, target)
+                } else if (type === "nocaptcha") {
+                    return;
+                }
+            } catch (e) {
+                log(this.responseText);
             }
             return;
         }
@@ -220,7 +224,7 @@ async function imageselect(image, type, target) {
         target: target || htmlTarget,
         type,
         method: "recaptcha2",
-    })
+    }, "beta");
     const [wait, sent] = waitCal(data.solution.length);
     const cells = document.querySelectorAll('.rc-image-tile-wrapper');
     for (const index of data.solution) {
@@ -252,7 +256,7 @@ async function multiple(data) {
 async function binary(data) {
     const solutions = data.solution;
     const solution = solutions.filter(index => index > 8);
-    const [wait, sent] = data.timer || waitCal(solutions.length);
+    const [wait, sent] = data.timer || waitCal(solutions?.length);
     const cells = document.querySelectorAll(".task-image .image");
     for (const index of solutions) {
         await sleep(wait);
@@ -265,16 +269,18 @@ async function binary(data) {
         return binary({ solution, timer: [wait, sent] })
     }
 }
-async function audio(url) {
-    const arrayBuffer = await fetch(url).then(response => response.arrayBuffer());
-    const body = new FormData();
-    body.append("audio", new Blob([arrayBuffer], { type: "audio/mp3" }), "audio.mp3");
-    const data = await apiFetch(body, "audio")
-    document.querySelector("#audio-response").value = data.solution;
-}
+// async function audio(url) {
+//     const arrayBuffer = await fetch(url).then(response => response.arrayBuffer());
+//     const body = new FormData();
+//     body.append("audio", new Blob([arrayBuffer], { type: "audio/mp3" }), "audio.mp3");
+//     const data = await apiFetch(body, "audio")
+//     document.querySelector("#audio-response").value = data.solution;
+// }
 
 async function apiFetch(body, v = "solve", method = "POST") {
-    const response = await fetch("https://" + cfg.get("PLAN") + ".nocaptchaai.com/" + v, {
+    const tempcheck = v === "beta"; //until free and pro are available
+    v = tempcheck ? "solve" : v;
+    const response = await fetch("https://" + (tempcheck ? "beta" : cfg.get("PLAN")) + ".nocaptchaai.com/" + v, {
         method,
         headers: {
             "Content-Type": "application/json",
