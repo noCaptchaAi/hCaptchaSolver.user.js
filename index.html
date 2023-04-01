@@ -75,21 +75,22 @@
             <input id="LOOP" type="checkbox">
         </div>
         <div>
-            <label for="DELAY">Delay Timer</label>
-            <input id="DELAY" type="number" min="3" max="10" value="3">        
+            <label for="HCAPTCHA">Hcaptcha Enabled</label>
+            <input id="HCAPTCHA" type="checkbox">
+        </div>
+        <div>
+            <label for="RECAPTCHA">Recaptcha Enabled</label>
+            <input id="RECAPTCHA" type="checkbox">
+        </div>
+        <div>
+            <label for="DELAY">Delay</label>
+            <input id="DELAY" type="number" min="1" max="10">        
         </div>
         <!-- </div> -->
         <!-- <p><a target="_blank" href="https://noCaptchaAi.com">2022-2023 @ noCaptchaAi.com</a><b>Version:1.1.0</b></p> -->
     </template>
     <script>
-    const searchParams = new URLSearchParams(location.search);
     if (window.opener) {
-        /*
-        const template = document.getElementById("tampermonkey");
-        const clone = template.content.cloneNode(true);
-        const inputs = clone.querySelectorAll("input");
-        const wallet = clone.getElementById("WALLET");
-        */
         window.addEventListener("blur", window.opener.close);
     }
     </script>
