@@ -4,7 +4,7 @@
 <h1>hCaptcha Solver UserScript </h1>
 <p>Machine Learning Solution Powered by noCaptchaAi.com</p>
 
-[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/) &nbsp; [![npm version](https://badge.fury.io/js/nocaptchaai-puppeteer.svg)](https://www.npmjs.com/package/nocaptchaai-puppeteer) &nbsp; [![Discord](https://img.shields.io/badge/chat%20on-Discord-7289da.svg)](https://discord.gg/E7FfzhZqzA) &nbsp; [![Telegram](https://img.shields.io/badge/chat%20on-Telegram-blue.svg)](https://t.me/noCaptchaAi)
+
 <p>
 <a href="https://t.me/noCaptchaAi" target="_blank"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"></a>
 <a href="https://discord.gg/E7FfzhZqzA" target="_blank"><img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"></a>
