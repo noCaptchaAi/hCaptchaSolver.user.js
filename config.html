@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAACiElEQVQoFU2SS0hUURjHz/PeO/d252FjZpQaDspoKkgQBG3ctIxWgRAtgxZtIiiQINpJLaK1BYEEKbZoEbVoE+6SGopRCc20hzboPO7M3HvPszOOSB/nHA6c/znf+f2/D4L/4nZfr0/xUDZBMQQ24AAUm80qE4+WNg9VpL2jENoIWRhaEFkIEQQBAgAqiyBbwiMW5krHQhkxNNMcPcvl0xSnk7a5NtaTolqCJDCiQqMeA1mFohyLa6+WW2IMkYtxhpAOQj2MXdua/baFga40mEOQayGPkoxD0hY2ecxX4a1sj43hxc6s59pTaysTnZnFSlVgfdShSQc/uTzC6uGXerMhxbutMhMapRBJQmpDKCN2pfvYndW1C12p9VrYVHJurfRiadNKJgybjbBvE9/BZMh2KUZjqcy99ZWX5dLDgdzU1+/X+7vnfpYGUonJN8XhrDc6lIka8V8dM6UQhaA1BJ/ODZz1/fvrG1d7u57/2Aml+rBTNZQT859lEFOKCIaGwTi0H1obx+bPjd84dWJm408o1G5sytCK3ZA/LWwD+6AAiAMtlOZGLwRg/MFofmZ8sC09XJXWXAIuFVcAn7H9PSUNV1nJLpf0v180T/R5znLQbF8wRbx7vnenKT7+DrZrDAVKBkrEUjKlGQDTg/2FSn3hV6mt9ih+fWmE+k4cs1rEq5GA7aaYzeU7LJpwiZWwRrrd1XL1bXnPoWj4uOekE6EIy5GYXCiGQhPe+p+sSAk5VBKIWEcRzWX83OkUh6AQ1BpBWAG8wmTTQOj9XjLZTQuZVDd7TiYpzWcdSpDpVgF0MQoDJh5/2ooNsTTOgAOzYqViAGKDoVtWAKWAAhxqJpRhqzPZRjLrP7aJN0eOYMMQAAAAAElFTkSuQmCC"
+        type="image/png" />
+    <title>Userscript config ~ noCaptchaAi</title>
+    <meta name="description"
+        content="Ai based hCaptcha Solver service,CAPCTHA Solver AI Service, API BASED CAPCTHA Solving, recognise and solve hCaptcha challenges with Ai, browserless, with javascript, userscript, python requests, puppeteer, selenium, playwright .. more" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-c5046512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192-801f7a1c.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512-d110a861.png" />
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFTUlEQVRYR81XW0xUVxRd54LAwJ1hQCCIE9DKQwGxMpoqJjqlak2ogJZYP2xjYtKfakLrR5tYK5bGrxZN6keTNjatSX+oj+Ljw1rEtrQ2gkKUqIVAAeUhL20LMiNzT/c5M8PcO7zBtN3zM/fcffZZZ6919j6XYRLjgILNjoOjLorCoGp2wxSL7onBjUilbnSEY4QdrfxosjXYFAAYtuQeMvjMBIDG3ezYldJZAxAT+ZbckmkDANdgDbrpzwDX2NErH/53ADSNs2NVh4lKT6ZLwFgJND0gAwWS8xzHadq3fzyCJcgJYoQcEIlVE2oAQgNMrwEOM+/S+btZaVXhZAAYAajQiYgCeAFIPjifHABREKnoKCDIBgBESenVgn8PACGGCl0GpgAgN5njODdZBopbGldd6h5AxbpMJKvh6A15ip+6H6EgMYb4ox1blRs6EVIG0OnfMee+DEhdCE3w5Y736b9g2MO7yrfqU3TFNWB/r7EZ7yTZ8Fp8HLY1NOBsRy9LVU38Wm42Pu/sZO9eb8b+TBs+Xr2EKJKxfCYoNAKKVC4YKOBZgceMv6J32P+g0V7Weh9BNPjN8nS+PsnK7Jdr0DHsgiPWihOONKyqqEW/cwRfrEvle1YnGGuLmdUaMjJTAD0hTvv663W4OziEeZSw8jXpLDY0BI6rdXhKFO9OiUdh4nwU/tCAeQrjl7ZnMYctyr+HuQC42N+rWi3BaYlhoRAgWp4MCxA4tTYDbUNO7K1rlAsdsS9Gx5ALx+88wPywYFzbaUey1eQBoaJGn1E6JQEUZDjOehy8Z9/C8ki8rM05jEU3fxOEsrK0ZOTFRmMDgehwuhCqKDhHIjzZ2o2Tbd1SPF+tX4pPbrejvn8QS6PC8evObFhDg0EiNJoV540ayNSpXrwxQ2pgWNOw5lYt6ocGpX9xog27E+Lx0o169LmewhSkgOjAgTstclHxbI8x4+fux9J/U2IULhZmITgyoN1MF4AI8nhkBIVNt1E18EgGfTUuBvuW2ZBffQt/jrgRTotuXBiFira+gG16HveuWIhP81NmlwHfLGeEhl237uDb7h45lBNtwdupNrxx/S6euA1lfVwQ3+9agY2LdaKcSQZkRDO4mzRRfLcJx9sfyKEU1YSk8DBcfjgw7qL6wW1pMTi9I9M/NBsANFsSeaS5FQeaWqZcVO+wJMqEpr0vPBsAIsqX/Z14s/Z3jFANmI6lRptw761nCAB0BbvQ2Ycd1xowNA0NFC2L5eVF6V60jHoFvyDbOhU1sQE2phRHaHmGnalc3gGL7zXhzMNetjMxDvuSbWinorTpx3oMTgHi64JlTa9nxXvOpjALG1MHDkFcNn0mADBdQ4nQssXzgqpf0OVySS9RDYtssbhMXbGHasJEtnaBBdV7smtouj/+bAGcomMoTsJ9p3M61CMhIgTVO1ZikS3c34zmkgExVwiv4q8e/llzJxNHcCIZZsepKM/LwHORJk6a8QLwJsHMz0v+5Y/RD7LTyopCLpznbPiOXvhTpmKBlxLPehaihAaa/36CE390sbNdvbhPjUlUxez5KramxTTvyUgYCA7yhlB5hye0x+hOaLhvjPkukADA6HLjtQjEGzRh0VYa3otmo49ioe6n5zwAAEqr8sVGRwEFEvo/ACDbs6DFY2MywJ83vB8vA/pdmSUFPgI4gqq2678NxlIgvg28KZKaePnFDyilfkpU9xQUKLUygm/JssqSwCzrnyf9NhSOcwWAssrDes4DwUwHwEHKgJ8SVZuCAmMG5g5gM13bFYXuVj5NEACm08gYDQQAaK8sZeX0yTaB/QMsyi4QM2+VOwAAAABJRU5ErkJggg==" />
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACc0lEQVQ4T3WTTUhUURTH/+dNauPMvBn7EEcrhCxJy9QxIonUFn2pRFAQtYo2GUTrCPzclraqoGjRokW7IaVWftDHptRCyCLRUnNSG3UkonTmnc69z3mZ2n2L+9695/zu/3/ueYQVg49UNuglE2VLs0xsIeDqB7NFbV3Ny1NoFeDY4Ua95rVCDoCZkeHqg2Ux3epuWhPA5RVhveGhbD37VyjwG6JAHh9/U4qopeekCnMUcHnlEztAAHLio9hk2amcTZhNiyPoTmUKGH1qHT5EBMAOgPdU1atv2ahRxHMj70MH/Sa6fsS0kHS3QTtNN18/lKsOUwfYIL/RoRVwUdIz13xfXHA9X5grPj8wyM2FuXRvJIKK7ACejs9wW9V2Or0jU2qDN7bFJKBQe1cKqlvGv9DD6CTVbc3GtaFhXM3LwZ3hCRzI9OPlVAw9Z0pQluezaxhAu61gt3hXQyzERdmlsY8IT0Vxdttm3B2OwJ/qQvR3XIfkeFIxULcPGe6UtQEqiL3M9UOf6eboGNYbBmYX7eTkuF+Tj4slwf8DRAkrZbenv+JK/ydY/6QDD2rz+UJxlhQRHWKclYUGGAbBY1XrWC+HCl69RlGGh34lLIQjUQdhip0Pl/e/DfrSEjDJqcFfAJEClYano3RjbJRfROedPvGmuPD4RAEf37uxV7ePj9vV+SR6JUtuVnUiy6sXQb1iWqWD8z/p2dwMpa9zoXrXhndbTHdcFE4oi9TSXatvIanPbmUy4EGWbJMASvS3ujUVZS7dv08DsKqVHZD6G3VNEqUa5ACMXhiS2NrZuLyuq//Go9LaJCd7EysU2AC0djYpy0nIH9fF7zZ8Pjv5AAAAAElFTkSuQmCC" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="og:url" content="https://noCaptchaAi.com" />
+    <meta property="og:title"
+        content="noCaptchaAi: hCaptcha Solver Api Service. Solve hCapctha with or without browser using api calls" />
+    <meta property="og:description"
+        content="nAi based hCaptcha Solver service, recognise and solve hCaptcha challenges with Ai, browserless, with javascript, userscript, python requests, puppeteer, selenium, playwright .. more" />
+    <meta property="og:image" content="/src/assets/favicons/favicon.png" />
+    <meta name="keywords"
+        content="Best CAPTCHA Solver Bypass Service, hCaptcha solver, faster than 2captcha deathbycapctha anti-captcha, hCaptcha HTTP API, capctha solving service, Ai capctha solver, python capctha solver, captcha solver script puppeteer selenium playwright, fast capctha solve, captcha solve withour browser,    " />
+    <meta property="twitter:image" content="/sec/assets/favicon.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+
+</head>
+
+<body>
+    <div>
+        <h1>noCaptchaAi generated config page</h1>
+        <ul>
+            <li>Our UserScripts</li>
+            <li>Our Browser Extension
+                <ul>
+                    <li>Chrome</li>
+                    <li>Firefox Based</li>
+                    <li>Opera</li>
+                    <li>Edge</li>
+                    <li>Brave</li>
+                </ul>
+            </li>
+        </ul>
+        <span>Visit Dashboard</span> <br>
+        <a href="https://dash.nocaptchaai.com/home">https://dash.nocaptchaai.com</a>
+    </div>
+    <template id="tampermonkey">
+        <!-- <div style="background-color: rgb(59 130 246 / .5); border-radius: 25px; margin: auto; width: 50%;"> -->
+        <a href="https://accounts.hcaptcha.com/demo" target="_blank" style="text-decoration:none;">
+            <img alt="hcaptcha_logo" width="30px" src="https://www.google.com/s2/favicons?domain=hcaptcha.com">
+            hCaptcha
+        </a>
+        <div id="WALLET">
+        </div>
+        <div>
+            <label for="CHECKBOX_AUTO_OPEN">Auto Open</label>
+            <input id="CHECKBOX_AUTO_OPEN" type="checkbox">
+        </div>
+        <div>
+            <label for="AUTO_SOLVE">Auto Solve</label>
+            <input id="AUTO_SOLVE" type="checkbox">
+        </div>
+        <div>
+            <label for="DEBUG_LOGS">Logs</label>
+            <input id="DEBUG_LOGS" type="checkbox">
+        </div>
+        <div>
+            <label for="LOOP">Infinity Loop</label>
+            <input id="LOOP" type="checkbox">
+        </div>
+        <div>
+            <label for="HCAPTCHA">Hcaptcha Enabled</label>
+            <input id="HCAPTCHA" type="checkbox">
+        </div>
+        <div>
+            <label for="RECAPTCHA">Recaptcha Enabled</label>
+            <input id="RECAPTCHA" type="checkbox">
+        </div>
+        <div>
+            <label for="DELAY">Delay</label>
+            <input id="DELAY" type="number" min="1" max="10">        
+        </div>
+        <!-- </div> -->
+        <!-- <p><a target="_blank" href="https://noCaptchaAi.com">2022-2023 @ noCaptchaAi.com</a><b>Version:1.1.0</b></p> -->
+    </template>
+    <script>
+    if (window.opener) {
+        window.addEventListener("blur", window.opener.close);
+    }
+    </script>
+
+</body>
+
+</html>
