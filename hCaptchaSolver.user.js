@@ -165,17 +165,15 @@ async function solve() {
         let data = await apiFetch({
             images,
             target,
+            choices,
             method: 'hcaptcha_base64',
-            type: isMulti() ? 'multi' : isBbox() ? 'bbox' : 'grid',
-            choices: isMulti() ? choices : [],
+            type: isMulti() ? 'multi' : isBbox() ? 'bbox' : 'grid'
         });
         const clicktime = Date.now().toString().slice(-3) / 2
 
         switch(data.status) {
-            case 'new':
-                isMulti() && clickMatchingElement(data.answer);
-                break;
             case 'solved':
+            case 'new':
                 if (isMulti()) {
                     clickMatchingElement(data.answer);
                 } else if (isGrid()) {
