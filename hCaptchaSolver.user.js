@@ -67,9 +67,11 @@ function onTaskReady() {
     return new Promise(async (resolve) => {
         const check_interval = setInterval(async function () {
             const target = document.querySelector('.prompt-text')?.textContent;
-            const cells = document.querySelectorAll('.task-image .image');
-            const images = {};
             if (!target || stop == true) return;
+            const images = {};
+            const cells = document.querySelectorAll('.task-image .image');
+            let examples = document.querySelectorAll(".challenge-example .image .image");
+            examples = [...examples].map(el => el.style.backgroundImage.replace(/url\("|"\)/g, ''));
 
             if ((isGrid() || isMulti())) {
                 stop = true;
@@ -78,7 +80,8 @@ function onTaskReady() {
                     images[i] = await getBase64FromUrl(url);
                 }
             } else if (isBbox()) {
-                images[0] = await sliceOG();;
+                stop = true
+                images[0] = sliceOG();;
             }
 
             clearInterval(check_interval);
@@ -87,6 +90,7 @@ function onTaskReady() {
                 target,
                 cells,
                 images,
+                examples: examples.map(async example => await getBase64FromUrl(example)),
                 choices: [...document.querySelectorAll('.answer-text')].map(el => el.outerText)
             });
         }, 1000);
@@ -159,13 +163,13 @@ function apiFetch(body, v = 'solve', method = 'POST') {
 async function solve() {
     startTime = new Date();
 
-    const { target, cells, images, choices } = await onTaskReady();
-
+    const { target, cells, images, examples, choices } = await onTaskReady();
     try {
         let data = await apiFetch({
             images,
             target,
             choices,
+            examples: await Promise.all(examples),
             method: 'hcaptcha_base64',
             type: isMulti() ? 'multi' : isBbox() ? 'bbox' : 'grid'
         });
