@@ -17,6 +17,7 @@
 const hash = Object.fromEntries(new URLSearchParams(location.hash.replace('#', '')));
 const cfg = GM_getValue('settings', {})
 const isApikeyEmpty = !cfg.APIKEY || !cfg.PLANTYPE;
+const isVisible = true; // cfg.get('isVisible')
 
 if (location.host === 'newconfig.nocaptchaai.com') {
     const params = Object.fromEntries(new URLSearchParams(location.search));
@@ -36,18 +37,24 @@ addMenu('❓ Telegram', 'https://t.me/noCaptchaAi');
 
 let startTime;
 let stop = false;
+
 while(navigator.onLine || !isApikeyEmpty) {
     await sleep(1000);
 
     if (cfg.hCaptchaAutoOpen === 'true' && hash.frame === 'checkbox') {
         stop = true
         const isSolved = document.querySelector('[role=checkbox]').ariaChecked === 'true';
+        const boxElement = document.querySelector('#checkbox');
 
+        if (isVisible && boxElement.offsetParent === null) {
+            break;
+        }
+        
         if(isSolved && cfg.hCaptchaAlwaysSolve === 'false') {
             console.log('found solved');
             break;
         }
-        fireMouseEvents(document.querySelector('#checkbox'))
+        fireMouseEvents(boxElement)
     } else if (cfg.hCaptchaAutoSolve === 'true' && hash.frame === 'challenge') {
         await sleep(1000);
         await solve();
