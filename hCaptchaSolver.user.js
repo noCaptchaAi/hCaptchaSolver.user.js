@@ -273,5 +273,5 @@ function sliceOG() {
 
     const ctx = outputCanvas.getContext('2d');
     ctx.drawImage(originalCanvas, 0, 0, originalWidth, originalHeight, 0, 0, outputWidth, outputHeight);
-    return outputCanvas.toDataURL('image/jpeg', 0.4).replace(/^data:image\/(png|jpeg);base64,/, '');
+    return outputCanvas.toDataURL('image/jpeg', 0.99).replace(/^data:image\/(png|jpeg);base64,/, '');
 }
