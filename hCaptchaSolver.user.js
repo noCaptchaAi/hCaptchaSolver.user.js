@@ -77,8 +77,9 @@ function onTaskReady() {
             if (!target || stop == true) return;
             const images = {};
             const cells = document.querySelectorAll('.task-image .image');
-            let examples = document.querySelectorAll(".challenge-example .image .image");
-            examples = [...examples].map(el => el.style.backgroundImage.replace(/url\("|"\)/g, ''));
+            let examples = Array.from(document.querySelectorAll(".challenge-example .image .image"))
+                .concat(Array.from(document.querySelectorAll(".example-image .image")))
+                .map(el => el.style.backgroundImage.replace(/url\("|"\)/g, ''));
 
             if ((isGrid() || isMulti())) {
                 stop = true;
